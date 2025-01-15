@@ -18,7 +18,7 @@ async function getCSV(url){
 let questions_JV = []
 let questions_JdS = []
 async function loadData() {
-    CSVdata = await getCSV('planete_jeu_pairing.csv');
+    CSVdata = await getCSV('https://docs.google.com/spreadsheets/d/e/2PACX-1vQWBSQtcLt8CbTPN-TvHnrCt1h24GtoXiWxBCoo3nqbrTSqLuc93FeogkFsOrfS_qF-YDyhTk5E0aau/pub?output=csv');
 
     for (let i = 0; i < CSVdata.length; i++) {
         if (CSVdata[i].jeu_video == "TRUE") {
