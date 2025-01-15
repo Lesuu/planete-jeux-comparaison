@@ -1,0 +1,16 @@
+jeu_video,description_activite1,description_activite2,activite1_gagnante,commentaire
+TRUE,Jeu sur console avec une TV,Jeu téléchargé sur ordinateur portable,FALSE,"Impact sur le changement climatique, jouer 1h en France en 2022"
+TRUE,Jeu sur console avec une TV,Jeu en cloud gaming avec une console et une TV,TRUE,Impact sur le changement climatique
+TRUE,Jeu sur console avec une TV,Jeu téléchargé sur ordinateur fixe avec écran,FALSE,Impact sur le changement climatique
+TRUE,Jeu sur console avec une TV,Jeu en cloud gaming avec une box TV et une TV,FALSE,Impact sur le changement climatique
+TRUE,Jeu sur console avec une TV,Jeu téléchargé sur ordinateur portable,FALSE,Impact sur les ressources minérales et métalliques
+TRUE,Jeu sur console avec une TV,Jeu en cloud gaming avec une console et une TV,TRUE,Impact sur les ressources minérales et métalliques
+TRUE,Jeu sur console avec une TV,Jeu téléchargé sur ordinateur fixe avec écran,FALSE,Impact sur les ressources minérales et métalliques
+FALSE,Jeu sur console avec une TV,Jeu en cloud gaming avec une box TV et une TV,FALSE,Impact sur les ressources minérales et métalliques
+FALSE,Jeu sur console avec une TV,Jeu téléchargé sur ordinateur portable,FALSE,Impact sur les ressources en eau
+FALSE,Jeu sur console avec une TV,Jeu en cloud gaming avec une console et une TV,TRUE,Impact sur les ressources en eau
+FALSE,Long temps de jeu,Court temps de jeu,TRUE,"Jeu sur disque sur console avec TV, pour tous les indicateurs"
+FALSE,Haute définition,Basse définition,FALSE,"Jeu en cloud gaming avec box TV et TV, Haute définition = utilisation des serveurs est basse, pour tous les indicateurs"
+FALSE,TV,Console,TRUE,"Jouer à un jeu vidéo sur console et une TV, pour tous les indicateurs"
+FALSE,Transmission réseau+Datacenters+Ecran,Ordinateur fixe,TRUE,"Jouer à un jeu vidéo téléchargé sur un ordinateur fixe avec un écran supplémentaire, en ligne, pour tous les indicateurs"
+FALSE,Transmission réseau,TV,FALSE,"Jouer à un jeu vidéo en cloud gaming sur une TV avec une box TV, tous les impacts sauf radiations ionisantes"
