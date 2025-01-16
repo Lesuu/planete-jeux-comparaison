@@ -63,7 +63,10 @@ let score = 0
 //#region Ecran d'accueil
 
 scene("titleScreen", () => {
+    // Réinitialisation du score
     score = 0
+
+    // Elements UI
     let title = add([
         text("Choisi une option !", {
             font: "pixel",
@@ -97,8 +100,7 @@ scene("titleScreen", () => {
     jv_icon.onHoverEnd(() => jv_icon.sprite = "jv_icon")
     jds_icon.onHoverEnd(() => jds_icon.sprite = "jds_icon")
 
-    // Changement de scène
-   
+    // Changement de scène, établit si on a cliqué sur jv ou jds grâce a la variable jv
     jv_icon.onClick(() => {
         jv = true
         categorie = [...questions_JV]
@@ -111,16 +113,23 @@ scene("titleScreen", () => {
     })
 })
 
+// Scène ou on pose les questions
 scene("questions", () => {
+    // Couleur du background dépend du support choisi
     if (jv){
         setBackground(120,0,30)
     } else {
         setBackground(0,100,0)
     }
   
+    // Randomiser la position des cartes 
+    let x_card1 = width() / (randi() + 1.5);
+    let x_card2 = width() / (x_card1 === width() / 1.5 ? 2.5 : 1.5);
+
+    // Choisi une question aléatoire
     question_number = Math.floor(rand(categorie.length))
     let caption = add([
-        text("Quelle option consomme-t-elle le moins?", {
+        text("Quelle option a le moins d'impact sur le changement climatique ?", {
             font: "pixel",
             size: 32
         }),
@@ -130,7 +139,7 @@ scene("questions", () => {
     ])
     let card1 = add([
         sprite("card"),
-        pos(width()/2.5, height()/2),
+        pos(x_card1, height()/2),
         scale(scaleValue/1.2),  
         anchor("center"),
         area(),
@@ -152,7 +161,7 @@ scene("questions", () => {
     ])
     let card2 = add([
         sprite("card"),
-        pos(width()/1.5, height()/2),
+        pos(x_card2, height()/2),
         scale(scaleValue/1.2),  
         anchor("center"),
         area(),
