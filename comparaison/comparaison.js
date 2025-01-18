@@ -88,6 +88,8 @@ async function main() {
     let categorie
     let score = 0
     let compteur_question 
+    let jv_hover
+    let jds_hover
 
     // #region Constantes
     const nbr_questions = 10
@@ -126,23 +128,43 @@ async function main() {
             "jds_icon"
         ])
         // Changement de la texture quand on survole les icones...
-        jv_icon.onHover(() => jv_icon.sprite = "jv_color")
-        jds_icon.onHover(() => jds_icon.sprite = "jds_color")
+        jv_icon.onHover(() => {
+            jv_icon.sprite = "jv_color"
+            jv_hover = true
+        })
+        jds_icon.onHover(() => {
+            jds_icon.sprite = "jds_color"
+            jds_hover = true
+        })
 
         // ... et quand on lâche
-        jv_icon.onHoverEnd(() => jv_icon.sprite = "jv_icon")
-        jds_icon.onHoverEnd(() => jds_icon.sprite = "jds_icon")
+        jv_icon.onHoverEnd(() => {
+            jv_icon.sprite = "jv_icon"
+            jv_hover = false
+        })
+        jds_icon.onHoverEnd(() => {
+            jds_icon.sprite = "jds_icon"
+            jds_hover = false
+        })
 
         // Changement de scène, établit si on a cliqué sur jv ou jds grâce a la variable jv
         await jv_icon.onClick(() => {
-            jv = true
-            categorie = [...questions_JV]
-            go("questions")
+            onMouseRelease(()=>{
+                if (jv_hover){
+                    jv = true
+                    categorie = [...questions_JV]
+                    go("questions")
+                }
+            })
         })
         await jds_icon.onClick(() => {
-            jv = false
-            categorie = [...questions_JdS]
-            go("questions")
+            onMouseRelease(()=>{
+                if (jds_hover){
+                    jv = false
+                    categorie = [...questions_JdS]
+                    go("questions")
+                }
+            })
         })
     })
 
