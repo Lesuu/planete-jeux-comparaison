@@ -47,16 +47,41 @@ async function main() {
 
     loadFont("pixel", "assets/fonts/PixelOperator8-Bold.ttf")
 
-    loadSprite("card", "assets/sprites/card.png")
     loadSprite("jv_icon", "assets/sprites/video_game.png")
     loadSprite("jv_color", "assets/sprites/vg_color.png")
     loadSprite("jds_icon", "assets/sprites/board_game.png")
     loadSprite("jds_color", "assets/sprites/bg_color.png")
+    loadSpriteAtlas("assets/sprites/cards.png", {
+        "spades" : {
+            "x": 0,
+            "y": 0,
+            "width": 173,
+            "height": 236
+        },
+        "clubs" : {
+            "x": 173,
+            "y": 0,
+            "width": 173,
+            "height": 236
+        },
+        "hearts" : {
+            "x": 346,
+            "y": 0,
+            "width": 173,
+            "height": 236
+        },
+        "diamonds" : {
+            "x": 519,
+            "y": 0,
+            "width": 173,
+            "height": 236
+        }
+    })
 
 
     const scaleValue = (width()/height())*1.3;
 
-    //#region Variables globales
+    // #region Variables globales
     let jv 
     let question_number = 0
     let clicked = 0
@@ -67,7 +92,7 @@ async function main() {
     // #region Constantes
     const nbr_questions = 10
 
-    //#region Ecran d'accueil
+    // #region Ecran d'accueil
 
     scene("titleScreen", async () => {
         // Réinitialisation du score
@@ -131,10 +156,6 @@ async function main() {
             setBackground(0,100,0)
         }
     
-        // Randomiser la position des cartes 
-        let x_card1 = width() / (randi() + 1.5);
-        let x_card2 = width() / (x_card1 === width() / 1.5 ? 2.5 : 1.5);
-
         // Compteur de question
 
         compteur_question ++
@@ -152,6 +173,8 @@ async function main() {
         // Choisi une question aléatoire
         question_number = Math.floor(rand(categorie.length))
         console.log(question_number)
+
+        // Caption de la question
         let caption = add([
             text("Quelle option a le moins d'impact sur le changement climatique ?", {
                 font: "pixel",
@@ -163,15 +186,25 @@ async function main() {
             anchor("center"),
             "question_element"
         ])
+
+        // Randomiser la position des cartes 
+        let x_card1 = width() / (randi() + 1.5);
+        let x_card2 = width() / (x_card1 === width() / 1.5 ? 2.5 : 1.5);
+
+        // Choix aléatoire du type la carte
+        let sprite1 = (randi() === 0 ? "spades" : "clubs")
+        let sprite2 = (randi() === 0 ? "diamonds" : "hearts")
+        console.log(sprite1, sprite2)
+
+        // Carte 2
         let card1 = add([
-            sprite("card"),
+            sprite(sprite1),
             pos(x_card1, height()/2),
-            scale(scaleValue/1.2),  
+            scale(scaleValue/1.5),  
             anchor("center"),
             area(),
             "question_element"
         ])
-        console.log(categorie)
         let text1 = add([
             text(categorie[question_number].description_activite1, {
                 font: "pixel",
@@ -185,10 +218,12 @@ async function main() {
             z("100"),
             "question_element"
         ])
+
+        // Carte 2
         let card2 = add([
-            sprite("card"),
+            sprite(sprite2),
             pos(x_card2, height()/2),
-            scale(scaleValue/1.2),  
+            scale(scaleValue/1.5),  
             anchor("center"),
             area(),
             "question_element"
@@ -206,6 +241,8 @@ async function main() {
             z("100"),
             "question_element"
         ])
+
+        // Logique de quand on clique sur les cartes
         card1.onClick(() => {
             clicked = 1
             go("results")
@@ -217,7 +254,7 @@ async function main() {
     })
         
         
-    //#region Réponse question
+    // #region Réponse question
     // Scène qui affiche la réponse à la question
     let caption_result
     scene("results", () =>{
