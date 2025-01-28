@@ -122,7 +122,7 @@ async function main() {
         let jds_icon = add([
             sprite("jds_icon"),
             pos(width()/1.8, height()/2),
-            scale(scaleValue*2),  
+            scale(scaleValue*1.8),  
             anchor("left"),
             area(),
             "jds_icon"
