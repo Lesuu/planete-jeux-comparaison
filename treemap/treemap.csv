@@ -1,12 +1,46 @@
-name,size
-assemblage.printed paper,42.6
-assemblage.thermoforming sheet,14.25
-assemblage.laminating linerboard,13.01
-assemblage.laminating box,7.62
-assemblage.wood minifigure,0.0
-assemblage.shrink wrapping,0.93
-"transport.transport, freight, lorry",6.42
-"transport.transport, freight, sea",6.05
-"transport.transport, freight, lorry",4.97
-eol.eol,4.14
-,99.99
+treemap,etage_1,etage_2,etage_3,etage_4,case
+Jeu vidéo,Changement climatique,Jeu sur disque sur console + TV,TV,,0.18710079
+Jeu vidéo,Changement climatique,Jeu sur disque sur console + TV,Console,,0.79136284
+Jeu vidéo,Changement climatique,Jeu sur disque sur console + TV,Disque,,0.02153637
+Jeu vidéo,Changement climatique,Jeu sur disque sur console + TV - en ligne,TV,,0.18360827
+Jeu vidéo,Changement climatique,Jeu sur disque sur console + TV - en ligne,Console,,0.77659089
+Jeu vidéo,Changement climatique,Jeu sur disque sur console + TV - en ligne,Disque,,0.02113437
+Jeu vidéo,Changement climatique,Jeu sur disque sur console + TV - en ligne,Transmission réseaux,,0.01813894
+Jeu vidéo,Changement climatique,Jeu sur disque sur console + TV - en ligne,Datacenters,,0.00052753
+Jeu vidéo,Changement climatique,Jeu téléchargé sur console + TV,TV,,0.18343336
+Jeu vidéo,Changement climatique,Jeu téléchargé sur console + TV,Console,,0.77585108
+Jeu vidéo,Changement climatique,Jeu téléchargé sur console + TV,Transmission réseaux,,0.03956841
+Jeu vidéo,Changement climatique,Jeu téléchargé sur console + TV,Datacenters,,0.00114715
+Jeu vidéo,Changement climatique,Jeu téléchargé sur ordinateur portable,Ordinateur portable,,0.91227148
+Jeu vidéo,Changement climatique,Jeu téléchargé sur ordinateur portable,Transmission réseaux,,0.08525679
+Jeu vidéo,Changement climatique,Jeu téléchargé sur ordinateur portable,Datacenters,,0.00247173
+Jeu vidéo,Changement climatique,Jeu téléchargé sur ordinateur fixe + écran,Ordinateur fixe,,0.82368005
+Jeu vidéo,Changement climatique,Jeu téléchargé sur ordinateur fixe + écran,Ecran,,0.12130561
+Jeu vidéo,Changement climatique,Jeu téléchargé sur ordinateur fixe + écran,Transmission réseaux,,0.05346432
+Jeu vidéo,Changement climatique,Jeu téléchargé sur ordinateur fixe + écran,Datacenters,,0.00155002
+Jeu vidéo,Changement climatique,Cloud gaming sur box TV + TV,TV,,0.24142961
+Jeu vidéo,Changement climatique,Cloud gaming sur box TV + TV,Box TV,,0.12253829
+Jeu vidéo,Changement climatique,Cloud gaming sur box TV + TV,Transmission réseaux,,0.5266229
+Jeu vidéo,Changement climatique,Cloud gaming sur box TV + TV,Datacenters,,0.10940919
+Jeu vidéo,Changement climatique,Cloud gaming sur console + TV,TV,,0.127
+Jeu vidéo,Changement climatique,Cloud gaming sur console + TV,Console,,0.538
+Jeu vidéo,Changement climatique,Cloud gaming sur console + TV,Transmission réseaux,,0.277
+Jeu vidéo,Changement climatique,Cloud gaming sur console + TV,Datacenters,,0.0576
+Jeu vidéo,Ressources minérales et métalliques,Jeu sur disque sur console + TV,TV,,0.247
+Jeu vidéo,Ressources minérales et métalliques,Jeu sur disque sur console + TV,Console,,0.753
+Jeu vidéo,Ressources minérales et métalliques,Jeu sur disque sur console + TV,Disque,,0.000328
+Jeu vidéo,Ressources minérales et métalliques,Jeu sur disque sur console + TV - en ligne,,,0.188
+Jeu vidéo,Ressources minérales et métalliques,Jeu téléchargé sur console + TV,,,0.19
+Jeu vidéo,Ressources minérales et métalliques,Jeu téléchargé sur ordinateur portable,,,0.0285
+Jeu vidéo,Ressources minérales et métalliques,Jeu téléchargé sur ordinateur fixe + écran,,,0.0734
+Jeu vidéo,Ressources minérales et métalliques,Cloud gaming sur box TV + TV,,,0.106
+Jeu vidéo,Ressources minérales et métalliques,Cloud gaming sur console + TV,,,0.229
+Jeu de société,Changement climatique,Jouer à un jeu de société (Dorfromantik),Assemblage,Printed paper,42.6
+Jeu de société,Changement climatique,Jouer à un jeu de société (Dorfromantik),Assemblage,Thermoforming sheet,14.25
+Jeu de société,Changement climatique,Jouer à un jeu de société (Dorfromantik),Assemblage,Laminating Linerboard,13.01
+Jeu de société,Changement climatique,Jouer à un jeu de société (Dorfromantik),Assemblage,Laminating box,7.62
+Jeu de société,Changement climatique,Jouer à un jeu de société (Dorfromantik),Assemblage,Wood Minifigure,0
+Jeu de société,Changement climatique,Jouer à un jeu de société (Dorfromantik),Assemblage,Shrink Wrapping,0.93
+Jeu de société,Changement climatique,Jouer à un jeu de société (Dorfromantik),Transport,"Transport, freight, lorry",11.39
+Jeu de société,Changement climatique,Jouer à un jeu de société (Dorfromantik),Transport,"Transport, freight, sea",6.05
+Jeu de société,Changement climatique,Jouer à un jeu de société (Dorfromantik),Fin de vie,Fin de vie,4.14
