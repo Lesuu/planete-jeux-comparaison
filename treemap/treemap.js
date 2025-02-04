@@ -54,8 +54,7 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
     let jv_data_metaux = conversionDonnees(jv_metaux, "Ressources minérales et métalliques")
 
     // Exécution de la fonction pour les données du jeu de société
-    let dataset_jds = conversionDonnees(jds_data, "Jeu de société");
-
+    let jds_data_changement_climatique = conversionDonnees(jds_data, "Changement climatique");
     // Dimensions
 
     const marge = {
@@ -65,13 +64,35 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
         gauche : "20px"
     } 
 
-    // Fonction pour créer les treemaps. On donne le dataset, la largeur, la hauteur
-    // Ainsi que la marge qui sépare les éléments entre eux
-    buildTreemap(jv_data_changement_climatique, 800, 850, marge)
+    let bg_icon = document.getElementById('bg-icon')
+    let vg_icon = document.getElementById("vg-icon")
 
-    buildTreemap(jv_data_metaux, 800, 850, marge)
+    // Bouton jeu de plateau
+    bg_icon.addEventListener("mouseover", function(){bg_icon.src = "assets/bg_color.png"})
+    bg_icon.addEventListener("mouseleave", function(){bg_icon.src = "assets/board_game.png"})
+    bg_icon.addEventListener("click",function(){
+        // Fonction pour créer les treemaps. On donne le dataset, la largeur, la hauteur
+        // Ainsi que la marge qui sépare les éléments entre eux
+        document.getElementById('chart').innerHTML = ''
+        buildTreemap(jds_data_changement_climatique, 1000, 600, marge)
+    })
 
-        //#region Treemaps
+
+    // Bouton jeu vidéo
+    vg_icon.addEventListener("mouseover", function(){vg_icon.src = "assets/vg_color.png"})
+    vg_icon.addEventListener("mouseleave", function(){vg_icon.src = "assets/video_game.png"})
+
+    vg_icon.addEventListener("click",function(){
+        // Fonction pour créer les treemaps. On donne le dataset, la largeur, la hauteur
+        // Ainsi que la marge qui sépare les éléments entre eux
+        document.getElementById('chart').innerHTML = ''
+        buildTreemap(jv_data_changement_climatique, 600, 600, marge)
+        buildTreemap(jv_data_metaux, 600, 600, marge)
+    })
+
+
+
+    //#region Treemaps
     function buildTreemap(data, width, height, marge){
         // This custom tiling function adapts the built-in binary tiling function
         // for the appropriate aspect ratio when the treemap is zoomed-in.
@@ -147,15 +168,15 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
                 .attr("clip-path", d => d.clipUid)
                 .attr("font-weight", d => d === root ? "bold" : null)
                 .selectAll("tspan")
-                .data(d => (d === root ? name(d) : d.data.name)
-                    .split(/(?=[A-Z][^A-Z])/g)
-                    .concat(format(d.value))
+                .data(d => [d === root ? name(d) : d.data.name]
+                //    .split(/(?=[A-Z][^A-Z])/g)
+                //    .concat(format(d.value))
                 )
                 .join("tspan")
                 .attr("x", 3)
                 .attr("y", (d, i, nodes) => `${(i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`)
-                .attr("fill-opacity", (d, i, nodes) => i === nodes.length - 1 ? 0.7 : null)
-                .attr("font-weight", (d, i, nodes) => i === nodes.length - 1 ? "normal" : null)
+                //.attr("fill-opacity", (d, i, nodes) => i === nodes.length - 1 ? 0.7 : null)
+                //.attr("font-weight", (d, i, nodes) => i === nodes.length - 1 ? "normal" : null)
                 .text(d => d);
 
             group.call(position, root);
@@ -205,30 +226,4 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
     }
 
         // Code par Observable (à vérifier)
-
-    //#region test dl
-    /*
-    // téléchargement des données converties (temporaire)
-    // Convert JSON to Blob and create a downloadable link
-    const blob = new Blob([JSON.stringify(dataset_jv, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    
-    // Create a visible download button
-    const button = document.createElement("button");
-    button.textContent = "Download JSON";
-    button.style.padding = "10px";
-    button.style.margin = "10px";
-    button.style.cursor = "pointer";
-
-    button.onclick = function () {
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "output.json";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    };
-
-    document.body.appendChild(button);        
-    */
 });     
