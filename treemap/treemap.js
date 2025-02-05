@@ -172,7 +172,7 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
                 .attr("cursor", "pointer")
                 .on("click", (event, d) => d === root ? zoomout(root) : zoomin(d));
 
-            // Défini le titre de la node
+            // Défini le titre de la node (quand on hover avec la souris)
             node.append("title")
                 .text(d => `${name(d)}`);
 
@@ -201,27 +201,34 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
                     // Le root est en gras
                     .attr("font-weight", d => d === root ? "bold" : null)
                     .attr("x", 3)
-                    .attr("y", 15)
+                    .attr("y", 12)
                     .text(d => d === root ? name(d) : d.data.name);
 
-                // Fonction textwrap (de d3-textwrap), censé wrap le texte naus ça cause des problèmes
-                textElements.each(function (d) {
-                    let nodeWidth
-                    let nodeHeight
+            // Add "↩" symbol below the root node's title
+            node.filter(d => d === root && d.parent)
+                .append("text")
+                .attr("x", 3)
+                .attr("y", 25)
+                .text("↩")
+            
+            // Fonction textwrap (de d3-textwrap), censé wrap le texte naus ça cause des problèmes
+            textElements.each(function (d) {
+                let nodeWidth
+                let nodeHeight
 
-                    // Si c'est le root, on lui donne toute la largeur du treemap
-                    if (d === root){
-                        nodeWidth = width; 
-                        nodeHeight = 30;
-                    } else {
-                        nodeWidth = Math.max(x(d.x1) - x(d.x0) - 6, 10);
-                        nodeHeight = Math.max(y(d.y1) - y(d.y0) - 6, 10)
-                    }
-                    d3.select(this).call(d3.textwrap().bounds({
-                        width: Math.max(nodeWidth - 6, 5), 
-                        height: Math.max(nodeHeight - 6, 5) 
-                    }).method("tspans"));
-                });
+                // Si c'est le root, on lui donne toute la largeur du treemap
+                if (d === root){
+                    nodeWidth = width; 
+                    nodeHeight = 1000;
+                } else {
+                    nodeWidth = Math.max(x(d.x1) - x(d.x0) - 6, 10);
+                    nodeHeight = Math.max(y(d.y1) - y(d.y0) - 6, 10)
+                }
+                d3.select(this).call(d3.textwrap().bounds({
+                    width: Math.max(nodeWidth - 6, 5), 
+                    height: Math.max(nodeHeight - 6, 5) 
+                }).method("tspans"));
+            });
 
             group.call(position, root);
         }
