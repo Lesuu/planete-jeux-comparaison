@@ -2,15 +2,19 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
 
     // #region Data processing
    
+    // const de styles (à nommer de manière plus explicite)
+    const couleur1 = "#077107";
+    const couleur2 = "#AA2B2B";
+    const couleur3 = "#BB7171";
 
     // Séparation des données : chaque dataset correspond à un treemap
     const jv_data = data.filter(d => d.treemap === "Jeu vidéo");
     const jds_data = data.filter(d => d.treemap === "Jeu de société");
 
-    const jv_changementClimatique = jv_data.filter (d => d.scenario === "Changement climatique")
-    const jv_metaux = jv_data.filter (d=> d.scenario === "Ressources minérales et métalliques")
+    const jv_changementClimatique = jv_data.filter (d => d.scenario === "Changement climatique");
+    const jv_metaux = jv_data.filter (d=> d.scenario === "Ressources minérales et métalliques");
     
-    const jds_changementClimatique = jds_data.filter (d=> d.scenario === "Changement climatique")
+    const jds_changementClimatique = jds_data.filter (d=> d.scenario === "Changement climatique");
 
     // Conversion des données de CSV à JSON, hierarchisées
     function conversionDonnees(data, title) {
@@ -150,8 +154,6 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
             .style("font", "10px sans-serif")
             .style("margin-right", marge.droite);
 
-
-
         // UID: fonction qui crée un unique ID pour plus tard l'assigner à chaque rectangle
         // (Pas sur de complètement comprendre ce que ça fait)
         function uid(name) {
@@ -183,7 +185,7 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
                 // Défini les couleurs: Si c'est le root, couleur 1. 
                 // Si c'est un parent, couleur 2. 
                 // Si le child n'a plus de children (leaf node), couleur 3.
-                .attr("fill", d => d === root ? " #077107 " : d.children ? "#AA2B2B" : "#BB7171")
+                .attr("fill", d => d === root ? couleur1 : d.children ? couleur2 : couleur3)
                 // Couleur de fond (entre les nodes)
                 .attr("stroke", background_color);
 
