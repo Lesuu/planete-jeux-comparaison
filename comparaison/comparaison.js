@@ -31,7 +31,7 @@ async function loadData() {
 
 // Initialisation de Kaplay
 kaplay({
-    background : [120,0,30],
+    background : [102,0,0],
     letterbox:true,
     width:1280,
     height:720,
@@ -173,7 +173,7 @@ async function main() {
     scene("questions", () => {
         // Couleur du background dépend du support choisi
         if (jv){
-            setBackground(120,0,30)
+            setBackground(102,0,0)
         } else {
             setBackground(0,100,0)
         }

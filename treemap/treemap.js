@@ -49,6 +49,8 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
 
     //#endregion
 
+    const background_color = getComputedStyle(document.body).backgroundColor
+
     // Exécution de la fonction pour les données du jeu vidéo
     let jv_data_changement_climatique = conversionDonnees(jv_changementClimatique, "Changement climatique");
     let jv_data_metaux = conversionDonnees(jv_metaux, "Ressources minérales et métalliques")
@@ -67,12 +69,21 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
     let bg_icon = document.getElementById('bg-icon')
     let vg_icon = document.getElementById("vg-icon")
 
+    let bg_toggle = false
+    let vg_toggle = false
     // Bouton jeu de plateau
     bg_icon.addEventListener("mouseover", function(){bg_icon.src = "assets/bg_color.png"})
-    bg_icon.addEventListener("mouseleave", function(){bg_icon.src = "assets/board_game.png"})
+    bg_icon.addEventListener("mouseleave", function(){
+        if (bg_toggle === false){
+            bg_icon.src = "assets/board_game.png"
+        }
+    })
     bg_icon.addEventListener("click",function(){
         // Fonction pour créer les treemaps. On donne le dataset, la largeur, la hauteur
         // Ainsi que la marge qui sépare les éléments entre eux
+        bg_toggle = true
+        vg_toggle = false
+        vg_icon.src = "assets/video_game.png"
         document.getElementById('chart').innerHTML = ''
         buildTreemap(jds_data_changement_climatique, 1000, 600, marge)
     })
@@ -80,11 +91,17 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
 
     // Bouton jeu vidéo
     vg_icon.addEventListener("mouseover", function(){vg_icon.src = "assets/vg_color.png"})
-    vg_icon.addEventListener("mouseleave", function(){vg_icon.src = "assets/video_game.png"})
-
+    vg_icon.addEventListener("mouseleave", function(){
+        if (vg_toggle === false){
+            vg_icon.src = "assets/video_game.png"
+        }
+    })
     vg_icon.addEventListener("click",function(){
         // Fonction pour créer les treemaps. On donne le dataset, la largeur, la hauteur
         // Ainsi que la marge qui sépare les éléments entre eux
+        bg_toggle = false
+        vg_toggle = true
+        bg_icon.src = "assets/board_game.png"
         document.getElementById('chart').innerHTML = ''
         buildTreemap(jv_data_changement_climatique, 600, 600, marge)
         buildTreemap(jv_data_metaux, 600, 600, marge)
@@ -94,8 +111,8 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
 
     //#region Treemaps
     function buildTreemap(data, width, height, marge){
-        // This custom tiling function adapts the built-in binary tiling function
-        // for the appropriate aspect ratio when the treemap is zoomed-in.
+        // Adapte la fonction de tiling binaire de d3 pour correspondre à 
+        // l'aspect ration correct quand le treemap est zoomé.
         function tile(node, x0, y0, x1, y1) {
             d3.treemapBinary(node, 0, 0, width, height);
             for (const child of node.children) {
@@ -106,21 +123,26 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
             }
         }
 
-        // Compute the layout.
+        // Hierarchisation des données
         const hierarchy = d3.hierarchy(data)
             .sum(d => d.value)
-            .sort((a, b) => b.value - a.value);
+        // Tri par grandeur (pas utilisé)   
+        //    .sort((a, b) => b.value - a.value);
+        // Tri par ordre alphabétique
+            .sort((a, b) => a.data.name.localeCompare(b.data.name))
         const root = d3.treemap().tile(tile)(hierarchy);
 
         // Create the scales.
         const x = d3.scaleLinear().rangeRound([0, width]);
         const y = d3.scaleLinear().rangeRound([0, height]);
 
-        // Formatting utilities.
+        // Formatage
+        // Combien de digit on garde après la virgule (inutilisé pcq on cache les chiffres pour l'instant)
         const format = d3.format(".4f");
+        // Calcule le nom du root (Root/Category/Subcategory)
         const name = d => d.ancestors().reverse().map(d => d.data.name).join("/");
 
-        // Create the SVG container.
+        // Création du SVG
         const svg = d3.select("#chart")
             .append("svg")
             .attr("viewBox", [0.5, -30.5, width, height + 30])
@@ -130,12 +152,18 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
             .style("font", "10px sans-serif")
             .style("margin-right", marge.droite);
 
-        // UID
+        const image_width = 200
+        const image_height = 300
+
+
+
+        // UID: fonction qui crée un unique ID pour plus tard l'assigner à chaque rectangle
+        // (Pas sur de complètement comprendre ce que ça fait)
         function uid(name) {
-            return `${name}-${Math.random().toString(36).substr(2, 9)}`;
+            return `${name}-${Math.random().toString(36).slice(2, 11)}`;
         }
 
-        // Display the root.
+        // Afficher le Root, en haut du treemap.
         let group = svg.append("g")
             .call(render, root);
 
@@ -149,36 +177,54 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
                 .attr("cursor", "pointer")
                 .on("click", (event, d) => d === root ? zoomout(root) : zoomin(d));
 
+            // Défini le titre de la node
             node.append("title")
                 .text(d => `${name(d)}`);
 
-                //\n${format(d.value)}
-
+            // Défini les rectangles
             node.append("rect")
+                // Attribue un ID unique à chaque node
                 .attr("id", d => (d.leafUid = uid("leaf")))
-                .attr("fill", d => d === root ? "#fff" : d.children ? "#ccc" : "#ddd")
-                .attr("stroke", "#fff");
+                // Défini les couleurs: Si c'est le root, couleur 1. 
+                // Si c'est un parent, couleur 2. 
+                // Si le child n'a plus de children (leaf node), couleur 3.
+                .attr("fill", d => d === root ? " #077107 " : d.children ? "#AA2B2B" : "#BB7171")
+                // Couleur de fond (entre les nodes)
+                .attr("stroke", background_color);
 
+            // Empèche le text de dépasser son rectangle
             node.append("clipPath")
+                // Attribution d'un UID pour chaque clipPath (qui contient le texte)
                 .attr("id", d => (d.clipUid = uid("clip")))
                 .append("use")
-                .attr("xlink:href", d => d.leafUid.href);
+                // Se rattache à l'UID de la node défini plus haut
+                .attr("xlink:href", d => d.leafUid);
 
             node.append("text")
-                .attr("clip-path", d => d.clipUid)
-                .attr("font-weight", d => d === root ? "bold" : null)
-                .selectAll("tspan")
-                .data(d => [d === root ? name(d) : d.data.name]
-                //    .split(/(?=[A-Z][^A-Z])/g)
-                //    .concat(format(d.value))
-                )
-                .join("tspan")
-                .attr("x", 3)
-                .attr("y", (d, i, nodes) => `${(i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`)
-                //.attr("fill-opacity", (d, i, nodes) => i === nodes.length - 1 ? 0.7 : null)
-                //.attr("font-weight", (d, i, nodes) => i === nodes.length - 1 ? "normal" : null)
-                .text(d => d);
-
+                    // On ajoute le texte dans le clipPath défini juste avant
+                    .attr("clip-path", d => d.clipUid)
+                    // Le root est en gras
+                    .attr("font-weight", d => d === root ? "bold" : null)
+                    // C'est ici que devrait s'appliquer la logique pour le text wrap mais j'y arrive pas
+                    .selectAll("tspan")
+                    
+                    .data(d => {
+                        const titleText = d === root ? name(d) : d.data.name
+                        if (d === root && d.parent === null){
+                            return [titleText]
+                        // On ajoute un symbole 'retour' quand on est pas complètement dézoomé
+                        } else if (d === root && d.parent != null) {
+                            return [titleText, "↩"]
+                        // Pour l'instant ça fait un retour à la ligne quand y'a un '+'
+                        } else {    
+                            return titleText.split(/(?=\+)/g)
+                        }
+                    })
+                    .join("tspan")
+                        // Défini la position du texte
+                        .attr("x", 3)
+                        .attr("y", (d, i, nodes) => `${(i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`)
+                        .text(d => d);
             group.call(position, root);
         }
 
