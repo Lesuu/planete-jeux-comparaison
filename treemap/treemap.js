@@ -56,7 +56,7 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
     let jv_data_metaux = conversionDonnees(jv_metaux, "Ressources minérales et métalliques")
 
     // Exécution de la fonction pour les données du jeu de société
-    let jds_data_changement_climatique = conversionDonnees(jds_data, "Changement climatique");
+    let jds_data_changement_climatique = conversionDonnees(jds_changementClimatique, "Changement climatique");
     // Dimensions
 
     const marge = {
@@ -137,8 +137,6 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
         const y = d3.scaleLinear().rangeRound([0, height]);
 
         // Formatage
-        // Combien de digit on garde après la virgule (inutilisé pcq on cache les chiffres pour l'instant)
-        const format = d3.format(".4f");
         // Calcule le nom du root (Root/Category/Subcategory)
         const name = d => d.ancestors().reverse().map(d => d.data.name).join("/");
 
@@ -151,9 +149,6 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
             .attr("style", "max-width: 100%; height: auto;")
             .style("font", "10px sans-serif")
             .style("margin-right", marge.droite);
-
-        const image_width = 200
-        const image_height = 300
 
 
 
@@ -200,33 +195,37 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
                 // Se rattache à l'UID de la node défini plus haut
                 .attr("xlink:href", d => d.leafUid);
 
-            node.append("text")
+            const textElements = node.append("text")
                     // On ajoute le texte dans le clipPath défini juste avant
                     .attr("clip-path", d => d.clipUid)
                     // Le root est en gras
                     .attr("font-weight", d => d === root ? "bold" : null)
-                    // C'est ici que devrait s'appliquer la logique pour le text wrap mais j'y arrive pas
-                    .selectAll("tspan")
-                    
-                    .data(d => {
-                        const titleText = d === root ? name(d) : d.data.name
-                        if (d === root && d.parent === null){
-                            return [titleText]
-                        // On ajoute un symbole 'retour' quand on est pas complètement dézoomé
-                        } else if (d === root && d.parent != null) {
-                            return [titleText, "↩"]
-                        // Pour l'instant ça fait un retour à la ligne quand y'a un '+'
-                        } else {    
-                            return titleText.split(/(?=\+)/g)
-                        }
-                    })
-                    .join("tspan")
-                        // Défini la position du texte
-                        .attr("x", 3)
-                        .attr("y", (d, i, nodes) => `${(i === nodes.length - 1) * 0.3 + 1.1 + i * 0.9}em`)
-                        .text(d => d);
+                    .attr("x", 3)
+                    .attr("y", 15)
+                    .text(d => d === root ? name(d) : d.data.name);
+
+                // Fonction textwrap (de d3-textwrap), censé wrap le texte naus ça cause des problèmes
+                textElements.each(function (d) {
+                    let nodeWidth
+                    let nodeHeight
+
+                    // Si c'est le root, on lui donne toute la largeur du treemap
+                    if (d === root){
+                        nodeWidth = width; 
+                        nodeHeight = 30;
+                    } else {
+                        nodeWidth = Math.max(x(d.x1) - x(d.x0) - 6, 10);
+                        nodeHeight = Math.max(y(d.y1) - y(d.y0) - 6, 10)
+                    }
+                    d3.select(this).call(d3.textwrap().bounds({
+                        width: Math.max(nodeWidth - 6, 5), 
+                        height: Math.max(nodeHeight - 6, 5) 
+                    }).method("tspans"));
+                });
+
             group.call(position, root);
         }
+        
 
         function position(group, root) {
             group.selectAll("g")
@@ -251,6 +250,19 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
                 .call(t => group1.transition(t)
                     .attrTween("opacity", () => d3.interpolate(0, 1))
                     .call(position, d));
+            
+            // On recalcule le textwrap.
+            // Sinon, il calcule avec les tailles des nodes minuscules du début de l'animation
+            group1.selectAll("text")
+            .each(function(d) {
+                const nodeWidth = x(d.x1) - x(d.x0);
+                const nodeHeight = y(d.y1) - y(d.y0);
+                
+                d3.select(this).call(d3.textwrap().bounds({
+                    width: Math.max(nodeWidth - 6, 10),
+                    height: Math.max(nodeHeight - 6, 10)
+                }).method("tspans"));
+            });
         }
 
         // When zooming out, draw the old nodes on top, and fade them out.
@@ -268,8 +280,20 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
                     .call(position, d))
                 .call(t => group1.transition(t)
                     .call(position, d.parent));
+
+            // On recalcule le textwrap pour qu'il wrap correctement pendant un dézoom.
+            group1.selectAll("text")
+            .each(function(d) {
+                const nodeWidth = x(d.x1) - x(d.x0);
+                const nodeHeight = y(d.y1) - y(d.y0);
+                
+                d3.select(this).call(d3.textwrap().bounds({
+                    width: Math.max(nodeWidth - 6, 10),
+                    height: Math.max(nodeHeight - 6, 10)
+                }).method("tspans"));
+            });
+
         }
     }
-
-        // Code par Observable (à vérifier)
+    // Code original: https://observablehq.com/@d3/zoomable-treemap par Mike Bostock
 });     
