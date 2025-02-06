@@ -62,11 +62,11 @@ d3.csv(lien_français).then(function(data){
         }
     });
     bg_icon.addEventListener("click", function(){
-        // Fonction pour créer les treemaps. On donne le dataset, la largeur, la hauteur
-        // Ainsi que la marge qui sépare les éléments entre eux
         bg_toggle = true;
         vg_toggle = false;
         vg_icon.src = vg_icon_path;
+        document.getElementById('chart').innerHTML = '';
+        genereJeuDeSociete(jds_changementClimatique, contribution_choisie, marge)
     });
 
     // Bouton jeu vidéo
@@ -80,6 +80,8 @@ d3.csv(lien_français).then(function(data){
         bg_toggle = false;
         vg_toggle = true;
         bg_icon.src = bg_icon_path;
+        document.getElementById('chart').innerHTML = '';
+        genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, marge);
     });
 
     // Checkboxes pour la contribution
@@ -92,6 +94,7 @@ d3.csv(lien_français).then(function(data){
     let contribution_choisie = "par équipement";
 
     checkbox_equipement.addEventListener("click", function(){
+        document.getElementById('chart').innerHTML = '';
         contribution_choisie = "par équipement";
         equipement_toggle = true;
         checkbox_equipement.src = checkbox_full;
@@ -99,9 +102,15 @@ d3.csv(lien_français).then(function(data){
             checkbox_cycle.src = checkbox_empty;
             cycle_toggle = false;
         }
+        if (vg_toggle){
+            genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, marge)
+        } else if (bg_toggle){
+            genereJeuDeSociete(jds_changementClimatique, contribution_choisie, marge)
+        }
     });
 
     checkbox_cycle.addEventListener("click", function(){
+        document.getElementById('chart').innerHTML = '';
         contribution_choisie = "par étape de cycle de vie";
         cycle_toggle = true;
         checkbox_cycle.src = checkbox_full;
@@ -109,40 +118,44 @@ d3.csv(lien_français).then(function(data){
             checkbox_equipement.src = checkbox_empty;
             equipement_toggle = false;
         }
-    });
-
-    let go_button = document.getElementById('go-button');
-    go_button.addEventListener("click", function(){
-        document.getElementById('chart').innerHTML = '';
-        if (bg_toggle){
-            // Tri selon la contribution
-            jds_data_changement_climatique = jds_changementClimatique.filter(d => d.contribution === contribution_choisie);
-
-            // Conversion des données de CSV à JSON, hierarchisées
-            let jds_final_data_changement_climatique = conversionDonnees(jds_data_changement_climatique, `Changement climatique - ${contribution_choisie}`);
-
-            // Fonction pour créer les treemaps. On donne le dataset, la largeur, la hauteur
-            // Ainsi que la marge qui sépare les éléments entre eux
-            buildTreemap(jds_final_data_changement_climatique, 1000, 600, marge);
-            
-        } else if (vg_toggle){
-            // Tri selon la contribution
-            jv_data_changement_climatique = jv_changementClimatique.filter(d => d.contribution === contribution_choisie);
-            jv_data_metaux = jv_metaux.filter(d => d.contribution === contribution_choisie);
-            jv_data_particules_fines = jv_particulesFines.filter(d => d.contribution === contribution_choisie);
-
-            // Conversion des données de CSV à JSON, hierarchisées
-            let jv_final_data_changement_climatique = conversionDonnees(jv_data_changement_climatique, `Changement climatique - ${contribution_choisie}`);
-            let jv_final_data_metaux = conversionDonnees(jv_data_metaux, `Resources minérales et métalliques - ${contribution_choisie}`);
-            let jv_final_data_particules_fines = conversionDonnees(jv_data_particules_fines, `Particules fines - ${contribution_choisie}`);
-
-            // Fonction pour créer les treemaps. On donne le dataset, la largeur, la hauteur
-            // Ainsi que la marge qui sépare les éléments entre eux
-            buildTreemap(jv_final_data_changement_climatique, 600, 600, marge);
-            buildTreemap(jv_final_data_metaux, 600, 600, marge);
-            buildTreemap(jv_final_data_particules_fines, 600, 600, marge);
+        if (vg_toggle){
+            genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, marge)
+        } else if (bg_toggle){
+            genereJeuDeSociete(jds_changementClimatique, contribution_choisie, marge)
         }
     });
+
+    function genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, marge){
+        // Tri selon la contribution
+        jv_data_changement_climatique = jv_changementClimatique.filter(d => d.contribution === contribution_choisie);
+        jv_data_metaux = jv_metaux.filter(d => d.contribution === contribution_choisie);
+        jv_data_particules_fines = jv_particulesFines.filter(d => d.contribution === contribution_choisie);
+
+        // Conversion des données de CSV à JSON, hierarchisées
+        let jv_final_data_changement_climatique = conversionDonnees(jv_data_changement_climatique, `Changement climatique - ${contribution_choisie}`);
+        let jv_final_data_metaux = conversionDonnees(jv_data_metaux, `Resources minérales et métalliques - ${contribution_choisie}`);
+        let jv_final_data_particules_fines = conversionDonnees(jv_data_particules_fines, `Particules fines - ${contribution_choisie}`);
+
+        // Fonction pour créer les treemaps. On donne le dataset, la largeur, la hauteur
+        // Ainsi que la marge qui sépare les éléments entre eux
+        buildTreemap(jv_final_data_changement_climatique, 600, 600, marge);
+        buildTreemap(jv_final_data_metaux, 600, 600, marge);
+        buildTreemap(jv_final_data_particules_fines, 600, 600, marge);
+    }
+
+    function genereJeuDeSociete(jds_changementClimatique, contribution_choisie, marge){
+        // Tri selon la contribution
+        jds_data_changement_climatique = jds_changementClimatique.filter(d => d.contribution === contribution_choisie);
+
+        // Conversion des données de CSV à JSON, hierarchisées
+        let jds_final_data_changement_climatique = conversionDonnees(jds_data_changement_climatique, `Changement climatique - ${contribution_choisie}`);
+
+        // Fonction pour créer les treemaps. On donne le dataset, la largeur, la hauteur
+        // Ainsi que la marge qui sépare les éléments entre eux
+        buildTreemap(jds_final_data_changement_climatique, 1000, 600, marge);
+    }
+    
+
     //#endregion 
 
     //#region Conversion 
