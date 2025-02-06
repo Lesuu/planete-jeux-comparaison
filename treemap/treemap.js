@@ -52,18 +52,18 @@ d3.csv(lien_français).then(function(data){
     let bg_icon = document.getElementById('bg-icon');
     let vg_icon = document.getElementById("vg-icon");
 
-    let bg_toggle = false;
-    let vg_toggle = false;
+    let jds_toggle = false;
+    let jv_toggle = false;
     // Bouton jeu de plateau
     bg_icon.addEventListener("mouseover", function(){ bg_icon.src = bg_color_path; });
     bg_icon.addEventListener("mouseleave", function(){
-        if (bg_toggle === false){
+        if (jds_toggle === false){
             bg_icon.src = bg_icon_path;
         }
     });
     bg_icon.addEventListener("click", function(){
-        bg_toggle = true;
-        vg_toggle = false;
+        jds_toggle = true;
+        jv_toggle = false;
         vg_icon.src = vg_icon_path;
         document.getElementById('chart').innerHTML = '';
         genereJeuDeSociete(jds_changementClimatique, contribution_choisie, marge)
@@ -72,13 +72,13 @@ d3.csv(lien_français).then(function(data){
     // Bouton jeu vidéo
     vg_icon.addEventListener("mouseover", function(){ vg_icon.src = vg_color_path; });
     vg_icon.addEventListener("mouseleave", function(){
-        if (vg_toggle === false){
+        if (jv_toggle === false){
             vg_icon.src = vg_icon_path;
         }
     });
     vg_icon.addEventListener("click", function(){
-        bg_toggle = false;
-        vg_toggle = true;
+        jds_toggle = false;
+        jv_toggle = true;
         bg_icon.src = bg_icon_path;
         document.getElementById('chart').innerHTML = '';
         genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, marge);
@@ -102,9 +102,9 @@ d3.csv(lien_français).then(function(data){
             checkbox_cycle.src = checkbox_empty;
             cycle_toggle = false;
         }
-        if (vg_toggle){
+        if (jv_toggle){
             genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, marge)
-        } else if (bg_toggle){
+        } else if (jds_toggle){
             genereJeuDeSociete(jds_changementClimatique, contribution_choisie, marge)
         }
     });
@@ -118,9 +118,9 @@ d3.csv(lien_français).then(function(data){
             checkbox_equipement.src = checkbox_empty;
             equipement_toggle = false;
         }
-        if (vg_toggle){
+        if (jv_toggle){
             genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, marge)
-        } else if (bg_toggle){
+        } else if (jds_toggle){
             genereJeuDeSociete(jds_changementClimatique, contribution_choisie, marge)
         }
     });
@@ -313,30 +313,30 @@ d3.csv(lien_français).then(function(data){
                 .text("↩");
 
             // Fonction textwrap (de d3-textwrap), censé wrap le texte mais ça cause des problèmes
-            function applyTextWrap(selection, root, width, x, y) {
-                // Comme ça ne fonctionne pas bien, j'enlève le textwrap pour l'instant
-                return;
-                selection.each(function (d) {
-                    let nodeWidth;
-                    let nodeHeight;
+            // function applyTextWrap(selection, root, width, x, y) {
+            //     // Comme ça ne fonctionne pas bien, j'enlève le textwrap pour l'instant
+            //     return;
+            //     selection.each(function (d) {
+            //         let nodeWidth;
+            //         let nodeHeight;
             
-                    // Si c'est le root, on lui donne toute la largeur du treemap
-                    if (d === root) {
-                        nodeWidth = width;
-                        nodeHeight = 30;
-                    } else {
-                        nodeWidth = Math.max(x(d.x1) - x(d.x0) - 6, 10);
-                        nodeHeight = Math.max(y(d.y1) - y(d.y0) - 6, 10);
-                    }
-                    d3.select(this).call(d3.textwrap().bounds({
-                        width: Math.max(nodeWidth - 6, 5),
-                        height: Math.max(nodeHeight - 6, 5)
-                    }).method("tspans"));
-                });
-            }
+            //         // Si c'est le root, on lui donne toute la largeur du treemap
+            //         if (d === root) {
+            //             nodeWidth = width;
+            //             nodeHeight = 30;
+            //         } else {
+            //             nodeWidth = Math.max(x(d.x1) - x(d.x0) - 6, 10);
+            //             nodeHeight = Math.max(y(d.y1) - y(d.y0) - 6, 10);
+            //         }
+            //         d3.select(this).call(d3.textwrap().bounds({
+            //             width: Math.max(nodeWidth - 6, 5),
+            //             height: Math.max(nodeHeight - 6, 5)
+            //         }).method("tspans"));
+            //     });
+            // }
             
             // On appelle la fonction
-            applyTextWrap(textElements, root, width, x, y);
+            //applyTextWrap(textElements, root, width, x, y);
             group.call(position, root);
         }
 
@@ -366,7 +366,7 @@ d3.csv(lien_français).then(function(data){
             
             // On recalcule le textwrap.
             // Sinon, il calcule avec les tailles des nodes minuscules du début de l'animation
-            applyTextWrap(group1.selectAll("text"), root, width, x, y);
+            //applyTextWrap(group1.selectAll("text"), root, width, x, y);
         }
 
         // When zooming out, draw the old nodes on top, and fade them out.
@@ -386,7 +386,7 @@ d3.csv(lien_français).then(function(data){
                     .call(position, d.parent));
 
             // On recalcule le textwrap pour qu'il wrap correctement pendant un dézoom.
-            applyTextWrap(group1.selectAll("text"), root, width, x, y);
+            //applyTextWrap(group1.selectAll("text"), root, width, x, y);
         }
     }
     //#endregion
