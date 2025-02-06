@@ -7,10 +7,10 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
     const jv_data = data.filter(d => d.treemap === "Jeu vidéo");
     const jds_data = data.filter(d => d.treemap === "Jeu de société");
 
-    const jv_changementClimatique = jv_data.filter (d => d.scenario === "Changement climatique")
-    const jv_metaux = jv_data.filter (d=> d.scenario === "Ressources minérales et métalliques")
+    const jv_changementClimatique = jv_data.filter (d => d.scenario === "Changement climatique");
+    const jv_metaux = jv_data.filter (d=> d.scenario === "Ressources minérales et métalliques");
     
-    const jds_changementClimatique = jds_data.filter (d=> d.scenario === "Changement climatique")
+    const jds_changementClimatique = jds_data.filter (d=> d.scenario === "Changement climatique");
 
     // Conversion des données de CSV à JSON, hierarchisées
     function conversionDonnees(data, title) {
@@ -19,7 +19,7 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
         // On progresse à travers les différents étages
         data.forEach(row => {
             let levels = ["etage_1", "etage_2", "etage_3"];
-            let value = row.case
+            let value = row.case;
 
             let etageActuel = root;
 
@@ -49,11 +49,11 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
 
     //#endregion
 
-    const background_color = getComputedStyle(document.body).backgroundColor
+    const background_color = getComputedStyle(document.body).backgroundColor;
 
     // Exécution de la fonction pour les données du jeu vidéo
     let jv_data_changement_climatique = conversionDonnees(jv_changementClimatique, "Changement climatique");
-    let jv_data_metaux = conversionDonnees(jv_metaux, "Ressources minérales et métalliques")
+    let jv_data_metaux = conversionDonnees(jv_metaux, "Ressources minérales et métalliques");
 
     // Exécution de la fonction pour les données du jeu de société
     let jds_data_changement_climatique = conversionDonnees(jds_changementClimatique, "Changement climatique");
@@ -64,37 +64,37 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
         basse : "20px",
         droite : "50px",
         gauche : "20px"
-    } 
+    };
 
-    let bg_icon = document.getElementById('bg-icon')
-    let vg_icon = document.getElementById("vg-icon")
+    let bg_icon = document.getElementById('bg-icon');
+    let vg_icon = document.getElementById("vg-icon");
 
-    let bg_toggle = false
-    let vg_toggle = false
+    let bg_toggle = false;
+    let vg_toggle = false;
     // Bouton jeu de plateau
     bg_icon.addEventListener("mouseover", function(){bg_icon.src = "assets/bg_color.png"})
     bg_icon.addEventListener("mouseleave", function(){
         if (bg_toggle === false){
-            bg_icon.src = "assets/board_game.png"
-        }
-    })
+            bg_icon.src = "assets/board_game.png";
+        };
+    });
     bg_icon.addEventListener("click",function(){
         // Fonction pour créer les treemaps. On donne le dataset, la largeur, la hauteur
         // Ainsi que la marge qui sépare les éléments entre eux
-        bg_toggle = true
-        vg_toggle = false
-        vg_icon.src = "assets/video_game.png"
-        document.getElementById('chart').innerHTML = ''
-        buildTreemap(jds_data_changement_climatique, 1000, 600, marge)
-    })
+        bg_toggle = true;
+        vg_toggle = false;
+        vg_icon.src = "assets/video_game.png";
+        document.getElementById('chart').innerHTML = '';
+        buildTreemap(jds_data_changement_climatique, 1000, 600, marge);
+    });
 
 
     // Bouton jeu vidéo
-    vg_icon.addEventListener("mouseover", function(){vg_icon.src = "assets/vg_color.png"})
+    vg_icon.addEventListener("mouseover", function(){vg_icon.src = "assets/vg_color.png"});
     vg_icon.addEventListener("mouseleave", function(){
         if (vg_toggle === false){
             vg_icon.src = "assets/video_game.png"
-        }
+        };
     })
     vg_icon.addEventListener("click",function(){
         // Fonction pour créer les treemaps. On donne le dataset, la largeur, la hauteur
@@ -105,7 +105,7 @@ d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2R
         document.getElementById('chart').innerHTML = ''
         buildTreemap(jv_data_changement_climatique, 600, 600, marge)
         buildTreemap(jv_data_metaux, 600, 600, marge)
-    })
+    });
 
 
 
