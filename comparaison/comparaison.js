@@ -14,17 +14,31 @@ async function getCSV(url){
 }
 
 
-// Chargement des données dans la variable CSVdata & séparation des données jv/JdS
+// Chargement des données dans la variable CSVdata & séparation des données jv/JdS/autres
 let questions_JV = []
+let questions_JV_egales = []
+
 let questions_JdS = []
+let questions_JdS_egales = []
+
+let questions_autres = []
 async function loadData() {
     CSVdata = await getCSV('https://docs.google.com/spreadsheets/d/e/2PACX-1vQWBSQtcLt8CbTPN-TvHnrCt1h24GtoXiWxBCoo3nqbrTSqLuc93FeogkFsOrfS_qF-YDyhTk5E0aau/pub?output=csv');
-    console.log(CSVdata)
     for (let i = 0; i < CSVdata.length; i++) {
-        if (CSVdata[i].jeu_video == "TRUE") {
-            questions_JV.push(CSVdata[i]) 
-        } else {
-            questions_JdS.push(CSVdata[i])
+        if (CSVdata[i].autre === "oui"){
+            questions_autres.push(CSVdata[i])
+        } else if (CSVdata[i].jeu_video == "TRUE") {
+            if (CSVdata[i].egal === "oui"){
+                questions_JV_egales.push(CSVdata[i])
+            } else {
+                questions_JV.push(CSVdata[i]) 
+            }
+        } else if (CSVdata[i].jeu_video == "FALSE") {
+            if (CSVdata[i].egal === "oui"){
+                questions_JdS_egales.push(CSVdata[i])
+            } else {
+                questions_JdS.push(CSVdata[i])
+            }
         }
     }
 }
@@ -33,8 +47,8 @@ async function loadData() {
 kaplay({
     background : [102,0,0],
     letterbox:true,
-    width:1280,
-    height:720,
+    width:1920,
+    height:1080,
     stretch:true,
 })
 
@@ -42,15 +56,18 @@ main()
 async function main() {
     // On attend que les données soient chargées pour lancer le programme
     await loadData()
-
+    //#endregion
     //#region Asset loading
 
     loadFont("pixel", "assets/fonts/PixelOperator8-Bold.ttf")
+    loadFont("pixelthin", "assets/fonts/PixelOperator8.ttf")
 
     loadSprite("jv_icon", "assets/sprites/video_game.png")
     loadSprite("jv_color", "assets/sprites/vg_color.png")
     loadSprite("jds_icon", "assets/sprites/board_game.png")
     loadSprite("jds_color", "assets/sprites/bg_color.png")
+    loadSprite("button_next", "assets/sprites/button.png")
+    loadSprite("button", "assets/sprites/button_textless.png")
     loadSpriteAtlas("assets/sprites/cards.png", {
         "spades" : {
             "x": 0,
@@ -80,20 +97,25 @@ async function main() {
 
 
     const scaleValue = (width()/height())*1.3;
-
-    // #region Variables globales
+    //#endregion
+    // #region Variables
+    // Variables globales
     let jv 
     let question_number = 0
     let clicked = 0
     let categorie
+    let autres
+    let egales
     let score = 0
     let compteur_question 
     let jv_hover
     let jds_hover
+    let question = {}
 
-    // #region Constantes
+    // Constantes
     const nbr_questions = 10
-
+    const num_questions_scriptees = [4, 7, 9]
+    //#endregion
     // #region Ecran d'accueil
 
     scene("titleScreen", async () => {
@@ -153,6 +175,10 @@ async function main() {
                 if (jv_hover){
                     jv = true
                     categorie = [...questions_JV]
+                    autres = [...questions_autres]
+                    egales = [...questions_JV_egales]
+                    console.log("autres:", autres)
+                    console.log("categorie:", categorie)
                     go("questions")
                 }
             })
@@ -162,14 +188,17 @@ async function main() {
                 if (jds_hover){
                     jv = false
                     categorie = [...questions_JdS]
+                    autres = [...questions_autres]
+                    egales = [...questions_JdS_egales]
+                    console.log("autres:", autres)
                     go("questions")
                 }
             })
         })
     })
-
+    //#endregion
     // #region Questions
-    // Scène ou on pose les questions
+    // Scène où on pose les questions
     scene("questions", () => {
         // Couleur du background dépend du support choisi
         if (jv){
@@ -188,13 +217,12 @@ async function main() {
             }),
             pos(width() - width()/1.1, height()*0.04),
             anchor("center"),
-            "question_element"
         ])
 
 
         // Choisi une question aléatoire
         question_number = Math.floor(rand(categorie.length))
-        console.log(question_number)
+        console.log("Question number: " + question_number)
 
         // Caption de la question
         let caption = add([
@@ -206,7 +234,6 @@ async function main() {
             }),
             pos(width()/2, height()/6),
             anchor("center"),
-            "question_element"
         ])
 
         // Randomiser la position des cartes 
@@ -216,19 +243,85 @@ async function main() {
         // Choix aléatoire du type la carte
         let sprite1 = (randi() === 0 ? "spades" : "clubs")
         let sprite2 = (randi() === 0 ? "diamonds" : "hearts")
-        console.log(sprite1, sprite2)
+        console.log("Sprites:", sprite1, sprite2)
 
-        // Carte 2
+        //#region Logique question
+        function choixQuestion(){
+            console.log("compteur_question:", compteur_question)
+            // Si c'est la dernière scriptée, on prend une question 'égale'
+            if (compteur_question === Math.max(...num_questions_scriptees) && egales.length > 0){
+                let randnum = Math.floor(rand(egales.length))
+                return {
+                    scriptee : false,
+                    text1 : egales[randnum].description_activite1,
+                    text2 : egales[randnum].description_activite2,
+                    activite1_gagne : true,
+                    commentaire : egales[randnum].commentaire,
+                    categorie : "egal",
+                    egal : true
+                }
+            // Si c'est une question scriptée mais pas la dernière, on prend une question 'autre'
+            } else if (num_questions_scriptees.includes(compteur_question)){
+                let randnum = Math.floor(rand(autres.length))
+                if (autres[randnum].activite1_gagnante == "TRUE"){
+                    return {
+                        scriptee : true,
+                        text1 : autres[randnum].description_activite1,
+                        text2 : autres[randnum].description_activite2,
+                        activite1_gagne : true,
+                        commentaire : autres[randnum].commentaire,
+                        categorie : "autres"
+                    }
+                } else {
+                    return{
+                        scriptee : true,
+                        text1 : autres[randnum].description_activite1,
+                        text2 : autres[randnum].description_activite2,
+                        activite1_gagne : false,
+                        commentaire : autres[randnum].commentaire,
+                        categorie : "autres"
+                    }
+                }
+            // Sinon, on prend une question normale aléatoire
+            } else{
+                if (categorie[question_number].activite1_gagnante === "TRUE"){
+                    return{
+                        scriptee : false,
+                        text1 : categorie[question_number].description_activite1,
+                        text2 : categorie[question_number].description_activite2,
+                        activite1_gagne : true,
+                        commentaire : categorie[question_number].commentaire,
+                        categorie : "normal"
+                    }
+                } else if (categorie[question_number].activite1_gagnante === "FALSE"){
+                    return{
+                        scriptee : false,
+                        text1 : categorie[question_number].description_activite2,
+                        text2 : categorie[question_number].description_activite1,
+                        activite1_gagne : false,
+                        commentaire : categorie[question_number].commentaire,
+                        categorie : "normal"
+                    }
+                } 
+            }
+        }
+        //#endregion
+
+        //#region Cartes
+        // Carte 1
+
+        question = choixQuestion()
+        console.log("Question: "+question)
+
         let card1 = add([
             sprite(sprite1),
             pos(x_card1, height()/2),
             scale(scaleValue/1.5),  
             anchor("center"),
             area(),
-            "question_element"
         ])
-        let text1 = add([
-            text(categorie[question_number].description_activite1, {
+        add([
+            text(question.text1, {
                 font: "pixel",
                 size: 24,
                 width: 250,
@@ -238,7 +331,6 @@ async function main() {
             pos(card1.pos),
             anchor("center"),
             z("100"),
-            "question_element"
         ])
 
         // Carte 2
@@ -248,10 +340,9 @@ async function main() {
             scale(scaleValue/1.5),  
             anchor("center"),
             area(),
-            "question_element"
         ])
-        let text2 = add([
-            text(categorie[question_number].description_activite2, {
+        add([
+            text(question.text2, {
                 font: "pixel",
                 size: 22,
                 width: 250,
@@ -261,32 +352,37 @@ async function main() {
             pos(card2.pos),
             anchor("center"),
             z("100"),
-            "question_element"
         ])
 
         // Logique de quand on clique sur les cartes
         card1.onClick(() => {
             clicked = 1
-            go("results")
+            go("results", question)
         })
         card2.onClick(() => {
             clicked = 2
-            go("results")
+            go("results", question)
         })
     })
-        
-        
+        //#endregion
+ 
+    //#endregion
     // #region Réponse question
     // Scène qui affiche la réponse à la question
     let caption_result
-    scene("results", () =>{
-        if (((categorie[question_number].activite1_gagnante == "TRUE") && (clicked == 1)) || 
-                (categorie[question_number].activite1_gagnante == "FALSE") && (clicked == 2)){
+    scene("results", (question) =>{
+        if (((question.activite1_gagne) && (clicked == 1)) || 
+            (!question.activite1_gagne) && (clicked == 2)){
             caption_result = "C'est correct!"
             score += 100
+        } else if (question.egal){
+            caption_result = "... ça dépend!"
+            score += 100
         } else {
-            caption_result = "C'est faux."
+            caption_result = "C'est incorrect!"
         }
+
+
         let result = add([
             text(caption_result, {
                 font: "pixel",
@@ -294,12 +390,12 @@ async function main() {
                 width: 500,
                 align: "center"
             }),
-            pos(width()/2, height()/6),
+            pos(width()/2, height()/20),
             anchor("center"),
             "results_element"
         ])
         let commentaire = add([
-            text(categorie[question_number].commentaire, {
+            text(question.commentaire, {
                 font: "pixel",
                 size: 32,
                 width: 800,
@@ -311,42 +407,75 @@ async function main() {
         ])
         
         if ((categorie.length - 1 > 0) && (compteur_question < nbr_questions)){ 
-            let suivant = add([
-                text("Prochaine question",{
-                    font: "pixel",
-                    size: 32,
-                    align: "center"
-                }),
-                pos(width()/2, height()/1.2),
+            let suivant_bouton = add([
+                sprite("button_next"),
+                pos(width()/2, height()/1.1),
+                scale(scaleValue*1.5),  
                 anchor("center"),
                 area(),
-                "results_element"
             ])
             
-            onClick(() => {
-                console.log(categorie.length)
+
+            // let suivant_label = add([
+            //     text("Prochaine question",{
+            //         font: "pixel",
+            //         size: 32,
+            //         align: "center"
+            //     }),
+            //     pos(width()/2, height()/1.2),
+            //     anchor("center"),
+            //     area(),
+            //     "results_element"
+            // ])
+            
+            suivant_bouton.onClick(() => {
+                console.log("Categorie length: " + categorie.length)
                 categorie.splice(question_number, 1)
                 go("questions")
             })
         } else {
+            let suivant_bouton = add([
+                sprite("button"),
+                pos(width()/2, height()/1.1),
+                scale(scaleValue*1.5),  
+                anchor("center"),
+                area(),
+            ])
+
             let fin = add([
-                text("Résultats finaux",{
-                    font: "pixel",
+                text("RÉSULTATS",{
+                    font: "pixelthin",
                     size: 32,
                     align: "center"
                 }),
-                pos(width()/2, height()/1.2),
+                pos(suivant_bouton.pos),
                 anchor("center"),
                 area(),
+                z("100"),
                 "results_element"
             ])
+
+            let fin_shadow = add([
+                text("RÉSULTATS",{
+                    font: "pixelthin",
+                    size: 32,
+                    align: "center"
+                }),
+                color(93, 27, 27),
+                pos(suivant_bouton.pos.x + 5, suivant_bouton.pos.y + 5),
+                anchor("center"),
+                area(),
+                z("99"),
+                "results_element"
+            ])
+
             
-            onClick(() => {
+            suivant_bouton.onClick(() => {
                 go("finalResults", {score: score})
             })
         }
     })
-
+    //#endregion
     //#region Résultats finaux
     scene("finalResults", ({score}) =>{
         let scoreLabel = add([
@@ -359,22 +488,45 @@ async function main() {
             anchor("center"),
 
         ])
-        let quit = add([
-            text("Terminer",{
-                font: "pixel",
+        let suivant_bouton = add([
+            sprite("button"),
+            pos(width()/2, height()/1.1),
+            scale(scaleValue*1.5),  
+            anchor("center"),
+            area(),
+        ])
+
+        let fin = add([
+            text("TERMINER",{
+                font: "pixelthin",
                 size: 32,
                 align: "center"
             }),
-            pos(width()/2, height()/1.2),
+            pos(suivant_bouton.pos),
             anchor("center"),
-            area()
+            area(),
+            z("100"),
+            "results_element"
         ])
-        onClick(()=>{
+
+        let fin_shadow = add([
+            text("TERMINER",{
+                font: "pixelthin",
+                size: 32,
+                align: "center"
+            }),
+            color(93, 27, 27),
+            pos(suivant_bouton.pos.x + 5, suivant_bouton.pos.y + 5),
+            anchor("center"),
+            area(),
+            z("99"),
+            "results_element"
+        ])
+
+        suivant_bouton.onClick(()=>{
             go("titleScreen")
         })
     })
-
+    //#endregion
     go("titleScreen")
-
 }
-
