@@ -1,6 +1,7 @@
 //#region Chargement des données
 // Récupération du CSV 
 let CSVdata = []
+let metaText = []
 
 async function getCSV(url){
     const response = await fetch(url);
@@ -21,9 +22,21 @@ let questions_JV_egales = []
 let questions_JdS = []
 let questions_JdS_egales = []
 
+let translations = {}
+
 let questions_autres = []
 async function loadData() {
-    CSVdata = await getCSV('https://docs.google.com/spreadsheets/d/e/2PACX-1vQWBSQtcLt8CbTPN-TvHnrCt1h24GtoXiWxBCoo3nqbrTSqLuc93FeogkFsOrfS_qF-YDyhTk5E0aau/pub?output=csv');
+    CSVdata = await getCSV('https://docs.google.com/spreadsheets/d/e/2PACX-1vQWBSQtcLt8CbTPN-TvHnrCt1h24GtoXiWxBCoo3nqbrTSqLuc93FeogkFsOrfS_qF-YDyhTk5E0aau/pub?gid=0&single=true&output=csv');
+    metaText = await getCSV('https://docs.google.com/spreadsheets/d/e/2PACX-1vQWBSQtcLt8CbTPN-TvHnrCt1h24GtoXiWxBCoo3nqbrTSqLuc93FeogkFsOrfS_qF-YDyhTk5E0aau/pub?gid=826164962&single=true&output=csv')
+    
+    metaText.forEach(row=>{
+        translations[row.TEXTE] = {
+            fr: row.fr,
+            eng: row.eng
+        };
+    });
+    
+    // Séparation des données - pairings
     for (let i = 0; i < CSVdata.length; i++) {
         if (CSVdata[i].autre === "oui"){
             questions_autres.push(CSVdata[i])
@@ -115,8 +128,14 @@ async function main() {
     // Constantes
     const nbr_questions = 10
     const num_questions_scriptees = [4, 7, 9]
+    const langue = "fr"
     //#endregion
     // #region Ecran d'accueil
+
+    //Fonction pour la traduction des textes
+    function getTranslation(key){
+        return translations[key][langue]
+    }
 
     scene("titleScreen", async () => {
         // Réinitialisation du score
@@ -125,7 +144,7 @@ async function main() {
 
         // Elements UI
         let title = add([
-            text("Choisi une option !", {
+            text(getTranslation("OPTION"), {
                 font: "pixel",
                 size: 16
             }),
@@ -201,10 +220,13 @@ async function main() {
     // Scène où on pose les questions
     scene("questions", () => {
         // Couleur du background dépend du support choisi
+        let icon_sprite
         if (jv){
             setBackground(102,0,0)
+            icon_sprite = "jv_color"
         } else {
             setBackground(0,100,0)
+            icon_sprite = "jds_color" 
         }
     
         // Compteur de question
@@ -219,6 +241,12 @@ async function main() {
             anchor("center"),
         ])
 
+        let icon = add([
+            sprite(icon_sprite),
+            pos(width() - width()/1.21, height()*0.04),
+            anchor("center"),
+        ])
+
 
         // Choisi une question aléatoire
         question_number = Math.floor(rand(categorie.length))
@@ -226,8 +254,9 @@ async function main() {
 
         // Caption de la question
         let caption = add([
-            text("Quelle option a le moins d'impact sur le changement climatique ?", {
+            text(getTranslation("QUESTION"), {
                 font: "pixel",
+                lineSpacing: 10,
                 size: 32,
                 width: 1000,
                 align: "center"
@@ -373,13 +402,13 @@ async function main() {
     scene("results", (question) =>{
         if (((question.activite1_gagne) && (clicked == 1)) || 
             (!question.activite1_gagne) && (clicked == 2)){
-            caption_result = "C'est correct!"
+            caption_result = getTranslation("CORRECT")
             score += 100
         } else if (question.egal){
-            caption_result = "... ça dépend!"
+            caption_result = getTranslation("DEPENDS")
             score += 100
         } else {
-            caption_result = "C'est incorrect!"
+            caption_result = getTranslation("INCORRECT")
         }
 
 
@@ -397,8 +426,9 @@ async function main() {
         let commentaire = add([
             text(question.commentaire, {
                 font: "pixel",
+                lineSpacing: 15,
                 size: 32,
-                width: 800,
+                width: 1200,
                 align: "center"
             }),
             pos(width()/2, height()/2),
@@ -415,19 +445,6 @@ async function main() {
                 area(),
             ])
             
-
-            // let suivant_label = add([
-            //     text("Prochaine question",{
-            //         font: "pixel",
-            //         size: 32,
-            //         align: "center"
-            //     }),
-            //     pos(width()/2, height()/1.2),
-            //     anchor("center"),
-            //     area(),
-            //     "results_element"
-            // ])
-            
             suivant_bouton.onClick(() => {
                 console.log("Categorie length: " + categorie.length)
                 categorie.splice(question_number, 1)
@@ -443,7 +460,7 @@ async function main() {
             ])
 
             let fin = add([
-                text("RÉSULTATS",{
+                text(getTranslation("RESULTATS"),{
                     font: "pixelthin",
                     size: 32,
                     align: "center"
@@ -456,7 +473,7 @@ async function main() {
             ])
 
             let fin_shadow = add([
-                text("RÉSULTATS",{
+                text(getTranslation("RESULTATS"),{
                     font: "pixelthin",
                     size: 32,
                     align: "center"
@@ -479,7 +496,7 @@ async function main() {
     //#region Résultats finaux
     scene("finalResults", ({score}) =>{
         let scoreLabel = add([
-            text(`Bravo! Tu as réalisé un score de ${score}.`,{
+            text(getTranslation("FINAL").replace("{score}", score),{
                 font: "pixel",
                 size: 32,
                 align: "center"
@@ -497,7 +514,7 @@ async function main() {
         ])
 
         let fin = add([
-            text("TERMINER",{
+            text(getTranslation("TERMINER"),{
                 font: "pixelthin",
                 size: 32,
                 align: "center"
@@ -510,7 +527,7 @@ async function main() {
         ])
 
         let fin_shadow = add([
-            text("TERMINER",{
+            text(getTranslation("TERMINER"),{
                 font: "pixelthin",
                 size: 32,
                 align: "center"
