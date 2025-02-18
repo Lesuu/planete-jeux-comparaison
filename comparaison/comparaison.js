@@ -146,10 +146,9 @@ async function main() {
         let title = add([
             text(getTranslation("OPTION"), {
                 font: "pixel",
-                size: 16
+                size: 32
             }),
             pos(width()/2 , height()/5),
-            scale(scaleValue),
             anchor("center")
         ])
         let jv_icon = add([
