@@ -267,7 +267,7 @@ async function main() {
 
         // Randomiser la position des cartes 
         let x_card1 = width() / (randi() + 1.5);
-        let x_card2 = width() / (x_card1 === width() / 1.5 ? 2.5 : 1.5);
+        let x_card2 = width() / (x_card1 === width() / 1.5 ? 3 : 1.5);
 
         // Choix aléatoire du type la carte
         let sprite1 = (randi() === 0 ? "spades" : "clubs")
@@ -344,8 +344,8 @@ async function main() {
 
         let card1 = add([
             sprite(sprite1),
-            pos(x_card1, height()/2),
-            scale(scaleValue/1.5),  
+            pos(x_card1, height()/1.8),
+            scale(scaleValue),  
             anchor("center"),
             area(),
         ])
@@ -353,7 +353,8 @@ async function main() {
             text(question.text1, {
                 font: "pixel",
                 size: 24,
-                width: 250,
+                width: 330,
+                lineSpacing : 10, 
                 align: "center"
             }),
             color(56, 71, 74),
@@ -365,16 +366,17 @@ async function main() {
         // Carte 2
         let card2 = add([
             sprite(sprite2),
-            pos(x_card2, height()/2),
-            scale(scaleValue/1.5),  
+            pos(x_card2, height()/1.8),
+            scale(scaleValue),  
             anchor("center"),
             area(),
         ])
         add([
             text(question.text2, {
                 font: "pixel",
-                size: 22,
-                width: 250,
+                size: 24,
+                width: 330,
+                lineSpacing : 10,
                 align: "center"
             }),
             color(56, 71, 74),
@@ -438,7 +440,7 @@ async function main() {
         
         if ((categorie.length - 1 > 0) && (compteur_question < nbr_questions)){ 
             let suivant_bouton = add([
-                sprite("button_next"),
+                sprite("button"),
                 pos(width()/2, height()/1.1),
                 scale(scaleValue*1.5),  
                 anchor("center"),
@@ -450,6 +452,38 @@ async function main() {
                 categorie.splice(question_number, 1)
                 go("questions")
             })
+
+            let suivant = add([
+                text(getTranslation("SUIVANT"),{
+                    font: "pixelthin",
+                    width: 250,
+                    lineSpacing: 10,
+                    size: 32,
+                    align: "center"
+                }),
+                pos(suivant_bouton.pos),
+                anchor("center"),
+                area(),
+                z("100"),
+                "results_element"
+            ])
+
+            let suivant_shadow = add([
+                text(getTranslation("SUIVANT"),{
+                    font: "pixelthin",
+                    width: 250,
+                    lineSpacing: 10,
+                    size: 32,
+                    align: "center"
+                }),
+                color(93, 27, 27),
+                pos(suivant_bouton.pos.x + 4, suivant_bouton.pos.y + 4),
+                anchor("center"),
+                area(),
+                z("99"),
+                "results_element"            
+            ])
+
         } else {
             let suivant_bouton = add([
                 sprite("button"),
