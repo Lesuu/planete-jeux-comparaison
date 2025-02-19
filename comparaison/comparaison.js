@@ -59,10 +59,10 @@ async function loadData() {
 // Initialisation de Kaplay
 kaplay({
     background : [102,0,0],
-    letterbox:false,
+    letterbox:true,
     width:1920,
     height:1080,
-    stretch:false,
+    stretch:true,
 })
 
 main()
@@ -195,8 +195,6 @@ async function main() {
                     categorie = [...questions_JV]
                     autres = [...questions_autres]
                     egales = [...questions_JV_egales]
-                    console.log("autres:", autres)
-                    console.log("categorie:", categorie)
                     go("questions")
                 }
             })
@@ -208,7 +206,6 @@ async function main() {
                     categorie = [...questions_JdS]
                     autres = [...questions_autres]
                     egales = [...questions_JdS_egales]
-                    console.log("autres:", autres)
                     go("questions")
                 }
             })
@@ -240,6 +237,17 @@ async function main() {
             anchor("center"),
         ])
 
+        // Compteur de score
+        let score_caption = add([
+            text(`Score: ${score}`, {
+                font: "pixel",
+                size: 16
+            }),
+            pos(width()/1.1, height()*0.04),
+            anchor("center"),
+        ])
+
+        // Icone du support
         let icon = add([
             sprite(icon_sprite),
             pos(width() - width()/1.21, height()*0.04),
@@ -249,7 +257,6 @@ async function main() {
 
         // Choisi une question aléatoire
         question_number = Math.floor(rand(categorie.length))
-        console.log("Question number: " + question_number)
 
         // Caption de la question
         let caption = add([
@@ -271,11 +278,9 @@ async function main() {
         // Choix aléatoire du type la carte
         let sprite1 = (randi() === 0 ? "spades" : "clubs")
         let sprite2 = (randi() === 0 ? "diamonds" : "hearts")
-        console.log("Sprites:", sprite1, sprite2)
 
         //#region Logique question
         function choixQuestion(){
-            console.log("compteur_question:", compteur_question)
             // Si c'est la dernière scriptée, on prend une question 'égale'
             if (compteur_question === Math.max(...num_questions_scriptees) && egales.length > 0){
                 let randnum = Math.floor(rand(egales.length))
@@ -291,7 +296,7 @@ async function main() {
             // Si c'est une question scriptée mais pas la dernière, on prend une question 'autre'
             } else if (num_questions_scriptees.includes(compteur_question)){
                 let randnum = Math.floor(rand(autres.length))
-                if (autres[randnum].activite1_gagnante == "TRUE"){
+                if (autres[randnum].activite1_gagnante === "TRUE"){
                     return {
                         scriptee : true,
                         text1 : autres[randnum].description_activite1,
@@ -324,8 +329,8 @@ async function main() {
                 } else if (categorie[question_number].activite1_gagnante === "FALSE"){
                     return{
                         scriptee : false,
-                        text1 : categorie[question_number].description_activite2,
-                        text2 : categorie[question_number].description_activite1,
+                        text1 : categorie[question_number].description_activite1,
+                        text2 : categorie[question_number].description_activite2,
                         activite1_gagne : false,
                         commentaire : categorie[question_number].commentaire,
                         categorie : "normal"
@@ -339,16 +344,29 @@ async function main() {
         // Carte 1
 
         question = choixQuestion()
-        console.log("Question: "+question)
 
         let card1 = add([
             sprite(sprite1),
-            pos(x_card1, height()/1.8),
+            pos(x_card1, height()*1.2),
             scale(scaleValue),  
             anchor("center"),
             area(),
+            z(50),
+            animate(),
+            "card1"
         ])
-        add([
+        let card1_shadow = add([
+            sprite(sprite1),
+            color(0,0,0),
+            opacity(0.4),
+            pos(x_card1 + 20, height()*1.2),
+            scale(scaleValue),  
+            anchor("center"),
+            area(),
+            animate(),
+            "card1"
+        ])
+        let card1_text = add([
             text(question.text1, {
                 font: "pixel",
                 size: 24,
@@ -365,7 +383,7 @@ async function main() {
         // Carte 2
         let card2 = add([
             sprite(sprite2),
-            pos(x_card2, height()/1.8),
+            pos(x_card2, height()*1.3),
             scale(scaleValue),  
             anchor("center"),
             area(),
@@ -377,14 +395,14 @@ async function main() {
             sprite(sprite2),
             color(0,0,0),
             opacity(0.4),
-            pos(x_card2 + 20, height()/1.8 + 20),
+            pos(x_card2 + 20, height()*1.3),
             scale(scaleValue),  
             anchor("center"),
             area(),
             animate(),
             "card2"
         ])
-        add([
+        let card2_text = add([
             text(question.text2, {
                 font: "pixel",
                 size: 24,
@@ -400,18 +418,104 @@ async function main() {
             "card2"
         ])
 
+        // Tween!!
+        // Carte 1
+        tween(
+            card1.pos,
+            vec2(x_card1, height()/1.8),
+            1,
+            (val) => card1.pos = val,
+            easings.easeOutQuad
+        );
+        tween(
+            card1_shadow.pos,
+            vec2(x_card1 + 20, height()/1.8 + 20),
+            1,
+            (val) => card1_shadow.pos = val,
+            easings.easeOutQuad
+        );
+        tween(
+            card1_text.pos,
+            vec2(x_card1, height()/1.8),
+            1,
+            (val) => card1_text.pos = val,
+            easings.easeOutQuad
+        )
+
+        // Carte 2
+        wait(0.5, ()=>{
+            tween(
+                card2.pos,
+                vec2(x_card2, height()/1.8),
+                1,
+                (val) => card2.pos = val,
+                easings.easeOutQuad
+            );
+            tween(
+                card2_shadow.pos,
+                vec2(x_card2 + 20, height()/1.8 + 20),
+                1,
+                (val) => card2_shadow.pos = val,
+                easings.easeOutQuad
+            );
+            tween(
+                card2_text.pos,
+                vec2(x_card2, height()/1.8),
+                1,
+                (val) => card2_text.pos = val,
+                easings.easeOutQuad
+            )
+        })
+        
+
         // Logique de quand on clique sur les cartes
         card1.onClick(() => {
+            let card1hover = true
             clicked = 1
-            //go("results", question)
-        })
+            card1.animate("scale", [        
+                vec2(scaleValue, scaleValue),
+                vec2(scaleValue * 1.2, scaleValue * 1.2),
+                vec2(scaleValue*1.1, scaleValue*1.1)], { 
+                duration: 0.3,
+                direction: "forward",
+                loops: 2
+            });
+            card1_shadow.animate("scale", [
+                vec2(scaleValue, scaleValue),
+                vec2(scaleValue * 1.2, scaleValue * 1.2),
+                vec2(scaleValue*1.1, scaleValue*1.1)], { 
+                duration: 0.3,
+                direction: "forward",
+                loops: 2
+            });
+            onMouseRelease(() => {
+                if (card1hover){
+                    wait(0.3, () =>{
+                        go("results", question)
+                        card1hover = false
+                    });
+                }
+            })
+            /*card1.onHoverEnd(() => {
+                card1hover = false
+                card1.animate("scale",
+                    [vec2(scaleValue, scaleValue)], {
+                    duration:0.2
+                });
+                card1_shadow.animate("scale",
+                    [vec2(scaleValue, scaleValue)], {
+                    duration:0.2
+                });
+            });*/
+        });
         card2.onClick(() => {
             clicked = 2
+            let card2hover = true
             card2.animate("scale", [        
                 vec2(scaleValue, scaleValue),
                 vec2(scaleValue * 1.2, scaleValue * 1.2),
                 vec2(scaleValue*1.1, scaleValue*1.1)], { 
-                duration: 0.5,
+                duration: 0.3,
                 direction: "forward",
                 loops: 2
             });
@@ -419,11 +523,27 @@ async function main() {
                 vec2(scaleValue, scaleValue),
                 vec2(scaleValue * 1.2, scaleValue * 1.2),
                 vec2(scaleValue*1.1, scaleValue*1.1)], { 
-                duration: 0.5,
+                duration: 0.3,
                 direction: "forward",
                 loops: 2
             });
-            //go("results", question)
+            onMouseRelease(() => {
+                wait(0.3, () =>{
+                    go("results", question)
+                    card2hover = false
+                });
+            })
+            /*card2.onHoverEnd(() => {
+                card2hover = false
+                card2.animate("scale",
+                    [vec2(scaleValue, scaleValue)], {
+                    duration:0.2
+                });
+                card2_shadow.animate("scale",
+                    [vec2(scaleValue, scaleValue)], {
+                    duration:0.2
+                });
+            });*/
         })
     })
         //#endregion
@@ -433,17 +553,55 @@ async function main() {
     // Scène qui affiche la réponse à la question
     let caption_result
     scene("results", (question) =>{
-        if (((question.activite1_gagne) && (clicked == 1)) || 
-            (!question.activite1_gagne) && (clicked == 2)){
+        console.log("clicked: " + clicked)
+        if (((question.activite1_gagne) && (clicked == 1)) 
+            || (!question.activite1_gagne) && (clicked == 2)
+        ){
             caption_result = getTranslation("CORRECT")
             score += 100
+            console.log(question, score)
         } else if (question.egal){
             caption_result = getTranslation("DEPENDS")
             score += 100
+            console.log(question, score)
         } else {
+            console.log(question, score)
             caption_result = getTranslation("INCORRECT")
         }
 
+        let icon_sprite
+        if (jv){
+            icon_sprite = "jv_color"
+        } else {
+            icon_sprite = "jds_color" 
+        }
+
+        // Afficher le score
+        let score_caption = add([
+            text(`Score: ${score}`, {
+                font: "pixel",
+                size: 16
+            }),
+            pos(width()/1.1, height()*0.04),
+            anchor("center"),
+        ])
+
+        // Afficher le compteur de question
+        let compteur_caption = add([
+            text(`Question ${compteur_question}/${nbr_questions}`, {
+                font: "pixel",
+                size: 16
+            }),
+            pos(width() - width()/1.1, height()*0.04),
+            anchor("center"),
+        ])
+
+        // Icone du support
+        let icon = add([
+            sprite(icon_sprite),
+            pos(width() - width()/1.21, height()*0.04),
+            anchor("center"),
+        ])
 
         let result = add([
             text(caption_result, {
@@ -479,7 +637,6 @@ async function main() {
             ])
             
             suivant_bouton.onClick(() => {
-                console.log("Categorie length: " + categorie.length)
                 categorie.splice(question_number, 1)
                 go("questions")
             })
