@@ -59,10 +59,10 @@ async function loadData() {
 // Initialisation de Kaplay
 kaplay({
     background : [102,0,0],
-    letterbox:true,
+    letterbox:false,
     width:1920,
     height:1080,
-    stretch:true,
+    stretch:false,
 })
 
 main()
@@ -369,6 +369,20 @@ async function main() {
             scale(scaleValue),  
             anchor("center"),
             area(),
+            animate(),
+            z("50"),
+            "card2"
+        ])
+        let card2_shadow = add([
+            sprite(sprite2),
+            color(0,0,0),
+            opacity(0.4),
+            pos(x_card2 + 20, height()/1.8 + 20),
+            scale(scaleValue),  
+            anchor("center"),
+            area(),
+            animate(),
+            "card2"
         ])
         add([
             text(question.text2, {
@@ -382,16 +396,34 @@ async function main() {
             pos(card2.pos),
             anchor("center"),
             z("100"),
+            animate(),
+            "card2"
         ])
 
         // Logique de quand on clique sur les cartes
         card1.onClick(() => {
             clicked = 1
-            go("results", question)
+            //go("results", question)
         })
         card2.onClick(() => {
             clicked = 2
-            go("results", question)
+            card2.animate("scale", [        
+                vec2(scaleValue, scaleValue),
+                vec2(scaleValue * 1.2, scaleValue * 1.2),
+                vec2(scaleValue*1.1, scaleValue*1.1)], { 
+                duration: 0.5,
+                direction: "forward",
+                loops: 2
+            });
+            card2_shadow.animate("scale", [
+                vec2(scaleValue, scaleValue),
+                vec2(scaleValue * 1.2, scaleValue * 1.2),
+                vec2(scaleValue*1.1, scaleValue*1.1)], { 
+                duration: 0.5,
+                direction: "forward",
+                loops: 2
+            });
+            //go("results", question)
         })
     })
         //#endregion
