@@ -75,6 +75,13 @@ async function main() {
     loadFont("pixel", "assets/fonts/PixelOperator8-Bold.ttf")
     loadFont("pixelthin", "assets/fonts/PixelOperator8.ttf")
 
+    loadSound("card1","assets/audio/card-place-1.ogg")
+    loadSound("card2","assets/audio/card-place-2.ogg")
+    loadSound("card3","assets/audio/card-place-3.ogg")
+    loadSound("card4","assets/audio/card-place-4.ogg")
+
+    let cardSounds = ["card1", "card2", "card3", "card4"]
+
     loadSprite("jv_icon", "assets/sprites/video_game.png")
     loadSprite("jv_color", "assets/sprites/vg_color.png")
     loadSprite("jds_icon", "assets/sprites/board_game.png")
@@ -272,8 +279,13 @@ async function main() {
         ])
 
         // Randomiser la position des cartes 
-        let x_card1 = width() / (randi() + 1.5);
-        let x_card2 = width() / (x_card1 === width() / 1.5 ? 3 : 1.5);
+        let x_card1 = width() / 3;
+        let x_card2 = width() / 1.5
+
+        // Randomly decide whether to swap the positions of the cards
+        if (randi() === 0) {
+            [x_card1, x_card2] = [x_card2, x_card1];
+        }
 
         // Choix aléatoire du type la carte
         let sprite1 = (randi() === 0 ? "spades" : "clubs")
@@ -420,131 +432,80 @@ async function main() {
 
         // Tween!!
         // Carte 1
+        // Son de la carte
+        play(choose(cardSounds), {
+            volume: 0.5, 
+        });
         tween(
             card1.pos,
             vec2(x_card1, height()/1.8),
             1,
-            (val) => card1.pos = val,
+            (val) => {
+                card1.pos = val;
+                card1_shadow.pos = vec2(val.x + 20, val.y + 20);
+                card1_text.pos = val;
+            },
             easings.easeOutQuad
         );
-        tween(
-            card1_shadow.pos,
-            vec2(x_card1 + 20, height()/1.8 + 20),
-            1,
-            (val) => card1_shadow.pos = val,
-            easings.easeOutQuad
-        );
-        tween(
-            card1_text.pos,
-            vec2(x_card1, height()/1.8),
-            1,
-            (val) => card1_text.pos = val,
-            easings.easeOutQuad
-        )
 
         // Carte 2
         wait(0.5, ()=>{
+            play(choose(cardSounds), {
+                volume: 0.5, 
+            });
             tween(
                 card2.pos,
                 vec2(x_card2, height()/1.8),
                 1,
-                (val) => card2.pos = val,
+                (val) => {
+                    card2.pos = val;
+                    card2_shadow.pos = vec2(val.x + 20, val.y + 20) ;
+                    card2_text.pos = val;
+                },
                 easings.easeOutQuad
             );
-            tween(
-                card2_shadow.pos,
-                vec2(x_card2 + 20, height()/1.8 + 20),
-                1,
-                (val) => card2_shadow.pos = val,
-                easings.easeOutQuad
-            );
-            tween(
-                card2_text.pos,
-                vec2(x_card2, height()/1.8),
-                1,
-                (val) => card2_text.pos = val,
-                easings.easeOutQuad
-            )
         })
         
 
         // Logique de quand on clique sur les cartes
         card1.onClick(() => {
-            let card1hover = true
             clicked = 1
-            card1.animate("scale", [        
-                vec2(scaleValue, scaleValue),
-                vec2(scaleValue * 1.2, scaleValue * 1.2),
-                vec2(scaleValue*1.1, scaleValue*1.1)], { 
-                duration: 0.3,
-                direction: "forward",
-                loops: 2
-            });
-            card1_shadow.animate("scale", [
-                vec2(scaleValue, scaleValue),
-                vec2(scaleValue * 1.2, scaleValue * 1.2),
-                vec2(scaleValue*1.1, scaleValue*1.1)], { 
-                duration: 0.3,
-                direction: "forward",
-                loops: 2
-            });
+            tween(
+                scaleValue,
+                scaleValue * 1.05,
+                0.3,
+                (value) => {
+                    card1.scale = vec2(value, value);
+                    card1_shadow.scale = vec2(value, value);
+                    card1_text.scale = vec2(value/scaleValue, value/scaleValue);
+                },
+                easings.easeOutElastic
+            );
             onMouseRelease(() => {
-                if (card1hover){
-                    wait(0.3, () =>{
-                        go("results", question)
-                        card1hover = false
-                    });
-                }
-            })
-            /*card1.onHoverEnd(() => {
-                card1hover = false
-                card1.animate("scale",
-                    [vec2(scaleValue, scaleValue)], {
-                    duration:0.2
+                wait(0.1, () => {
+                    go("results", question);
                 });
-                card1_shadow.animate("scale",
-                    [vec2(scaleValue, scaleValue)], {
-                    duration:0.2
-                });
-            });*/
-        });
-        card2.onClick(() => {
+            });
+         });
+         card2.onClick(() => {
             clicked = 2
-            let card2hover = true
-            card2.animate("scale", [        
-                vec2(scaleValue, scaleValue),
-                vec2(scaleValue * 1.2, scaleValue * 1.2),
-                vec2(scaleValue*1.1, scaleValue*1.1)], { 
-                duration: 0.3,
-                direction: "forward",
-                loops: 2
-            });
-            card2_shadow.animate("scale", [
-                vec2(scaleValue, scaleValue),
-                vec2(scaleValue * 1.2, scaleValue * 1.2),
-                vec2(scaleValue*1.1, scaleValue*1.1)], { 
-                duration: 0.3,
-                direction: "forward",
-                loops: 2
-            });
+            tween(
+                scaleValue,
+                scaleValue * 1.05,
+                0.3,
+                (value) => {
+                    card2.scale = vec2(value, value);
+                    card2_shadow.scale = vec2(value, value);
+                    card2_text.scale = vec2(value/scaleValue, value/scaleValue);
+                },
+                easings.easeOutElastic
+            );
             onMouseRelease(() => {
-                wait(0.3, () =>{
-                    go("results", question)
-                    card2hover = false
+                wait(0.1, () => {
+                    go("results", question);
                 });
-            })
-            /*card2.onHoverEnd(() => {
-                card2hover = false
-                card2.animate("scale",
-                    [vec2(scaleValue, scaleValue)], {
-                    duration:0.2
-                });
-                card2_shadow.animate("scale",
-                    [vec2(scaleValue, scaleValue)], {
-                    duration:0.2
-                });
-            });*/
-        })
+            });
+         });
     })
         //#endregion
  
