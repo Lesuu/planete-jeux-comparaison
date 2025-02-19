@@ -72,7 +72,7 @@ async function main() {
     //#endregion
     //#region Asset loading
 
-    loadFont("pixel", "assets/fonts/PixelOperator8-Bold.ttf")
+    loadFont("pixel", "assets/fonts/m6x11plus.ttf")
     loadFont("pixelthin", "assets/fonts/PixelOperator8.ttf")
 
     loadSound("card1","assets/audio/card-place-1.ogg")
@@ -153,7 +153,7 @@ async function main() {
         let title = add([
             text(getTranslation("OPTION"), {
                 font: "pixel",
-                size: 32
+                size: 54
             }),
             pos(width()/2 , height()/5),
             anchor("center")
@@ -238,7 +238,7 @@ async function main() {
         let compteur_caption = add([
             text(`Question ${compteur_question}/${nbr_questions}`, {
                 font: "pixel",
-                size: 16
+                size: 36
             }),
             pos(width() - width()/1.1, height()*0.04),
             anchor("center"),
@@ -248,7 +248,7 @@ async function main() {
         let score_caption = add([
             text(`Score: ${score}`, {
                 font: "pixel",
-                size: 16
+                size: 36
             }),
             pos(width()/1.1, height()*0.04),
             anchor("center"),
@@ -270,7 +270,7 @@ async function main() {
             text(getTranslation("QUESTION"), {
                 font: "pixel",
                 lineSpacing: 10,
-                size: 32,
+                size: 54,
                 width: 1000,
                 align: "center"
             }),
@@ -381,7 +381,7 @@ async function main() {
         let card1_text = add([
             text(question.text1, {
                 font: "pixel",
-                size: 24,
+                size: 36,
                 width: 330,
                 lineSpacing : 10, 
                 align: "center"
@@ -417,7 +417,7 @@ async function main() {
         let card2_text = add([
             text(question.text2, {
                 font: "pixel",
-                size: 24,
+                size: 36,
                 width: 330,
                 lineSpacing : 10,
                 align: "center"
@@ -541,7 +541,7 @@ async function main() {
         let score_caption = add([
             text(`Score: ${score}`, {
                 font: "pixel",
-                size: 16
+                size: 36
             }),
             pos(width()/1.1, height()*0.04),
             anchor("center"),
@@ -551,7 +551,7 @@ async function main() {
         let compteur_caption = add([
             text(`Question ${compteur_question}/${nbr_questions}`, {
                 font: "pixel",
-                size: 16
+                size: 36
             }),
             pos(width() - width()/1.1, height()*0.04),
             anchor("center"),
@@ -567,7 +567,7 @@ async function main() {
         let result = add([
             text(caption_result, {
                 font: "pixel",
-                size: 32,
+                size: 64,
                 width: 500,
                 align: "center"
             }),
@@ -579,7 +579,7 @@ async function main() {
             text(question.commentaire, {
                 font: "pixel",
                 lineSpacing: 15,
-                size: 32,
+                size: 64,
                 width: 1200,
                 align: "center"
             }),
@@ -681,7 +681,7 @@ async function main() {
         let scoreLabel = add([
             text(getTranslation("FINAL").replace("{score}", score),{
                 font: "pixel",
-                size: 32,
+                size: 64,
                 align: "center"
             }),
             pos(width()/2, height()/6),
