@@ -476,7 +476,7 @@ async function main() {
                 vec2(scaleValue, scaleValue),
                 vec2(scaleValue * 1.2, scaleValue * 1.2),
                 vec2(scaleValue*1.1, scaleValue*1.1)], { 
-                duration: 0.3,
+                duration: 0.5,
                 direction: "forward",
                 loops: 2
             });
@@ -484,13 +484,13 @@ async function main() {
                 vec2(scaleValue, scaleValue),
                 vec2(scaleValue * 1.2, scaleValue * 1.2),
                 vec2(scaleValue*1.1, scaleValue*1.1)], { 
-                duration: 0.3,
+                duration: 0.5,
                 direction: "forward",
                 loops: 2
             });
             onMouseRelease(() => {
                 if (card1hover){
-                    wait(0.3, () =>{
+                    wait(0.1, () =>{
                         go("results", question)
                         card1hover = false
                     });
@@ -515,7 +515,7 @@ async function main() {
                 vec2(scaleValue, scaleValue),
                 vec2(scaleValue * 1.2, scaleValue * 1.2),
                 vec2(scaleValue*1.1, scaleValue*1.1)], { 
-                duration: 0.3,
+                duration: 0.5,
                 direction: "forward",
                 loops: 2
             });
@@ -523,12 +523,12 @@ async function main() {
                 vec2(scaleValue, scaleValue),
                 vec2(scaleValue * 1.2, scaleValue * 1.2),
                 vec2(scaleValue*1.1, scaleValue*1.1)], { 
-                duration: 0.3,
+                duration: 0.5,
                 direction: "forward",
                 loops: 2
             });
             onMouseRelease(() => {
-                wait(0.3, () =>{
+                wait(0.1, () =>{
                     go("results", question)
                     card2hover = false
                 });
