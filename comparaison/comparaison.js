@@ -74,11 +74,23 @@ async function main() {
 
     loadFont("pixel", "assets/fonts/m6x11plus.ttf")
     loadFont("pixelthin", "assets/fonts/PixelOperator8.ttf")
+    loadFont("kaph", "assets/fonts/Kaph-Regular.ttf", {
+        outline: {
+            width: 3,
+            color: rgb(0,0,0),
+        },
+        lineSpacing : 40,
+    });
 
     loadSound("card1","assets/audio/card-place-1.ogg")
     loadSound("card2","assets/audio/card-place-2.ogg")
     loadSound("card3","assets/audio/card-place-3.ogg")
     loadSound("card4","assets/audio/card-place-4.ogg")
+
+    loadSound("score1","assets/audio/score.wav")
+    loadSound("score2","assets/audio/score-streak.wav")
+    loadSound("score3","assets/audio/score-streak-max.wav")
+    let scoreSound = ["score1", "score2", "score3"]
 
     let cardSounds = ["card1", "card2", "card3", "card4"]
 
@@ -131,11 +143,16 @@ async function main() {
     let jv_hover
     let jds_hover
     let question = {}
+    let curTween = null
+    let score_effect = null
+    let streak = 0
+    let multiplier = 1
 
     // Constantes
     const nbr_questions = 10
     const num_questions_scriptees = [4, 7, 9]
     const langue = "fr"
+    const w = (a, b, n) => wave(a, b, t(n));
     //#endregion
     // #region Ecran d'accueil
 
@@ -221,6 +238,7 @@ async function main() {
     //#endregion
     // #region Questions
     // Scène où on pose les questions
+    
     scene("questions", () => {
         // Couleur du background dépend du support choisi
         let icon_sprite
@@ -356,6 +374,8 @@ async function main() {
         // Carte 1
 
         question = choixQuestion()
+        let locked = false
+        let scoreEffectTriggered = false
 
         let card1 = add([
             sprite(sprite1),
@@ -434,7 +454,7 @@ async function main() {
         // Carte 1
         // Son de la carte
         play(choose(cardSounds), {
-            volume: 0.5, 
+            volume: 0.3, 
         });
         tween(
             card1.pos,
@@ -468,44 +488,118 @@ async function main() {
         
 
         // Logique de quand on clique sur les cartes
+        function scoreEffect(){
+            if (scoreEffectTriggered) return;
+            scoreEffectTriggered = true;
+            if (((question.activite1_gagne) && (clicked == 1)) 
+                || (!question.activite1_gagne) && (clicked == 2)
+                || (question.egal)){
+                streak++
+                let score_color
+                // Multiplicateur
+                switch (true) {
+                    case (streak <= 1):
+                        multiplier = 1;
+                        score_color = rgb(0, 255, 0);
+                        break;
+                    case (streak == 2):
+                        multiplier = 2;
+                        score_color = rgb(157, 0, 255);
+                        break;
+                    case (streak >= 3):
+                        multiplier = 3;
+                        score_color = hsl2rgb((time() * 3) % 1, 1, 0.5);
+                        break;
+
+                }
+                score += 100 * multiplier
+                play(scoreSound[multiplier - 1], {
+                    volume: 0.5
+                })
+                score_effect = add([
+                    text(`+${100 * multiplier}!`,{
+                        font: "kaph",
+                        size: 64,
+                    }),
+                    color(score_color),
+                    pos(mousePos()),
+                    z(200),
+                    anchor("bot"),
+                    rotate(rand(10, 30)),
+                    opacity(1)
+                ])
+
+                if (streak >= 3) {
+                    score_effect.onUpdate(() => {
+                        score_effect.color = hsl2rgb((time() * 1.5) % 1, 1, 0.5);
+                    });
+                } 
+
+                curTween = tween(
+                    score_effect.pos,
+                    vec2(score_effect.pos.x * 1.1, score_effect.pos.y * 0.9),
+                    0.5,
+                    (value) => {
+                        score_effect.pos = value
+                    },
+                    easings.easeOutQuint
+                )
+                tween(
+                    score_effect.opacity,
+                    0,
+                    0.5,
+                    (value) => {
+                        score_effect.opacity = value
+                    },
+                    easings.easeInQuart
+                )
+            } 
+        }
         card1.onClick(() => {
-            clicked = 1
-            tween(
-                scaleValue,
-                scaleValue * 1.05,
-                0.3,
-                (value) => {
-                    card1.scale = vec2(value, value);
-                    card1_shadow.scale = vec2(value, value);
-                    card1_text.scale = vec2(value/scaleValue, value/scaleValue);
-                },
-                easings.easeOutElastic
-            );
-            onMouseRelease(() => {
-                wait(0.1, () => {
-                    go("results", question);
+            if (locked) return
+                locked = true
+                clicked = 1
+                tween(
+                    scaleValue,
+                    scaleValue * 1.05,
+                    0.3,
+                    (value) => {
+                        card1.scale = vec2(value, value);
+                        card1_shadow.scale = vec2(value, value);
+                        card1_text.scale = vec2(value/scaleValue, value/scaleValue);
+                    },
+                    easings.easeOutElastic
+                );
+                onMouseRelease(() => { 
+                    scoreEffect()
+                    wait(1, () => {
+                        go("results", question);
+                    });
                 });
-            });
-         });
-         card2.onClick(() => {
-            clicked = 2
-            tween(
-                scaleValue,
-                scaleValue * 1.05,
-                0.3,
-                (value) => {
-                    card2.scale = vec2(value, value);
-                    card2_shadow.scale = vec2(value, value);
-                    card2_text.scale = vec2(value/scaleValue, value/scaleValue);
-                },
-                easings.easeOutElastic
-            );
-            onMouseRelease(() => {
-                wait(0.1, () => {
-                    go("results", question);
+        });
+        card2.onClick(() => {
+            if (locked) return
+                locked = true
+                clicked = 2
+                tween(
+                    scaleValue,
+                    scaleValue * 1.05,
+                    0.3,
+                    (value) => {
+                        card2.scale = vec2(value, value);
+                        card2_shadow.scale = vec2(value, value);
+                        card2_text.scale = vec2(value/scaleValue, value/scaleValue);
+                    },
+                    easings.easeOutElastic
+                );
+                onMouseRelease(() => {
+                    scoreEffect()
+                    wait(1, () => {
+                        go("results", question);
+                    });
                 });
-            });
-         });
+        });
+        
     })
         //#endregion
  
@@ -519,7 +613,6 @@ async function main() {
             || (!question.activite1_gagne) && (clicked == 2)
         ){
             caption_result = getTranslation("CORRECT")
-            score += 100
             console.log(question, score)
         } else if (question.egal){
             caption_result = getTranslation("DEPENDS")
@@ -528,6 +621,7 @@ async function main() {
         } else {
             console.log(question, score)
             caption_result = getTranslation("INCORRECT")
+            streak = 0
         }
 
         let icon_sprite
