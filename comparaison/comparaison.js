@@ -33,7 +33,7 @@ async function loadData() {
         translations[row.TEXTE] = {
             fr: row.fr,
             eng: row.eng
-        };
+        };  
     });
     
     // Séparation des données - pairings
@@ -72,8 +72,27 @@ async function main() {
     //#endregion
     //#region Asset loading
 
-    loadFont("pixel", "assets/fonts/PixelOperator8-Bold.ttf")
+    loadFont("pixel", "assets/fonts/m6x11plus.ttf")
     loadFont("pixelthin", "assets/fonts/PixelOperator8.ttf")
+    loadFont("kaph", "assets/fonts/Kaph-Regular.ttf", {
+        outline: {
+            width: 3,
+            color: rgb(0,0,0),
+        },
+        lineSpacing : 40,
+    });
+
+    loadSound("card1","assets/audio/card-place-1.ogg")
+    loadSound("card2","assets/audio/card-place-2.ogg")
+    loadSound("card3","assets/audio/card-place-3.ogg")
+    loadSound("card4","assets/audio/card-place-4.ogg")
+
+    loadSound("score1","assets/audio/score.wav")
+    loadSound("score2","assets/audio/score-streak.wav")
+    loadSound("score3","assets/audio/score-streak-max.wav")
+    let scoreSound = ["score1", "score2", "score3"]
+
+    let cardSounds = ["card1", "card2", "card3", "card4"]
 
     loadSprite("jv_icon", "assets/sprites/video_game.png")
     loadSprite("jv_color", "assets/sprites/vg_color.png")
@@ -124,11 +143,16 @@ async function main() {
     let jv_hover
     let jds_hover
     let question = {}
+    let curTween = null
+    let score_effect = null
+    let streak = 0
+    let multiplier = 1
 
     // Constantes
     const nbr_questions = 10
     const num_questions_scriptees = [4, 7, 9]
     const langue = "fr"
+    const w = (a, b, n) => wave(a, b, t(n));
     //#endregion
     // #region Ecran d'accueil
 
@@ -146,7 +170,7 @@ async function main() {
         let title = add([
             text(getTranslation("OPTION"), {
                 font: "pixel",
-                size: 32
+                size: 54
             }),
             pos(width()/2 , height()/5),
             anchor("center")
@@ -214,6 +238,7 @@ async function main() {
     //#endregion
     // #region Questions
     // Scène où on pose les questions
+    
     scene("questions", () => {
         // Couleur du background dépend du support choisi
         let icon_sprite
@@ -231,7 +256,7 @@ async function main() {
         let compteur_caption = add([
             text(`Question ${compteur_question}/${nbr_questions}`, {
                 font: "pixel",
-                size: 16
+                size: 36
             }),
             pos(width() - width()/1.1, height()*0.04),
             anchor("center"),
@@ -241,7 +266,7 @@ async function main() {
         let score_caption = add([
             text(`Score: ${score}`, {
                 font: "pixel",
-                size: 16
+                size: 36
             }),
             pos(width()/1.1, height()*0.04),
             anchor("center"),
@@ -263,7 +288,7 @@ async function main() {
             text(getTranslation("QUESTION"), {
                 font: "pixel",
                 lineSpacing: 10,
-                size: 32,
+                size: 54,
                 width: 1000,
                 align: "center"
             }),
@@ -272,8 +297,13 @@ async function main() {
         ])
 
         // Randomiser la position des cartes 
-        let x_card1 = width() / (randi() + 1.5);
-        let x_card2 = width() / (x_card1 === width() / 1.5 ? 3 : 1.5);
+        let x_card1 = width() / 3;
+        let x_card2 = width() / 1.5
+
+        // Randomly decide whether to swap the positions of the cards
+        if (randi() === 0) {
+            [x_card1, x_card2] = [x_card2, x_card1];
+        }
 
         // Choix aléatoire du type la carte
         let sprite1 = (randi() === 0 ? "spades" : "clubs")
@@ -344,6 +374,8 @@ async function main() {
         // Carte 1
 
         question = choixQuestion()
+        let locked = false
+        let scoreEffectTriggered = false
 
         let card1 = add([
             sprite(sprite1),
@@ -369,7 +401,7 @@ async function main() {
         let card1_text = add([
             text(question.text1, {
                 font: "pixel",
-                size: 24,
+                size: 36,
                 width: 330,
                 lineSpacing : 10, 
                 align: "center"
@@ -405,7 +437,7 @@ async function main() {
         let card2_text = add([
             text(question.text2, {
                 font: "pixel",
-                size: 24,
+                size: 36,
                 width: 330,
                 lineSpacing : 10,
                 align: "center"
@@ -420,131 +452,154 @@ async function main() {
 
         // Tween!!
         // Carte 1
+        // Son de la carte
+        play(choose(cardSounds), {
+            volume: 0.3, 
+        });
         tween(
             card1.pos,
             vec2(x_card1, height()/1.8),
             1,
-            (val) => card1.pos = val,
+            (val) => {
+                card1.pos = val;
+                card1_shadow.pos = vec2(val.x + 20, val.y + 20);
+                card1_text.pos = val;
+            },
             easings.easeOutQuad
         );
-        tween(
-            card1_shadow.pos,
-            vec2(x_card1 + 20, height()/1.8 + 20),
-            1,
-            (val) => card1_shadow.pos = val,
-            easings.easeOutQuad
-        );
-        tween(
-            card1_text.pos,
-            vec2(x_card1, height()/1.8),
-            1,
-            (val) => card1_text.pos = val,
-            easings.easeOutQuad
-        )
 
         // Carte 2
         wait(0.5, ()=>{
+            play(choose(cardSounds), {
+                volume: 0.5, 
+            });
             tween(
                 card2.pos,
                 vec2(x_card2, height()/1.8),
                 1,
-                (val) => card2.pos = val,
+                (val) => {
+                    card2.pos = val;
+                    card2_shadow.pos = vec2(val.x + 20, val.y + 20) ;
+                    card2_text.pos = val;
+                },
                 easings.easeOutQuad
             );
-            tween(
-                card2_shadow.pos,
-                vec2(x_card2 + 20, height()/1.8 + 20),
-                1,
-                (val) => card2_shadow.pos = val,
-                easings.easeOutQuad
-            );
-            tween(
-                card2_text.pos,
-                vec2(x_card2, height()/1.8),
-                1,
-                (val) => card2_text.pos = val,
-                easings.easeOutQuad
-            )
         })
         
 
         // Logique de quand on clique sur les cartes
-        card1.onClick(() => {
-            let card1hover = true
-            clicked = 1
-            card1.animate("scale", [        
-                vec2(scaleValue, scaleValue),
-                vec2(scaleValue * 1.2, scaleValue * 1.2),
-                vec2(scaleValue*1.1, scaleValue*1.1)], { 
-                duration: 0.5,
-                direction: "forward",
-                loops: 2
-            });
-            card1_shadow.animate("scale", [
-                vec2(scaleValue, scaleValue),
-                vec2(scaleValue * 1.2, scaleValue * 1.2),
-                vec2(scaleValue*1.1, scaleValue*1.1)], { 
-                duration: 0.5,
-                direction: "forward",
-                loops: 2
-            });
-            onMouseRelease(() => {
-                if (card1hover){
-                    wait(0.1, () =>{
-                        go("results", question)
-                        card1hover = false
-                    });
+        function scoreEffect(){
+            if (scoreEffectTriggered) return;
+            scoreEffectTriggered = true;
+            if (((question.activite1_gagne) && (clicked == 1)) 
+                || (!question.activite1_gagne) && (clicked == 2)
+                || (question.egal)){
+                streak++
+                let score_color
+                // Multiplicateur
+                switch (true) {
+                    case (streak <= 1):
+                        multiplier = 1;
+                        score_color = rgb(0, 255, 0);
+                        break;
+                    case (streak == 2):
+                        multiplier = 2;
+                        score_color = rgb(157, 0, 255);
+                        break;
+                    case (streak >= 3):
+                        multiplier = 3;
+                        score_color = hsl2rgb((time() * 3) % 1, 1, 0.5);
+                        break;
+
                 }
-            })
-            /*card1.onHoverEnd(() => {
-                card1hover = false
-                card1.animate("scale",
-                    [vec2(scaleValue, scaleValue)], {
-                    duration:0.2
+                score += 100 * multiplier
+                play(scoreSound[multiplier - 1], {
+                    volume: 0.5
+                })
+                score_effect = add([
+                    text(`+${100 * multiplier}!`,{
+                        font: "kaph",
+                        size: 64,
+                    }),
+                    color(score_color),
+                    pos(mousePos()),
+                    z(200),
+                    anchor("bot"),
+                    rotate(rand(10, 30)),
+                    opacity(1)
+                ])
+
+                if (streak >= 3) {
+                    score_effect.onUpdate(() => {
+                        score_effect.color = hsl2rgb((time() * 1.5) % 1, 1, 0.5);
+                    });
+                } 
+
+                curTween = tween(
+                    score_effect.pos,
+                    vec2(score_effect.pos.x * 1.1, score_effect.pos.y * 0.9),
+                    0.5,
+                    (value) => {
+                        score_effect.pos = value
+                    },
+                    easings.easeOutQuint
+                )
+                tween(
+                    score_effect.opacity,
+                    0,
+                    0.5,
+                    (value) => {
+                        score_effect.opacity = value
+                    },
+                    easings.easeInQuart
+                )
+            } 
+        }
+        card1.onClick(() => {
+            if (locked) return
+                locked = true
+                clicked = 1
+                tween(
+                    scaleValue,
+                    scaleValue * 1.05,
+                    0.3,
+                    (value) => {
+                        card1.scale = vec2(value, value);
+                        card1_shadow.scale = vec2(value, value);
+                        card1_text.scale = vec2(value/scaleValue, value/scaleValue);
+                    },
+                    easings.easeOutElastic
+                );
+                onMouseRelease(() => { 
+                    scoreEffect()
+                    wait(1, () => {
+                        go("results", question);
+                    });
                 });
-                card1_shadow.animate("scale",
-                    [vec2(scaleValue, scaleValue)], {
-                    duration:0.2
-                });
-            });*/
         });
         card2.onClick(() => {
-            clicked = 2
-            let card2hover = true
-            card2.animate("scale", [        
-                vec2(scaleValue, scaleValue),
-                vec2(scaleValue * 1.2, scaleValue * 1.2),
-                vec2(scaleValue*1.1, scaleValue*1.1)], { 
-                duration: 0.5,
-                direction: "forward",
-                loops: 2
-            });
-            card2_shadow.animate("scale", [
-                vec2(scaleValue, scaleValue),
-                vec2(scaleValue * 1.2, scaleValue * 1.2),
-                vec2(scaleValue*1.1, scaleValue*1.1)], { 
-                duration: 0.5,
-                direction: "forward",
-                loops: 2
-            });
-            onMouseRelease(() => {
-                wait(0.1, () =>{
-                    go("results", question)
-                    card2hover = false
+            if (locked) return
+                locked = true
+                clicked = 2
+                tween(
+                    scaleValue,
+                    scaleValue * 1.05,
+                    0.3,
+                    (value) => {
+                        card2.scale = vec2(value, value);
+                        card2_shadow.scale = vec2(value, value);
+                        card2_text.scale = vec2(value/scaleValue, value/scaleValue);
+                    },
+                    easings.easeOutElastic
+                );
+                onMouseRelease(() => {
+                    scoreEffect()
+                    wait(1, () => {
+                        go("results", question);
+                    });
                 });
-            })
-            /*card2.onHoverEnd(() => {
-                card2hover = false
-                card2.animate("scale",
-                    [vec2(scaleValue, scaleValue)], {
-                    duration:0.2
-                });
-                card2_shadow.animate("scale",
-                    [vec2(scaleValue, scaleValue)], {
-                    duration:0.2
-                });
-            });*/
-        })
+        });
+        
     })
         //#endregion
  
@@ -558,7 +613,6 @@ async function main() {
             || (!question.activite1_gagne) && (clicked == 2)
         ){
             caption_result = getTranslation("CORRECT")
-            score += 100
             console.log(question, score)
         } else if (question.egal){
             caption_result = getTranslation("DEPENDS")
@@ -567,6 +621,7 @@ async function main() {
         } else {
             console.log(question, score)
             caption_result = getTranslation("INCORRECT")
+            streak = 0
         }
 
         let icon_sprite
@@ -580,7 +635,7 @@ async function main() {
         let score_caption = add([
             text(`Score: ${score}`, {
                 font: "pixel",
-                size: 16
+                size: 36
             }),
             pos(width()/1.1, height()*0.04),
             anchor("center"),
@@ -590,7 +645,7 @@ async function main() {
         let compteur_caption = add([
             text(`Question ${compteur_question}/${nbr_questions}`, {
                 font: "pixel",
-                size: 16
+                size: 36
             }),
             pos(width() - width()/1.1, height()*0.04),
             anchor("center"),
@@ -606,7 +661,7 @@ async function main() {
         let result = add([
             text(caption_result, {
                 font: "pixel",
-                size: 32,
+                size: 64,
                 width: 500,
                 align: "center"
             }),
@@ -618,7 +673,7 @@ async function main() {
             text(question.commentaire, {
                 font: "pixel",
                 lineSpacing: 15,
-                size: 32,
+                size: 64,
                 width: 1200,
                 align: "center"
             }),
@@ -720,7 +775,7 @@ async function main() {
         let scoreLabel = add([
             text(getTranslation("FINAL").replace("{score}", score),{
                 font: "pixel",
-                size: 32,
+                size: 64,
                 align: "center"
             }),
             pos(width()/2, height()/6),
