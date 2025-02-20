@@ -56,9 +56,10 @@ async function loadData() {
     }
 }
 
+
 // Initialisation de Kaplay
 kaplay({
-    background : [102,0,0],
+    background : [42, 138, 109],
     letterbox:true,
     width:1920,
     height:1080,
@@ -127,6 +128,11 @@ async function main() {
         }
     })
 
+    // Shader CRT
+    loadShaderURL("crt", null, "assets/shaders/crt.frag");
+    const crtEffect = () => ({
+        "u_flatness": 4 ,
+    });   
 
     const scaleValue = (width()/height())*1.3;
     //#endregion
@@ -152,7 +158,7 @@ async function main() {
     const nbr_questions = 10
     const num_questions_scriptees = [4, 7, 9]
     const langue = "fr"
-    const w = (a, b, n) => wave(a, b, t(n));
+    const background_col = rgb(42, 138, 109)
     //#endregion
     // #region Ecran d'accueil
 
@@ -162,6 +168,10 @@ async function main() {
     }
 
     scene("titleScreen", async () => {
+        // Shader CRT
+        onUpdate(() => {
+            usePostEffect("crt", crtEffect());
+        });
         // Réinitialisation du score
         score = 0
         compteur_question = 0
@@ -173,7 +183,18 @@ async function main() {
                 size: 54
             }),
             pos(width()/2 , height()/5),
-            anchor("center")
+            anchor("center"),
+            z(50)
+        ])
+        let title_shadow = add([
+            text(getTranslation("OPTION"), {
+                font: "pixel",
+                size: 54
+            }),
+            pos(title.pos.x + 6, title.pos.y + 6),
+            anchor("center"),
+            color(0,0,0),
+            opacity(0.4)
         ])
         let jv_icon = add([
             sprite("jv_icon"),
@@ -240,13 +261,17 @@ async function main() {
     // Scène où on pose les questions
     
     scene("questions", () => {
+        // Shader CRT
+        onUpdate(() => {
+            usePostEffect("crt", crtEffect());
+        });
         // Couleur du background dépend du support choisi
         let icon_sprite
         if (jv){
-            setBackground(102,0,0)
+            setBackground(background_col)
             icon_sprite = "jv_color"
         } else {
-            setBackground(0,100,0)
+            setBackground(background_col)
             icon_sprite = "jds_color" 
         }
     
@@ -294,6 +319,20 @@ async function main() {
             }),
             pos(width()/2, height()/6),
             anchor("center"),
+            z(40)
+        ])
+        let caption_shadow = add([
+            text(getTranslation("QUESTION"), {
+                font: "pixel",
+                lineSpacing: 10,
+                size: 54,
+                width: 1000,
+                align: "center"
+            }),
+            pos(caption.pos.x + 5, caption.pos.y + 5),
+            anchor("center"),
+            color(0,0,0),
+            opacity(0.4)
         ])
 
         // Randomiser la position des cartes 
@@ -384,7 +423,6 @@ async function main() {
             anchor("center"),
             area(),
             z(50),
-            animate(),
             "card1"
         ])
         let card1_shadow = add([
@@ -395,7 +433,6 @@ async function main() {
             scale(scaleValue),  
             anchor("center"),
             area(),
-            animate(),
             "card1"
         ])
         let card1_text = add([
@@ -419,7 +456,6 @@ async function main() {
             scale(scaleValue),  
             anchor("center"),
             area(),
-            animate(),
             z("50"),
             "card2"
         ])
@@ -431,7 +467,6 @@ async function main() {
             scale(scaleValue),  
             anchor("center"),
             area(),
-            animate(),
             "card2"
         ])
         let card2_text = add([
@@ -446,7 +481,6 @@ async function main() {
             pos(card2.pos),
             anchor("center"),
             z("100"),
-            animate(),
             "card2"
         ])
 
@@ -606,6 +640,10 @@ async function main() {
     //#endregion
     // #region Réponse question
     // Scène qui affiche la réponse à la question
+    // Shader CRT
+    onUpdate(() => {
+        usePostEffect("crt", crtEffect());
+    });
     let caption_result
     scene("results", (question) =>{
         console.log("clicked: " + clicked)
@@ -667,8 +705,22 @@ async function main() {
             }),
             pos(width()/2, height()/20),
             anchor("center"),
+            z(50),
             "results_element"
-        ])
+        ]);
+        let result_shadow = add([
+            text(caption_result, {
+                font: "pixel",
+                size: 64,
+                width: 500,
+                align: "center"
+            }),
+            pos(result.pos.x + 6, result.pos.y + 6),
+            anchor("center"),
+            color(0,0,0),
+            opacity(0.4),
+            "results_element"
+        ]);
         let commentaire = add([
             text(question.commentaire, {
                 font: "pixel",
@@ -679,6 +731,21 @@ async function main() {
             }),
             pos(width()/2, height()/2),
             anchor("center"),
+            z(50),
+            "results_element"
+        ])
+        let commentaire_shadow = add([
+            text(question.commentaire, {
+                font: "pixel",
+                lineSpacing: 15,
+                size: 64,
+                width: 1200,
+                align: "center"
+            }),
+            pos(commentaire.pos.x + 6, commentaire.pos.y + 5),
+            anchor("center"),
+            color(0,0,0),
+            opacity(0.4),
             "results_element"
         ])
         
@@ -686,7 +753,7 @@ async function main() {
             let suivant_bouton = add([
                 sprite("button"),
                 pos(width()/2, height()/1.1),
-                scale(scaleValue*1.5),  
+                scale(scaleValue*2),  
                 anchor("center"),
                 area(),
             ])
@@ -699,9 +766,9 @@ async function main() {
             let suivant = add([
                 text(getTranslation("SUIVANT"),{
                     font: "pixelthin",
-                    width: 250,
+                    width: 400,
                     lineSpacing: 10,
-                    size: 32,
+                    size: 40,
                     align: "center"
                 }),
                 pos(suivant_bouton.pos),
@@ -714,9 +781,9 @@ async function main() {
             let suivant_shadow = add([
                 text(getTranslation("SUIVANT"),{
                     font: "pixelthin",
-                    width: 250,
+                    width: 400,
                     lineSpacing: 10,
-                    size: 32,
+                    size: 40,
                     align: "center"
                 }),
                 color(93, 27, 27),
@@ -772,6 +839,10 @@ async function main() {
     //#endregion
     //#region Résultats finaux
     scene("finalResults", ({score}) =>{
+        // Shader CRT
+        onUpdate(() => {
+            usePostEffect("crt", crtEffect());
+        });
         let scoreLabel = add([
             text(getTranslation("FINAL").replace("{score}", score),{
                 font: "pixel",
