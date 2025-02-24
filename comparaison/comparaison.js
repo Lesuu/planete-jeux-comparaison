@@ -14,6 +14,9 @@ async function getCSV(url){
     return parsedData.data; 
 }
 
+const lien = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQWBSQtcLt8CbTPN-TvHnrCt1h24GtoXiWxBCoo3nqbrTSqLuc93FeogkFsOrfS_qF-YDyhTk5E0aau/pub?gid=0&single=true&output=csv'
+const lien_v2 = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQWBSQtcLt8CbTPN-TvHnrCt1h24GtoXiWxBCoo3nqbrTSqLuc93FeogkFsOrfS_qF-YDyhTk5E0aau/pub?gid=1185013817&single=true&output=csv'
+let testing = false
 
 // Chargement des données dans la variable CSVdata & séparation des données jv/JdS/autres
 let questions_JV = []
@@ -26,7 +29,19 @@ let translations = {}
 
 let questions_autres = []
 async function loadData() {
-    CSVdata = await getCSV('https://docs.google.com/spreadsheets/d/e/2PACX-1vQWBSQtcLt8CbTPN-TvHnrCt1h24GtoXiWxBCoo3nqbrTSqLuc93FeogkFsOrfS_qF-YDyhTk5E0aau/pub?gid=0&single=true&output=csv');
+
+    questions_JV = []
+    questions_JV_egales = []
+
+    questions_JdS = []
+    questions_JdS_egales = []
+
+    translations = {}
+
+    questions_autres = []
+
+    if (!testing){CSVdata = await getCSV(lien)}
+    else if (testing) {CSVdata = await getCSV(lien_v2)}
     metaText = await getCSV('https://docs.google.com/spreadsheets/d/e/2PACX-1vQWBSQtcLt8CbTPN-TvHnrCt1h24GtoXiWxBCoo3nqbrTSqLuc93FeogkFsOrfS_qF-YDyhTk5E0aau/pub?gid=826164962&single=true&output=csv')
     
     metaText.forEach(row=>{
@@ -169,6 +184,36 @@ async function main() {
     }
 
     scene("titleScreen", async () => {
+
+        // Testing
+        // Add a button that uses the 'button' sprite
+    let start_button = add([
+        sprite("button"),
+        pos(width()/2, height()/1.2),
+        scale(scaleValue*1.5),  
+        anchor("center"),
+        area(),
+        "start_button"
+    ])
+
+    let start_text = add([
+        text(`mode test : ${testing}`, {
+            font: "pixel",
+            size: 32,
+            align: "center"
+        }),
+        pos(start_button.pos),
+        anchor("center"),
+        z(100),
+        "start_button"
+    ])
+
+    start_button.onClick(async () => {
+        testing = !testing
+        await loadData()
+        start_text.text = `mode test : ${testing}`
+    })
+
         // Shader CRT
         onUpdate(() => {
             usePostEffect("crt", crtEffect());
@@ -181,7 +226,7 @@ async function main() {
 
         // Elements UI
         let title = add([
-            text(getTranslation("OPTION"), {
+            text(/*getTranslation("OPTION")*/ 'Choisis une option!', {
                 font: "pixel",
                 size: 54
             }),
@@ -190,7 +235,7 @@ async function main() {
             z(50)
         ])
         let title_shadow = add([
-            text(getTranslation("OPTION"), {
+            text(/*getTranslation("OPTION")*/ 'Choisis une option!', {
                 font: "pixel",
                 size: 54
             }),
@@ -263,7 +308,7 @@ async function main() {
     // #region Questions
     // Scène où on pose les questions
     
-    scene("questions", () => {
+     scene("questions", async () => {
         displayQuestion()
         function displayQuestion(){
             locked = false
@@ -289,7 +334,7 @@ async function main() {
                     font: "pixel",
                     size: 54
                 }),
-                pos(width() - width()/1.1, height()*0.06),
+                pos(width() - width()/1.11, height()*0.06),
                 anchor("center"),
                 z(50)
             ]);
@@ -329,7 +374,7 @@ async function main() {
             // Icone du support
             let icon = add([
                 sprite(icon_sprite),
-                pos(width() - width()/1.21, height()*0.04),
+                pos(width() - width()/1.255, height()*0.058),
                 anchor("center"),
             ])
 
@@ -455,7 +500,6 @@ async function main() {
                 z(50),
                 color(),
                 rotate(0),
-                animate(),
                 "card1"
             ])
             let card1_shadow = add([
@@ -467,7 +511,6 @@ async function main() {
                 anchor("center"),
                 area(),
                 rotate(0),
-                animate(),
                 "card1"
             ])
             let card1_text = add([
@@ -481,9 +524,8 @@ async function main() {
                 color(56, 71, 74),
                 pos(card1.pos),
                 anchor("center"),
-                z(100),
+                z(55),
                 rotate(0),
-                animate(),
                 "card1"
             ])
 
@@ -497,7 +539,6 @@ async function main() {
                 z(50),
                 color(),
                 rotate(0),
-                animate(),
                 "card2"
             ])
             let card2_shadow = add([
@@ -509,7 +550,6 @@ async function main() {
                 anchor("center"),
                 area(),
                 rotate(0),
-                animate(),
                 "card2"
             ])
             let card2_text = add([
@@ -523,9 +563,8 @@ async function main() {
                 color(56, 71, 74),
                 pos(card2.pos),
                 anchor("center"),
-                z(100),
+                z(55),
                 rotate(0),
-                animate(),
                 "card2"
             ])
             //#endregion
@@ -568,7 +607,7 @@ async function main() {
             
 
             // Logique de quand on clique sur les cartes
-            function scoreEffect(card){
+            function scoreEffect(card, card_text){
                 if (scoreEffectTriggered) return;
                 scoreEffectTriggered = true;
                 if (((question.activite1_gagne) && (clicked == 1)) 
@@ -611,6 +650,7 @@ async function main() {
 
                     card.color = rgb(0,255,0)
                     card.z = 60
+                    card_text.z = 65
 
                     if (streak >= 3) {
                         score_effect.onUpdate(() => {
@@ -654,7 +694,7 @@ async function main() {
                         easings.easeOutElastic
                     );
                     onMouseRelease(() => { 
-                        scoreEffect(card1)
+                        scoreEffect(card1, card1_text)
                         wait(0.4, () => {
                             //go("results", question);
                             displayResults(question, card1, card1_shadow, card1_text, card2, card2_shadow, card2_text)
@@ -677,7 +717,7 @@ async function main() {
                     easings.easeOutElastic
                 );
                 onMouseRelease(() => {
-                    scoreEffect(card2)
+                    scoreEffect(card2, card2_text)
                     wait(0.4, () => {
                         //go("results", question);
                         displayResults(question, card1, card1_shadow, card1_text, card2, card2_shadow, card2_text)
@@ -733,8 +773,31 @@ async function main() {
                 easings.easeInOutQuad
             );
 
-            //animate: rotation
+            //tween: card1 rotation
+            tween(
+                card1.angle,
+                randi(-20, 20), 
+                1,
+                (val) => {
+                    card1.angle = val;
+                    card1_shadow.angle = val;
+                    card1_text.angle = val;
+                },
+                easings.easeInOutQuad
+            )
 
+            // tween: card2 rotation
+            tween(
+                card2.angle,
+                randi(-20, 20), 
+                1,
+                (val) => {
+                    card2.angle = val;
+                    card2_shadow.angle = val;
+                    card2_text.angle = val;
+                },
+                easings.easeInOutQuad
+            )
 
             //tween: card2 pos
             tween(
