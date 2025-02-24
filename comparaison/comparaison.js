@@ -636,6 +636,9 @@ async function main() {
 
                     }
                     score += 100 * multiplier
+                    score_caption.text = `Score: ${score}`
+                    score_shadow.text = `Score: ${score}`
+
                     play(scoreSound[multiplier - 1], {
                         volume: 0.8
                     })
