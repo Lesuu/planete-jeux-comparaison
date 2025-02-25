@@ -1,77 +1,8 @@
-//#region Chargement des données
-// Importation des fonctions
-// Récupération du CSV 
-let CSVdata = []
-let metaText = []
+import { loadData, questions_JV, questions_JdS, questions_autres, translations} from './dataLoader.js';
 
-async function getCSV(url){
-    const response = await fetch(url);
-    const csvText = await response.text();
-
-    const parsedData = Papa.parse(csvText, {
-        header: true, 
-        skipEmptyLines: true, 
-    });
-    return parsedData.data; 
-}
-
-const lien = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQWBSQtcLt8CbTPN-TvHnrCt1h24GtoXiWxBCoo3nqbrTSqLuc93FeogkFsOrfS_qF-YDyhTk5E0aau/pub?gid=0&single=true&output=csv'
-const lien_v2 = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQWBSQtcLt8CbTPN-TvHnrCt1h24GtoXiWxBCoo3nqbrTSqLuc93FeogkFsOrfS_qF-YDyhTk5E0aau/pub?gid=1185013817&single=true&output=csv'
+//#region initialisation 
+// false: fiche v1, true: fiche v3
 let testing = true
-
-// Chargement des données dans la variable CSVdata & séparation des données jv/JdS/autres
-let questions_JV = []
-let questions_JV_egales = []
-
-let questions_JdS = []
-let questions_JdS_egales = []
-
-let translations = {}
-
-let questions_autres = []
-async function loadData() {
-
-    questions_JV = []
-    questions_JV_egales = []
-
-    questions_JdS = []
-    questions_JdS_egales = []
-
-    translations = {}
-
-    questions_autres = []
-
-    if (!testing){CSVdata = await getCSV(lien)}
-    else if (testing) {CSVdata = await getCSV(lien_v2)}
-    metaText = await getCSV('https://docs.google.com/spreadsheets/d/e/2PACX-1vQWBSQtcLt8CbTPN-TvHnrCt1h24GtoXiWxBCoo3nqbrTSqLuc93FeogkFsOrfS_qF-YDyhTk5E0aau/pub?gid=826164962&single=true&output=csv')
-    
-    metaText.forEach(row=>{
-        translations[row.TEXTE] = {
-            fr: row.fr,
-            eng: row.eng
-        };  
-    });
-    
-    // Séparation des données - pairings
-    for (let i = 0; i < CSVdata.length; i++) {
-        if (CSVdata[i].autre === "oui"){
-            questions_autres.push(CSVdata[i])
-        } else if (CSVdata[i].jeu_video == "TRUE") {
-            if (CSVdata[i].egal === "oui"){
-                questions_JV_egales.push(CSVdata[i])
-            } else {
-                questions_JV.push(CSVdata[i]) 
-            }
-        } else if (CSVdata[i].jeu_video == "FALSE") {
-            if (CSVdata[i].egal === "oui"){
-                questions_JdS_egales.push(CSVdata[i])
-            } else {
-                questions_JdS.push(CSVdata[i])
-            }
-        }
-    }
-}
-
 
 // Initialisation de Kaplay
 kaplay({
@@ -85,7 +16,7 @@ kaplay({
 main()
 async function main() {
     // On attend que les données soient chargées pour lancer le programme
-    await loadData()
+    await loadData(testing)
     //#endregion
     //#region Asset loading
 
@@ -160,7 +91,6 @@ async function main() {
     let clicked = 0
     let categorie
     let autres
-    let egales
     let score = 0
     let compteur_question 
     let jv_hover
@@ -293,7 +223,6 @@ async function main() {
                     jv = true
                     categorie = [...questions_JV]
                     autres = [...questions_autres]
-                    egales = [...questions_JV_egales]
                     go("questions")
                 }
             })
@@ -304,7 +233,6 @@ async function main() {
                     jv = false
                     categorie = [...questions_JdS]
                     autres = [...questions_autres]
-                    egales = [...questions_JdS_egales]
                     go("questions")
                 }
             })
@@ -389,34 +317,9 @@ async function main() {
             // Choisi une question aléatoire
             question_number = Math.floor(rand(categorie.length))
 
-            // Caption de la question
-            let caption = add([
-                text(getTranslation("QUESTION"), {
-                    font: "pixel",
-                    lineSpacing: 10,
-                    size: 54,
-                    width: 1000,
-                    align: "center"
-                }),
-                pos(width()/2, height()/6),
-                anchor("center"),
-                z(40),
-                "caption"
-            ])
-            let caption_shadow = add([
-                text(getTranslation("QUESTION"), {
-                    font: "pixel",
-                    lineSpacing: 10,
-                    size: 54,
-                    width: 1000,
-                    align: "center"
-                }),
-                pos(caption.pos.x + 5, caption.pos.y + 5),
-                anchor("center"),
-                color(0,0,0),
-                opacity(0.4),
-                "caption"
-            ])
+            // Sépare les questions 'égales'
+            let questionsEgales = categorie.filter(question => question.theme === "Egal")
+            console.log(questionsEgales)
 
             // Randomiser la position des cartes 
             let x_card1 = width() / 3;
@@ -431,19 +334,20 @@ async function main() {
             let sprite1 = (randi() === 0 ? "spades" : "clubs")
             let sprite2 = (randi() === 0 ? "diamonds" : "hearts")
 
-            //#region Logique question
+            //#region choixQuestion
             function choixQuestion(){
                 // Si c'est la dernière scriptée, on prend une question 'égale'
-                if (compteur_question === Math.max(...num_questions_scriptees) && egales.length > 0){
-                    let randnum = Math.floor(rand(egales.length))
+                if (compteur_question === Math.max(...num_questions_scriptees) && questionsEgales.length > 0){
+                    console.log("question egale")
+                    let randnum = Math.floor(rand(questionsEgales.length))
                     return {
                         scriptee : false,
-                        text1 : egales[randnum].description_activite1,
-                        text2 : egales[randnum].description_activite2,
+                        text1 : questionsEgales[randnum].description_activite1,
+                        text2 : questionsEgales[randnum].description_activite2,
+                        theme : questionsEgales[randnum].theme,
+                        caption : questionsEgales[randnum].question,
                         activite1_gagne : true,
-                        commentaire : egales[randnum].commentaire,
-                        categorie : "egal",
-                        egal : true
+                        commentaire : questionsEgales[randnum].commentaire,
                     }
                 // Si c'est une question scriptée mais pas la dernière, on prend une question 'autre'
                 } else if (num_questions_scriptees.includes(compteur_question)){
@@ -453,18 +357,20 @@ async function main() {
                             scriptee : true,
                             text1 : autres[randnum].description_activite1,
                             text2 : autres[randnum].description_activite2,
+                            theme : autres[randnum].theme,
+                            caption : autres[randnum].question,
                             activite1_gagne : true,
-                            commentaire : autres[randnum].commentaire,
-                            categorie : "autres"
+                            commentaire : autres[randnum].commentaire
                         }
                     } else {
                         return{
                             scriptee : true,
                             text1 : autres[randnum].description_activite1,
                             text2 : autres[randnum].description_activite2,
+                            theme : autres[randnum].theme,
+                            caption : autres[randnum].question,
                             activite1_gagne : false,
-                            commentaire : autres[randnum].commentaire,
-                            categorie : "autres"
+                            commentaire : autres[randnum].commentaire
                         }
                     }
                 // Sinon, on prend une question normale aléatoire
@@ -474,18 +380,20 @@ async function main() {
                             scriptee : false,
                             text1 : categorie[question_number].description_activite1,
                             text2 : categorie[question_number].description_activite2,
+                            theme : categorie[question_number].theme,
+                            caption : categorie[question_number].question,
                             activite1_gagne : true,
-                            commentaire : categorie[question_number].commentaire,
-                            categorie : "normal"
+                            commentaire : categorie[question_number].commentaire
                         }
                     } else if (categorie[question_number].activite1_gagnante === "FALSE"){
                         return{
                             scriptee : false,
                             text1 : categorie[question_number].description_activite1,
                             text2 : categorie[question_number].description_activite2,
+                            theme : categorie[question_number].theme,
+                            caption : categorie[question_number].question,
                             activite1_gagne : false,
-                            commentaire : categorie[question_number].commentaire,
-                            categorie : "normal"
+                            commentaire : categorie[question_number].commentaire
                         }
                     } 
                 }
@@ -619,7 +527,7 @@ async function main() {
                 scoreEffectTriggered = true;
                 if (((question.activite1_gagne) && (clicked == 1)) 
                     || (!question.activite1_gagne) && (clicked == 2)
-                    || (question.egal)){
+                    || (question.theme === "Egal")){
                     streak++
                     let score_color
                     // Multiplicateur
@@ -662,8 +570,9 @@ async function main() {
                     card.color = correct_color
                     card.z = 60
                     card_text.z = 65
+                    console.log(question.theme)
 
-                    if (clicked == 2){
+                    if (clicked == 2 && question.theme !== "Egal"){
                         wait(0.5, () =>{
                             tween(
                                 card1.color,
@@ -674,11 +583,22 @@ async function main() {
                                 },
                             )    
                         })
-                    } else {
+                    } else if (question.theme !== "Egal"){
                         wait(0.5, () =>{
                             tween(
                                 card2.color,
                                 wrong_color,
+                                1,
+                                (value) => {
+                                    card2.color = value
+                                },
+                            )    
+                        })
+                    } else {
+                        wait(0.5, () =>{
+                            tween(
+                                card2.color,
+                                correct_color,
                                 1,
                                 (value) => {
                                     card2.color = value
@@ -748,7 +668,6 @@ async function main() {
             }
             card1.onClick(() => {
                 if (locked || showingResults) return
-                    console.log(showingResults)
                     locked = true
                     clicked = 1
                     tween(
@@ -772,7 +691,6 @@ async function main() {
             });
             card2.onClick(() => {
                 if (locked || showingResults) return
-                console.log(showingResults)
                 locked = true
                 clicked = 2
                 tween(
@@ -797,8 +715,40 @@ async function main() {
         }
     
     //#endregion
-
     //#endregion
+
+    //#region Caption
+
+    // Caption de la question
+    let caption = add([
+        text(question.caption, {
+            font: "pixel",
+            lineSpacing: 10,
+            size: 54,
+            width: 1000,
+            align: "center"
+        }),
+        pos(width()/2, height()/6),
+        anchor("center"),
+        z(40),
+        "caption"
+    ])
+    let caption_shadow = add([
+        text(question.caption, {
+            font: "pixel",
+            lineSpacing: 10,
+            size: 54,
+            width: 1000,
+            align: "center"
+        }),
+        pos(caption.pos.x + 5, caption.pos.y + 5),
+        anchor("center"),
+        color(0,0,0),
+        opacity(0.4),
+        "caption"
+    ])
+    //#endregion
+
     // #region Réponse question
     // Fonction qui affiche la réponse à la question    
         function displayResults(question, card1, card1_shadow, card1_text, card2, card2_shadow, card2_text){
@@ -886,11 +836,12 @@ async function main() {
             );
 
             let caption_result
-            if (((question.activite1_gagne) && (clicked == 1)) 
-                || (!question.activite1_gagne) && (clicked == 2)
+            if (((question.activite1_gagne) && (clicked == 1) && (question.theme !== "Egal")) 
+                || ((!question.activite1_gagne) && (clicked == 2) && (question.theme !== "Egal"))
             ){
                 caption_result = getTranslation("CORRECT")
-            } else if (question.egal){
+            } else if (question.theme === "Egal"){
+                console.log("caption depends")
                 caption_result = getTranslation("DEPENDS")
                 score += 100
             } else {
@@ -963,7 +914,6 @@ async function main() {
                 let lock = false
                 suivant_bouton.onClick(() => {
                     if(lock) return
-                    console.log("RAHHH")
                     lock = true
                     categorie.splice(question_number, 1)
                     if (curTween1) curTween1.cancel()
