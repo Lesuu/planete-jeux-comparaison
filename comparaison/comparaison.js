@@ -14,21 +14,22 @@ kaplay({
 })
 
 // On attend que les données soient chargées pour lancer le programme
-load(loadData(testing))
+
 
 main()
 async function main() {
     //#endregion
     //#region Asset loading
+    await load(loadData(testing))
 
     loadFont("pixel", "assets/fonts/m6x11plus.ttf")
-    loadFont("pixelthin", "assets/fonts/PixelOperator8.ttf")
+    loadFont("pixelthin", "assets/fonts/m5x7.ttf")
     loadFont("kaph", "assets/fonts/Kaph-Regular.ttf", {
         outline: {
             width: 3,
             color: rgb(0,0,0),
         },
-        lineSpacing : 40,
+        letterSpacing : -5,
     });
 
     loadSound("fail","assets/audio/fail.mp3")
@@ -139,7 +140,7 @@ async function main() {
 
         // Elements UI
         let title = add([
-            text(/*getTranslation("OPTION")*/ 'Choisis une option!', {
+            text(getTranslation("OPTION"), {
                 font: "pixel",
                 size: 54
             }),
@@ -148,7 +149,7 @@ async function main() {
             z(50)
         ])
         let title_shadow = add([
-            text(/*getTranslation("OPTION")*/ 'Choisis une option!', {
+            text(getTranslation("OPTION"), {
                 font: "pixel",
                 size: 54
             }),
@@ -976,9 +977,10 @@ async function main() {
 
                 let fin = add([
                     text(getTranslation("RESULTATS"),{
-                        font: "pixelthin",
-                        size: 32,
-                        align: "center"
+                        font: "pixel",
+                        size: 54,
+                        align: "center",
+                        letterSpacing: 6,
                     }),
                     pos(suivant_bouton.pos),
                     anchor("center"),
@@ -988,9 +990,10 @@ async function main() {
 
                 let fin_shadow = add([
                     text(getTranslation("RESULTATS"),{
-                        font: "pixelthin",
-                        size: 32,
-                        align: "center"
+                        font: "pixel",
+                        size: 54,
+                        align: "center",
+                        letterSpacing: 6,
                     }),
                     color(93, 27, 27),
                     pos(suivant_bouton.pos.x + 5, suivant_bouton.pos.y + 5),
@@ -1040,9 +1043,10 @@ async function main() {
 
         let fin = add([
             text(getTranslation("TERMINER"),{
-                font: "pixelthin",
-                size: 32,
-                align: "center"
+                font: "pixel",
+                size: 54,
+                align: "center",
+                letterSpacing : 6
             }),
             pos(suivant_bouton.pos),
             anchor("center"),
@@ -1052,9 +1056,10 @@ async function main() {
 
         let fin_shadow = add([
             text(getTranslation("TERMINER"),{
-                font: "pixelthin",
-                size: 32,
-                align: "center"
+                font: "pixel",
+                size: 54,
+                align: "center",
+                letterSpacing : 6
             }),
             color(93, 27, 27),
             pos(suivant_bouton.pos.x + 5, suivant_bouton.pos.y + 5),
