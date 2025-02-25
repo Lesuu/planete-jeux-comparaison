@@ -78,6 +78,31 @@ async function main() {
         }
     })
 
+    loadSpriteAtlas("assets/sprites/BETTY-sheet.png", {
+        "betty" : {
+            "x": 0,
+            "y": 0,
+            "width": 124,
+            "height": 78,
+            "sliceX": 4,
+            "sliceY": 2,
+            "anims": {
+                "idle": {
+                    "from": 0,
+                    "to": 1,
+                    "speed": 1.5,
+                    "loop": true,
+                },
+                "talk": {
+                    "from": 4,
+                    "to": 7,
+                    "speed": 1,
+                    "loop": true,
+                }
+            }
+        }
+    })
+
     // Shader CRT
     loadShaderURL("crt", null, "assets/shaders/crt.frag");
     const crtEffect = () => ({
@@ -308,6 +333,26 @@ async function main() {
             // Randomiser la position des cartes 
             let x_card1 = width() / 3;
             let x_card2 = width() / 1.5
+
+            let betty = add([
+                sprite("betty", {anim: "idle"}),
+                pos(width() / 1.1, height() / 1.2),
+                scale(scaleValue*2),
+                anchor("bot"),
+                z(50),
+                "betty"
+            ])
+            betty.flipX = true
+            let betty_shadow = add([
+                pos(betty.pos.x, betty.pos.y),
+                scale(1.5, 0.5),
+                opacity(0.3),
+                circle(30),
+                color(0, 0, 0),
+                anchor("center"),
+                z(40),
+                "betty"
+            ])
 
             // Randomly decide whether to swap the positions of the cards
             if (randi() === 0) {
