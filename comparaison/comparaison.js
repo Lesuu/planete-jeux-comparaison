@@ -17,7 +17,7 @@ async function getCSV(url){
 
 const lien = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQWBSQtcLt8CbTPN-TvHnrCt1h24GtoXiWxBCoo3nqbrTSqLuc93FeogkFsOrfS_qF-YDyhTk5E0aau/pub?gid=0&single=true&output=csv'
 const lien_v2 = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQWBSQtcLt8CbTPN-TvHnrCt1h24GtoXiWxBCoo3nqbrTSqLuc93FeogkFsOrfS_qF-YDyhTk5E0aau/pub?gid=1185013817&single=true&output=csv'
-let testing = false
+let testing = true
 
 // Chargement des données dans la variable CSVdata & séparation des données jv/JdS/autres
 let questions_JV = []
@@ -117,7 +117,6 @@ async function main() {
     loadSprite("jv_color", "assets/sprites/vg_color.png")
     loadSprite("jds_icon", "assets/sprites/board_game.png")
     loadSprite("jds_color", "assets/sprites/bg_color.png")
-    loadSprite("button_next", "assets/sprites/button.png")
     loadSprite("button", "assets/sprites/button_textless.png")
     loadSpriteAtlas("assets/sprites/cards.png", {
         "spades" : {
@@ -177,7 +176,11 @@ async function main() {
     const nbr_questions = 10
     const num_questions_scriptees = [4, 7, 9]
     const langue = "fr"
+
+    // Couleurs
     const background_col = rgb(42, 138, 109)
+    const correct_color = hsl2rgb(120/360, 0.6, 0.65)
+    const wrong_color = hsl2rgb(337/360, 0.8, 0.7)
     //#endregion
     // #region Ecran d'accueil
 
@@ -655,7 +658,8 @@ async function main() {
                         opacity(1)
                     ])
 
-                    card.color = rgb(0,255,0)
+                    
+                    card.color = correct_color
                     card.z = 60
                     card_text.z = 65
 
@@ -663,7 +667,7 @@ async function main() {
                         wait(0.5, () =>{
                             tween(
                                 card1.color,
-                                rgb(255,0,0),
+                                wrong_color,
                                 1,
                                 (value) => {
                                     card1.color = value
@@ -674,7 +678,7 @@ async function main() {
                         wait(0.5, () =>{
                             tween(
                                 card2.color,
-                                rgb(255,0,0),
+                                wrong_color,
                                 1,
                                 (value) => {
                                     card2.color = value
@@ -708,7 +712,7 @@ async function main() {
                         easings.easeInQuart
                     )
                 } else {
-                    card.color = rgb(255,0,0)
+                    card.color = wrong_color
 
                     play("fail", {
                         volume: 0.5
@@ -717,7 +721,7 @@ async function main() {
                         wait(0.5, () =>{
                             tween(
                                 card1.color,
-                                rgb(0, 255, 0),
+                                correct_color,
                                 1,
                                 (value) => {
                                     card1.color = value
@@ -730,7 +734,7 @@ async function main() {
                         wait(0.5, () =>{
                             tween(
                                 card2.color,
-                                rgb(0, 255, 0),
+                                correct_color,
                                 1,
                                 (value) => {
                                     card2.color = value
