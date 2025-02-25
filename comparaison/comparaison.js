@@ -336,7 +336,7 @@ async function main() {
 
             let betty = add([
                 sprite("betty", {anim: "idle"}),
-                pos(width() / 1.1, height() / 1.2),
+                pos(width() / 1.12, height() / 1.25),
                 scale(scaleValue*2),
                 anchor("bot"),
                 z(50),
