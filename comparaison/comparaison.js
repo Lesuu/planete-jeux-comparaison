@@ -473,7 +473,7 @@ async function main() {
             let card1_text = add([
                 text(question.text1, {
                     font: "pixel",
-                    size: 36,
+                    size: 45,
                     width: 330,
                     lineSpacing : 10, 
                     align: "center"
@@ -511,7 +511,7 @@ async function main() {
             let card2_text = add([
                 text(question.text2, {
                     font: "pixel",
-                    size: 36,
+                    size: 45,
                     width: 330,
                     lineSpacing : 10,
                     align: "center"
@@ -603,75 +603,27 @@ async function main() {
                         pos(mousePos()),
                         z(200),
                         anchor("bot"),
-                        rotate(rand(10, 30)),
-                        opacity(1)
+                        rotate(rand(-30, 30)),
+                        area({ collisionIgnore: ["particle"] }),
+                        body(),
+                        opacity(1),
+                        lifespan(0.5, {fade: 0.3}),
+                        move(choose([LEFT, RIGHT]), rand(60, 240))
                     ])
 
-                    
-                    card.color = correct_color
-                    card.z = 60
-                    card_text.z = 65
+                    // Effet de saut pour le +100
+                    setGravity(800)
+                    score_effect.jump(rand(400, 440))
 
-                    // Color tween
-                    // if (clicked == 2 && question.theme !== "Egal"){
-                    //     wait(0.5, () =>{
-                    //         tween(
-                    //             card1.color,
-                    //             wrong_color,
-                    //             1,
-                    //             (value) => {
-                    //                 card1.color = value
-                    //             },
-                    //         )    
-                    //     })
-                    // } else if (question.theme !== "Egal"){
-                    //     wait(0.5, () =>{
-                    //         tween(
-                    //             card2.color,
-                    //             wrong_color,
-                    //             1,
-                    //             (value) => {
-                    //                 card2.color = value
-                    //             },
-                    //         )    
-                    //     })
-                    // } else {
-                    //     wait(0.5, () =>{
-                    //         tween(
-                    //             card2.color,
-                    //             correct_color,
-                    //             1,
-                    //             (value) => {
-                    //                 card2.color = value
-                    //             },
-                    //         )    
-                    //     })
-                    // }
-
+                    // Effet de couleur pour le +300
                     if (streak >= 3) {
                         score_effect.onUpdate(() => {
                             score_effect.color = hsl2rgb((time() * 1.5) % 1, 1, 0.5);
                         });
-                    } 
-
-                    tween(
-                        score_effect.pos,
-                        vec2(score_effect.pos.x * 1.1, score_effect.pos.y * 0.9),
-                        0.5,
-                        (value) => {
-                            score_effect.pos = value
-                        },
-                        easings.easeOutQuint
-                    )
-                    tween(
-                        score_effect.opacity,
-                        0,
-                        0.5,
-                        (value) => {
-                            score_effect.opacity = value
-                        },
-                        easings.easeInQuart
-                    )
+                    }                     
+                    card.color = correct_color
+                    card.z = 60
+                    card_text.z = 65
                 } else {
                     card.color = wrong_color
                     card.z = 40
@@ -681,35 +633,6 @@ async function main() {
                     play("fail", {
                         volume: 0.5
                     })
-
-                    // Color tween
-                    // if (clicked == 2){
-                    //     wait(0.5, () =>{
-                    //         tween(
-                    //             card1.color,
-                    //             correct_color,
-                    //             1,
-                    //             (value) => {
-                    //                 card1.color = value
-                    //             },
-                    //         )    
-                    //     })
-                    //     card1.z = 60
-                    //     card1_text.z = 65
-                    // } else {
-                    //     wait(0.5, () =>{
-                    //         tween(
-                    //             card2.color,
-                    //             correct_color,
-                    //             1,
-                    //             (value) => {
-                    //                 card2.color = value
-                    //             },
-                    //         )    
-                    //     })
-                    //     card2.z = 60
-                    //     card2_text.z = 65
-                    // }
                 } 
             }
             card1.onClick(() => {
@@ -770,9 +693,14 @@ async function main() {
         text(question.caption, {
             font: "pixel",
             lineSpacing: 10,
-            size: 54,
+            size: 72,
             width: 1000,
-            align: "center"
+            align: "center",
+            letterSpacing: 6,
+            transform: (idx, ch) => ({
+                pos: vec2(0, wave(-1, 1, time() * 3 + idx * 0.5)),
+                angle: wave(-2, 2, time() * 3 + idx),
+            }),
         }),
         pos(width()/2, height()/6),
         anchor("center"),
@@ -783,9 +711,14 @@ async function main() {
         text(question.caption, {
             font: "pixel",
             lineSpacing: 10,
-            size: 54,
+            size: 72,
             width: 1000,
-            align: "center"
+            align: "center",
+            letterSpacing: 6,
+            transform: (idx, ch) => ({
+                pos: vec2(0, wave(-1, 1, time() * 3 + idx * 0.5)),
+                angle: wave(-2, 2, time() * 3 + idx),
+            }),
         }),
         pos(caption.pos.x + 5, caption.pos.y + 5),
         anchor("center"),
@@ -897,11 +830,16 @@ async function main() {
             let result = add([
                 text(caption_result, {
                     font: "pixel",
-                    size: 64,
+                    size: 72,
                     width: 500,
-                    align: "center"
+                    align: "center",
+                    letterSpacing: 6,
+                    transform: (idx, ch) => ({
+                        pos: vec2(0, wave(-1, 1, time() * 3 + idx * 0.5)),
+                        angle: wave(-2, 2, time() * 3 + idx),
+                    })
                 }),
-                pos(width()/2, height()/16),
+                pos(width()/1.75, height()/8),
                 anchor("center"),
                 z(50),
                 "results_element"
@@ -909,9 +847,14 @@ async function main() {
             let result_shadow = add([
                 text(caption_result, {
                     font: "pixel",
-                    size: 64,
+                    size: 72,
                     width: 500,
-                    align: "center"
+                    align: "center",
+                    letterSpacing: 6,
+                    transform: (idx, ch) => ({
+                        pos: vec2(0, wave(-1, 1, time() * 3 + idx * 0.5)),
+                        angle: wave(-2, 2, time() * 3 + idx),
+                    })
                 }),
                 pos(result.pos.x + 6, result.pos.y + 6),
                 anchor("center"),
@@ -950,7 +893,7 @@ async function main() {
             if ((categorie.length - 1 > 0) && (compteur_question < nbr_questions)){ 
                 let suivant_bouton = add([
                     sprite("button"),
-                    pos(width()/2, height()/1.1),
+                    pos(width()/1.75, height()/1.15),
                     scale(scaleValue*2),  
                     anchor("center"),
                     area(),
@@ -994,28 +937,28 @@ async function main() {
 
                 let suivant = add([
                     text(getTranslation("SUIVANT"),{
-                        font: "pixelthin",
+                        font: "pixel",
                         width: 400,
-                        lineSpacing: 10,
-                        size: 40,
+                        letterSpacing: 6,
+                        size: 54,
                         align: "center"
                     }),
-                    pos(suivant_bouton.pos),
+                    pos(suivant_bouton.pos.x, suivant_bouton.pos.y - 4),
                     anchor("center"),
-                    z(20),
+                    z(20),  
                     "results_element"
                 ])
 
                 let suivant_shadow = add([
                     text(getTranslation("SUIVANT"),{
-                        font: "pixelthin",
+                        font: "pixel",
                         width: 400,
-                        lineSpacing: 10,
-                        size: 40,
+                        letterSpacing: 6,
+                        size: 54,
                         align: "center"
                     }),
                     color(93, 27, 27),
-                    pos(suivant_bouton.pos.x + 4, suivant_bouton.pos.y + 4),
+                    pos(suivant.pos.x + 5, suivant.pos.y + 4),
                     anchor("center"),
                     z(10),
                     "results_element"            
