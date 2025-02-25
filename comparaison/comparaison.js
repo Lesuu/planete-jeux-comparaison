@@ -13,10 +13,11 @@ kaplay({
     stretch:true,
 })
 
+// On attend que les données soient chargées pour lancer le programme
+load(loadData(testing))
+
 main()
 async function main() {
-    // On attend que les données soient chargées pour lancer le programme
-    await loadData(testing)
     //#endregion
     //#region Asset loading
 
@@ -103,12 +104,13 @@ async function main() {
     let locked = false
     let showingResults = false
     let usedThemes = []
+    let dernierThemeChoisi = null
 
     // Constantes: détermine le nombre de questions & lesquelles sont scriptées.
     const nbr_questions = 10
     const question_autre_jeu = 4
     const question_autre_gen = 7
-    const question_egale = 1
+    const question_egale = 9
     const langue = "fr"
 
     // Couleurs
@@ -124,35 +126,6 @@ async function main() {
     }
 
     scene("titleScreen", async () => {
-
-        // Testing
-        // Add a button that uses the 'button' sprite
-        let start_button = add([
-            sprite("button"),
-            pos(width()/2, height()/1.2),
-            scale(scaleValue*1.5),  
-            anchor("center"),
-            area(),
-            "start_button"
-        ])
-
-        let start_text = add([
-            text(`mode test : ${testing}`, {
-                font: "pixel",
-                size: 32,
-                align: "center"
-            }),
-            pos(start_button.pos),
-            anchor("center"),
-            z(100),
-            "start_button"
-        ])
-
-        start_button.onClick(async () => {
-            testing = !testing
-            await loadData()
-            start_text.text = `mode test : ${testing}`
-        })
 
         // Shader CRT
         onUpdate(() => {
@@ -263,10 +236,6 @@ async function main() {
     // Scène où on pose les questions
     
     scene("questions", async () => {
-        // Shader CRT
-        onUpdate(() => {
-            usePostEffect("crt", crtEffect());
-        });
         // Couleur du background dépend du support choisi
         let icon_sprite
         if (jv){
@@ -431,12 +400,13 @@ async function main() {
                         availableQuestions = categorie;
                     }
 
-                    // Choose a random question from the available questions
+                    // On choisit une question aléatoire parmi les questions disponibles
                     let questionIndex = Math.floor(Math.random() * availableQuestions.length);
-                    let chosenQuestion = availableQuestions[questionIndex]
+                    let chosenQuestion = availableQuestions[questionIndex];
 
-                    // Ajoute le thème dans la blacklist
+                    // Ajoute le thème dans la blacklist et garde en mémoire le dernier thème choisi
                     usedThemes.push(chosenQuestion.theme);
+                    dernierThemeChoisi = chosenQuestion.theme;
 
                     // Trouver l'index de la question choisie
                     let chosenQuestionIndex = categorie.findIndex(question => question === chosenQuestion);
@@ -497,7 +467,6 @@ async function main() {
                 pos(x_card1 + 20, height()*1.2),
                 scale(scaleValue),  
                 anchor("center"),
-                area(),
                 rotate(0),
                 "card1"
             ])
@@ -536,7 +505,6 @@ async function main() {
                 pos(x_card2 + 20, height()*1.3),
                 scale(scaleValue),  
                 anchor("center"),
-                area(),
                 rotate(0),
                 "card2"
             ])
@@ -644,40 +612,41 @@ async function main() {
                     card.z = 60
                     card_text.z = 65
 
-                    if (clicked == 2 && question.theme !== "Egal"){
-                        wait(0.5, () =>{
-                            tween(
-                                card1.color,
-                                wrong_color,
-                                1,
-                                (value) => {
-                                    card1.color = value
-                                },
-                            )    
-                        })
-                    } else if (question.theme !== "Egal"){
-                        wait(0.5, () =>{
-                            tween(
-                                card2.color,
-                                wrong_color,
-                                1,
-                                (value) => {
-                                    card2.color = value
-                                },
-                            )    
-                        })
-                    } else {
-                        wait(0.5, () =>{
-                            tween(
-                                card2.color,
-                                correct_color,
-                                1,
-                                (value) => {
-                                    card2.color = value
-                                },
-                            )    
-                        })
-                    }
+                    // Color tween
+                    // if (clicked == 2 && question.theme !== "Egal"){
+                    //     wait(0.5, () =>{
+                    //         tween(
+                    //             card1.color,
+                    //             wrong_color,
+                    //             1,
+                    //             (value) => {
+                    //                 card1.color = value
+                    //             },
+                    //         )    
+                    //     })
+                    // } else if (question.theme !== "Egal"){
+                    //     wait(0.5, () =>{
+                    //         tween(
+                    //             card2.color,
+                    //             wrong_color,
+                    //             1,
+                    //             (value) => {
+                    //                 card2.color = value
+                    //             },
+                    //         )    
+                    //     })
+                    // } else {
+                    //     wait(0.5, () =>{
+                    //         tween(
+                    //             card2.color,
+                    //             correct_color,
+                    //             1,
+                    //             (value) => {
+                    //                 card2.color = value
+                    //             },
+                    //         )    
+                    //     })
+                    // }
 
                     if (streak >= 3) {
                         score_effect.onUpdate(() => {
@@ -705,37 +674,42 @@ async function main() {
                     )
                 } else {
                     card.color = wrong_color
+                    card.z = 40
+                    card_text.z = 45
+                    shake(10)
 
                     play("fail", {
                         volume: 0.5
                     })
-                    if (clicked == 2){
-                        wait(0.5, () =>{
-                            tween(
-                                card1.color,
-                                correct_color,
-                                1,
-                                (value) => {
-                                    card1.color = value
-                                },
-                            )    
-                        })
-                        card1.z = 60
-                        card1_text.z = 65
-                    } else {
-                        wait(0.5, () =>{
-                            tween(
-                                card2.color,
-                                correct_color,
-                                1,
-                                (value) => {
-                                    card2.color = value
-                                },
-                            )    
-                        })
-                        card2.z = 60
-                        card2_text.z = 65
-                    }
+
+                    // Color tween
+                    // if (clicked == 2){
+                    //     wait(0.5, () =>{
+                    //         tween(
+                    //             card1.color,
+                    //             correct_color,
+                    //             1,
+                    //             (value) => {
+                    //                 card1.color = value
+                    //             },
+                    //         )    
+                    //     })
+                    //     card1.z = 60
+                    //     card1_text.z = 65
+                    // } else {
+                    //     wait(0.5, () =>{
+                    //         tween(
+                    //             card2.color,
+                    //             correct_color,
+                    //             1,
+                    //             (value) => {
+                    //                 card2.color = value
+                    //             },
+                    //         )    
+                    //     })
+                    //     card2.z = 60
+                    //     card2_text.z = 65
+                    // }
                 } 
             }
             card1.onClick(() => {
@@ -1028,8 +1002,7 @@ async function main() {
                     }),
                     pos(suivant_bouton.pos),
                     anchor("center"),
-                    area(),
-                    z("100"),
+                    z(20),
                     "results_element"
                 ])
 
@@ -1044,8 +1017,7 @@ async function main() {
                     color(93, 27, 27),
                     pos(suivant_bouton.pos.x + 4, suivant_bouton.pos.y + 4),
                     anchor("center"),
-                    area(),
-                    z("99"),
+                    z(10),
                     "results_element"            
                 ])
 
@@ -1067,8 +1039,7 @@ async function main() {
                     }),
                     pos(suivant_bouton.pos),
                     anchor("center"),
-                    area(),
-                    z("100"),
+                    z(20),
                     "results_element"
                 ])
 
@@ -1081,8 +1052,7 @@ async function main() {
                     color(93, 27, 27),
                     pos(suivant_bouton.pos.x + 5, suivant_bouton.pos.y + 5),
                     anchor("center"),
-                    area(),
-                    z("99"),
+                    z(15),
                     "results_element"
                 ])
 
@@ -1096,19 +1066,26 @@ async function main() {
     //#endregion
     //#region Résultats finaux
     scene("finalResults", ({score}) =>{
-        // Shader CRT
-        onUpdate(() => {
-            usePostEffect("crt", crtEffect());
-        });
         let scoreLabel = add([
             text(getTranslation("FINAL").replace("{score}", score),{
                 font: "pixel",
-                size: 64,
+                size: 72,
                 align: "center"
             }),
             pos(width()/2, height()/6),
             anchor("center"),
-
+            z(10)
+        ])
+        let scoreLabel_shadow = add([
+            text(getTranslation("FINAL").replace("{score}", score),{
+                font: "pixel",
+                size: 72,
+                align: "center"
+            }),
+            pos(scoreLabel.pos.x + 5, scoreLabel.pos.y + 5),
+            anchor("center"),
+            color(0,0,0),
+            opacity(0.4)
         ])
         let suivant_bouton = add([
             sprite("button"),
@@ -1126,8 +1103,7 @@ async function main() {
             }),
             pos(suivant_bouton.pos),
             anchor("center"),
-            area(),
-            z("100"),
+            z(20),
             "results_element"
         ])
 
@@ -1140,8 +1116,6 @@ async function main() {
             color(93, 27, 27),
             pos(suivant_bouton.pos.x + 5, suivant_bouton.pos.y + 5),
             anchor("center"),
-            area(),
-            z("99"),
             "results_element"
         ])
 
