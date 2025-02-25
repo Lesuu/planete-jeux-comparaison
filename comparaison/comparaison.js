@@ -87,10 +87,11 @@ async function main() {
     // #region Variables
     // Variables globales
     let jv 
-    let question_number = 0
     let clicked = 0
     let categorie
     let autres
+    let questionsEgales
+    let autres_jeu
     let score = 0
     let compteur_question 
     let jv_hover
@@ -101,10 +102,13 @@ async function main() {
     let multiplier = 1
     let locked = false
     let showingResults = false
+    let usedThemes = []
 
-    // Constantes
+    // Constantes: détermine le nombre de questions & lesquelles sont scriptées.
     const nbr_questions = 10
-    const num_questions_scriptees = [4, 7, 9]
+    const question_autre_jeu = 4
+    const question_autre_gen = 7
+    const question_egale = 1
     const langue = "fr"
 
     // Couleurs
@@ -216,23 +220,39 @@ async function main() {
             jds_hover = false
         })
 
-        // Changement de scène, établit si on a cliqué sur jv ou jds grâce a la variable jv
+        // Changement de scène, on trie les données selon le support choisit
+        async function separationDonnees(jv){
+            if (jv){
+                categorie = [...questions_JV]
+            } else {
+                categorie = [...questions_JdS]
+            }
+            autres = [...questions_autres]
+
+            // Sépare les questions 'égales'
+            questionsEgales = categorie.filter(question => question.theme === "Egal")
+
+            // Sépare les questions 'autre jeu'
+            autres_jeu = categorie.filter(question => question.theme === "Autre jeu")
+
+            // Supprime ces questions du reste
+            categorie = categorie.filter(question => question.theme !== "Egal" && question.theme !== "Autre jeu")
+        }
+
         await jv_icon.onClick(() => {
-            onMouseRelease(()=>{
+            onMouseRelease(async ()=>{
                 if (jv_hover){
                     jv = true
-                    categorie = [...questions_JV]
-                    autres = [...questions_autres]
+                    await separationDonnees(jv)
                     go("questions")
                 }
             })
         })
         await jds_icon.onClick(() => {
-            onMouseRelease(()=>{
+            onMouseRelease(async ()=>{
                 if (jds_hover){
                     jv = false
-                    categorie = [...questions_JdS]
-                    autres = [...questions_autres]
+                    await separationDonnees(jv)
                     go("questions")
                 }
             })
@@ -314,12 +334,6 @@ async function main() {
         function displayQuestion(){
             locked = false
             showingResults = false
-            // Choisi une question aléatoire
-            question_number = Math.floor(rand(categorie.length))
-
-            // Sépare les questions 'égales'
-            let questionsEgales = categorie.filter(question => question.theme === "Egal")
-            console.log(questionsEgales)
 
             // Randomiser la position des cartes 
             let x_card1 = width() / 3;
@@ -336,9 +350,9 @@ async function main() {
 
             //#region choixQuestion
             function choixQuestion(){
-                // Si c'est la dernière scriptée, on prend une question 'égale'
-                if (compteur_question === Math.max(...num_questions_scriptees) && questionsEgales.length > 0){
-                    console.log("question egale")
+                // Questions 'scriptées':
+                // On prend une question 'égale' selon la position déterminée dans question_egale
+                if (compteur_question === question_egale && questionsEgales.length > 0){
                     let randnum = Math.floor(rand(questionsEgales.length))
                     return {
                         scriptee : false,
@@ -349,8 +363,8 @@ async function main() {
                         activite1_gagne : true,
                         commentaire : questionsEgales[randnum].commentaire,
                     }
-                // Si c'est une question scriptée mais pas la dernière, on prend une question 'autre'
-                } else if (num_questions_scriptees.includes(compteur_question)){
+                // On prend une question 'autre' selon la position déterminée dans question_autre_gen
+                } else if (compteur_question === question_autre_gen){
                     let randnum = Math.floor(rand(autres.length))
                     if (autres[randnum].activite1_gagnante === "TRUE"){
                         return {
@@ -373,28 +387,86 @@ async function main() {
                             commentaire : autres[randnum].commentaire
                         }
                     }
-                // Sinon, on prend une question normale aléatoire
-                } else{
-                    if (categorie[question_number].activite1_gagnante === "TRUE"){
-                        return{
-                            scriptee : false,
-                            text1 : categorie[question_number].description_activite1,
-                            text2 : categorie[question_number].description_activite2,
-                            theme : categorie[question_number].theme,
-                            caption : categorie[question_number].question,
+                // On prend une question 'autre jeu' selon la position déterminée dans question_autre_categorie
+                } else if (compteur_question === question_autre_jeu){
+                    let randnum = Math.floor(rand(autres_jeu.length))
+                    if (autres_jeu[randnum].activite1_gagnante === "TRUE"){
+                        return {
+                            scriptee : true,
+                            text1 : autres_jeu[randnum].description_activite1,
+                            text2 : autres_jeu[randnum].description_activite2,
+                            theme : autres_jeu[randnum].theme,
+                            caption : autres_jeu[randnum].question,
                             activite1_gagne : true,
-                            commentaire : categorie[question_number].commentaire
+                            commentaire : autres_jeu[randnum].commentaire
                         }
-                    } else if (categorie[question_number].activite1_gagnante === "FALSE"){
+                    } else {
+                        return{
+                            scriptee : true,
+                            text1 : autres_jeu[randnum].description_activite1,
+                            text2 : autres_jeu[randnum].description_activite2,
+                            theme : autres_jeu[randnum].theme,
+                            caption : autres_jeu[randnum].question,
+                            activite1_gagne : false,
+                            commentaire : autres_jeu[randnum].commentaire
+                        }
+                    }
+
+                // Question normales:
+                } else {
+                    // Gérer les thèmes: éviter les répétitions
+                    // Reset si tous les thèmes sont déjà passés
+                    if (usedThemes.length === categorie.length){
+                        usedThemes = [];
+                    }
+                    console.log(usedThemes)
+
+                    // Filtrer les questions disponibles selon les thèmes restant
+                    let availableQuestions = categorie.filter(question => !usedThemes.includes(question.theme));
+                    console.log(availableQuestions)
+                    
+                    // S'il n'y a plus de questions dispo, on reset
+                    if (availableQuestions.length === 0) {
+                        usedThemes = [];
+                        availableQuestions = categorie;
+                    }
+
+                    // Choose a random question from the available questions
+                    let questionIndex = Math.floor(Math.random() * availableQuestions.length);
+                    let chosenQuestion = availableQuestions[questionIndex]
+
+                    // Ajoute le thème dans la blacklist
+                    usedThemes.push(chosenQuestion.theme);
+
+                    // Trouver l'index de la question choisie
+                    let chosenQuestionIndex = categorie.findIndex(question => question === chosenQuestion);
+
+                    // Supprimer la question choisie de façon permanente
+                    if (chosenQuestionIndex !== -1) {
+                        categorie.splice(chosenQuestionIndex, 1);
+                    }
+
+                    // Choisi la question
+                    if (chosenQuestion.activite1_gagnante === "TRUE"){
                         return{
                             scriptee : false,
-                            text1 : categorie[question_number].description_activite1,
-                            text2 : categorie[question_number].description_activite2,
-                            theme : categorie[question_number].theme,
-                            caption : categorie[question_number].question,
+                            text1 : chosenQuestion.description_activite1,
+                            text2 : chosenQuestion.description_activite2,
+                            theme : chosenQuestion.theme,
+                            caption : chosenQuestion.question,
+                            activite1_gagne : true,
+                            commentaire : chosenQuestion.commentaire
+                        };
+                    } else if (chosenQuestion.activite1_gagnante === "FALSE"){
+                        return{
+                            scriptee : false,
+                            text1 : chosenQuestion.description_activite1,
+                            text2 : chosenQuestion.description_activite2,
+                            theme : chosenQuestion.theme,
+                            caption : chosenQuestion.question,
                             activite1_gagne : false,
-                            commentaire : categorie[question_number].commentaire
-                        }
+                            commentaire : chosenQuestion.commentaire
+                        };
                     } 
                 }
             }
@@ -404,6 +476,7 @@ async function main() {
             // Carte 1
 
             question = choixQuestion()
+            console.log(question.theme)
             let scoreEffectTriggered = false
 
             let card1 = add([
@@ -570,7 +643,6 @@ async function main() {
                     card.color = correct_color
                     card.z = 60
                     card_text.z = 65
-                    console.log(question.theme)
 
                     if (clicked == 2 && question.theme !== "Egal"){
                         wait(0.5, () =>{
@@ -841,7 +913,6 @@ async function main() {
             ){
                 caption_result = getTranslation("CORRECT")
             } else if (question.theme === "Egal"){
-                console.log("caption depends")
                 caption_result = getTranslation("DEPENDS")
                 score += 100
             } else {
@@ -915,7 +986,6 @@ async function main() {
                 suivant_bouton.onClick(() => {
                     if(lock) return
                     lock = true
-                    categorie.splice(question_number, 1)
                     if (curTween1) curTween1.cancel()
                     if (curTween2) curTween2.cancel()
                     curTween1 = tween(
