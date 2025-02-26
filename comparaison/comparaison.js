@@ -51,6 +51,7 @@ async function main() {
     loadSprite("jds_icon", "assets/sprites/board_game.png")
     loadSprite("jds_color", "assets/sprites/bg_color.png")
     loadSprite("button", "assets/sprites/button_textless.png")
+    loadSprite("bulle", "assets/sprites/bulle.png")
     loadSpriteAtlas("assets/sprites/cards.png", {
         "spades" : {
             "x": 0,
@@ -93,13 +94,25 @@ async function main() {
                     "speed": 1.5,
                     "loop": true,
                 },
+                "idle_active":{
+                    "from": 2,
+                    "to": 3,
+                    "speed": 1.5,
+                    "loop": true,
+                },
                 "talk": {
                     "from": 4,
                     "to": 7,
-                    "speed": 1,
+                    "speed": 10,
                     "loop": true,
                 }
             }
+        },
+        "quest":{
+            "x": 124,
+            "y": 0,
+            "width": 31,
+            "height": 39,
         }
     })
 
@@ -131,6 +144,7 @@ async function main() {
     let showingResults = false
     let usedThemes = []
     let dernierThemeChoisi = null
+    let isTalking = false
 
     // Constantes: détermine le nombre de questions & lesquelles sont scriptées.
     const nbr_questions = 10
@@ -324,6 +338,37 @@ async function main() {
             anchor("center"),
         ])
 
+        //#region Betty
+        let betty = add([
+            sprite("betty", {anim: "idle"}),
+            pos(width() / 1.08, height() / 1.25),
+            scale(scaleValue*2),
+            anchor("bot"),
+            z(90),
+            area(),
+            "betty"
+        ])
+        betty.flipX = true
+        let betty_shadow = add([
+            pos(betty.pos.x, betty.pos.y),
+            scale(1.5, 0.5),
+            opacity(0.3),
+            circle(30),
+            color(0, 0, 0),
+            anchor("center"),
+            z(80),
+            "betty"
+        ])
+        let betty_quest = add([
+            sprite("quest"),
+            pos(betty.pos.x, betty.pos.y - 170),
+            scale (scaleValue * 2),
+            anchor("bot"),
+            z(80),
+            opacity(0),
+            "betty"
+        ])
+        //#endregion
 
         displayQuestion()
         function displayQuestion(){
@@ -334,27 +379,7 @@ async function main() {
             let x_card1 = width() / 3;
             let x_card2 = width() / 1.5
 
-            let betty = add([
-                sprite("betty", {anim: "idle"}),
-                pos(width() / 1.12, height() / 1.25),
-                scale(scaleValue*2),
-                anchor("bot"),
-                z(50),
-                "betty"
-            ])
-            betty.flipX = true
-            let betty_shadow = add([
-                pos(betty.pos.x, betty.pos.y),
-                scale(1.5, 0.5),
-                opacity(0.3),
-                circle(30),
-                color(0, 0, 0),
-                anchor("center"),
-                z(40),
-                "betty"
-            ])
-
-            // Randomly decide whether to swap the positions of the cards
+            // On swap la position des cartes de façon aléatoire
             if (randi() === 0) {
                 [x_card1, x_card2] = [x_card2, x_card1];
             }
@@ -377,6 +402,7 @@ async function main() {
                         caption : questionsEgales[randnum].question,
                         activite1_gagne : true,
                         commentaire : questionsEgales[randnum].commentaire,
+                        explication : questionsEgales[randnum].explication
                     }
                 // On prend une question 'autre' selon la position déterminée dans question_autre_gen
                 } else if (compteur_question === question_autre_gen){
@@ -389,7 +415,8 @@ async function main() {
                             theme : autres[randnum].theme,
                             caption : autres[randnum].question,
                             activite1_gagne : true,
-                            commentaire : autres[randnum].commentaire
+                            commentaire : autres[randnum].commentaire,
+                            explication : autres[randnum].explication
                         }
                     } else {
                         return{
@@ -399,7 +426,8 @@ async function main() {
                             theme : autres[randnum].theme,
                             caption : autres[randnum].question,
                             activite1_gagne : false,
-                            commentaire : autres[randnum].commentaire
+                            commentaire : autres[randnum].commentaire,
+                            explication : autres[randnum].explication
                         }
                     }
                 // On prend une question 'autre jeu' selon la position déterminée dans question_autre_categorie
@@ -413,7 +441,8 @@ async function main() {
                             theme : autres_jeu[randnum].theme,
                             caption : autres_jeu[randnum].question,
                             activite1_gagne : true,
-                            commentaire : autres_jeu[randnum].commentaire
+                            commentaire : autres_jeu[randnum].commentaire,
+                            explication : autres[randnum].explication
                         }
                     } else {
                         return{
@@ -423,7 +452,8 @@ async function main() {
                             theme : autres_jeu[randnum].theme,
                             caption : autres_jeu[randnum].question,
                             activite1_gagne : false,
-                            commentaire : autres_jeu[randnum].commentaire
+                            commentaire : autres_jeu[randnum].commentaire,
+                            explication : autres_jeu[randnum].explication
                         }
                     }
 
@@ -434,11 +464,9 @@ async function main() {
                     if (usedThemes.length === categorie.length){
                         usedThemes = [];
                     }
-                    console.log(usedThemes)
 
                     // Filtrer les questions disponibles selon les thèmes restant
                     let availableQuestions = categorie.filter(question => !usedThemes.includes(question.theme));
-                    console.log(availableQuestions)
                     
                     // S'il n'y a plus de questions dispo, on reset
                     if (availableQuestions.length === 0) {
@@ -471,7 +499,8 @@ async function main() {
                             theme : chosenQuestion.theme,
                             caption : chosenQuestion.question,
                             activite1_gagne : true,
-                            commentaire : chosenQuestion.commentaire
+                            commentaire : chosenQuestion.commentaire,
+                            explication : chosenQuestion.explication
                         };
                     } else if (chosenQuestion.activite1_gagnante === "FALSE"){
                         return{
@@ -481,7 +510,8 @@ async function main() {
                             theme : chosenQuestion.theme,
                             caption : chosenQuestion.question,
                             activite1_gagne : false,
-                            commentaire : chosenQuestion.commentaire
+                            commentaire : chosenQuestion.commentaire,
+                            explication : chosenQuestion.explication
                         };
                     } 
                 }
@@ -492,7 +522,6 @@ async function main() {
             // Carte 1
 
             question = choixQuestion()
-            console.log(question.theme)
             let scoreEffectTriggered = false
 
             let card1 = add([
@@ -729,6 +758,7 @@ async function main() {
             });
         }
     
+        //#endregion
     //#endregion
     //#endregion
 
@@ -1046,12 +1076,102 @@ async function main() {
                     z(15),
                     "results_element"
                 ])
-
-                
                 suivant_bouton.onClick(() => {
                     go("finalResults", {score: score})
                 })
             }
+            //#endregion
+            //#region Betty comment
+            // Dialogue
+
+            betty.play("idle_active")
+            betty_quest.opacity = 1
+            betty.onClick(() => {
+                betty.play("talk")
+                betty_quest.opacity = 0
+                let bulle = add([
+                    sprite("bulle"),
+                    pos(betty.pos.x, betty.pos.y - 180),
+                    scale(scaleValue*5),
+                    anchor("botright"),
+                    area(),
+                    z(100),
+                    "bulle"
+                ])
+                let txt = add([
+                    text("", {
+                        font: "pixelthin",
+                        size: 54,
+                        width: 1070,
+                        transform: (idx, ch) => {
+                            return {
+                                opacity: idx < txt.letterCount ? 1 : 0,
+                            };
+                        },
+                    }),
+                    anchor("topleft"),
+                    pos(bulle.pos.x - 1120, bulle.pos.y - 570),
+                    color(56, 71, 74),
+                    z(110),
+                    {
+                        letterCount: 0,
+                    },
+                    "bulle"
+                ])
+                let close = add([
+                    text(getTranslation("FERMER"), {
+                        font: "pixelthin",
+                        size: 54,
+                        width: 1070,
+                        transform: (idx, ch) => ({
+                            pos: vec2(0, wave(-1, 1, time() * 3 + idx * 0.5)),
+                            angle: wave(-2, 2, time() * 3 + idx),
+                            // color: hsl2rgb(210/360, 0.12, 0.8),
+                        }),
+                    }),
+                    pos(bulle.pos.x - bulle.width*3.1, bulle.pos.y/1.33),
+                    color(150, 150, 150),
+                    z(110),
+                    anchor("center"),
+                    opacity(0),
+                    "bulle"
+                ])
+                function startWriting(dialog) {
+                    isTalking = true;
+                    txt.letterCount = 0;
+                    txt.text = dialog;
+                
+                    const writing = loop(0.02, () => {
+                        txt.letterCount = Math.min(
+                            txt.letterCount + 1,
+                            txt.renderedText.length,
+                        );
+                        // play(, {
+                        //     volume: 0.2,
+                        // });
+                        console.log(txt.renderedText.length, txt.letterCount)
+                        if (txt.letterCount === txt.renderedText.length) {
+                            isTalking = false;
+                            writing.cancel();
+                            betty.play("idle_active")
+                            close.opacity = 1
+                        }
+                    });
+                }
+                startWriting(question.explication)
+                let assombrissement = add([
+                    rect(1920, 1080),
+                    opacity(0.4),
+                    color(0,0,0),
+                    pos(0,0),
+                    z(70),
+                    "bulle"
+                ])
+                bulle.onClick(()=>{
+                    destroyAll("bulle")
+                    betty.play("idle")
+                })
+            })
         }
     })
     //#endregion
