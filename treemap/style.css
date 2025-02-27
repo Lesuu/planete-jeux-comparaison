@@ -39,14 +39,28 @@ body {
     width: 100%;
 }
 
-.checkbox {
+.checkbox-container-vertical {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.checkbox-container-horizontal {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.checkbox-scenario, .checkbox-acv{
     width: 20px;
     height: 20px;
     margin-right: 10px;
 }
 
-.checkbox-label {
-    font-size: 14px;
+.checkbox-scenario-label, .checkbox-acv-label{
+        font-size: 14px;
     flex: 1;
     font-family: sans-serif;
 }

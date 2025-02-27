@@ -9,7 +9,7 @@ const checkbox_empty = "assets/empty_checkbox.png";
 const checkbox_full = "assets/full_checkbox.png";
 
 // Liens vers le CSV (que français pr l'instant)
-const lien_français = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2RjJYuns3gy3P3p45n8_pm8yqqDCWqHfVON3xswfWfHk3vLgpdP6YhbIO/pub?gid=0&single=true&output=csv";
+const lien_français = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2RjJYuns3gy3P3p45n8_pm8yqqDCWqHfVON3xswfWfHk3vLgpdP6YhbIO/pub?gid=2091141345&single=true&output=csv";
 const lien_english = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2RjJYuns3gy3P3p45n8_pm8yqqDCWqHfVON3xswfWfHk3vLgpdP6YhbIO/pub?gid=895638476&single=true&output=csv";
 
 d3.csv(lien_français).then(function(data){
@@ -83,6 +83,12 @@ d3.csv(lien_français).then(function(data){
         document.getElementById('chart').innerHTML = '';
         genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, marge);
     });
+
+    // Boutons par scenario
+    // Add new buttons for each consumption mode
+let btn_changement_climatique = document.getElementById('btn-changement-climatique');
+let btn_metaux = document.getElementById('btn-metaux');
+let btn_particules_fines = document.getElementById('btn-particules-fines');
 
     // Checkboxes pour la contribution
     let checkbox_equipement = document.getElementById('checkbox-equipement');

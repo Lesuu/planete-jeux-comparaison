@@ -43,8 +43,17 @@ async function main() {
     loadSound("score2","assets/audio/score-streak.wav")
     loadSound("score3","assets/audio/score-streak-max.wav")
 
+    loadSound("talk1", "assets/audio/talk1.wav")
+    loadSound("talk2", "assets/audio/talk2.wav")
+
     let scoreSound = ["score1", "score2", "score3"]
     let cardSounds = ["card1", "card2", "card3", "card4"]
+    let foldSounds = []
+
+    for (let i = 1; i <= 8; i++) {
+        loadSound(`fold${i}`, `assets/audio/card-slide-${i}.ogg`)
+        foldSounds.push(`fold${i}`)
+    }
 
     loadSprite("jv_icon", "assets/sprites/video_game.png")
     loadSprite("jv_color", "assets/sprites/vg_color.png")
@@ -111,8 +120,14 @@ async function main() {
         "quest":{
             "x": 124,
             "y": 0,
-            "width": 31,
-            "height": 39,
+            "width": 6,
+            "height": 25,
+        },
+        "info": {
+            "x": 130,
+            "y": 0,
+            "width": 18,
+            "height": 17
         }
     })
 
@@ -143,8 +158,11 @@ async function main() {
     let locked = false
     let showingResults = false
     let usedThemes = []
+    let explanation = false
     let dernierThemeChoisi = null
     let isTalking = false
+    let exited = true
+
 
     // Constantes: détermine le nombre de questions & lesquelles sont scriptées.
     const nbr_questions = 10
@@ -330,6 +348,38 @@ async function main() {
             color(0,0,0),
 
         ])
+        // Streak
+        let streak_caption = add([
+            text(getTranslation("STREAK").replace("{streak}", streak) + (streak > 1 ? "!" : "."), {
+                font: "pixel",
+                size: 36,
+                transform: streak >= 3 ? (idx, ch) => ({
+                    color: hsl2rgb((time() * 0.2 + idx * 0.1) % 1, 0.7, 0.8),
+                    pos: vec2(0, wave(-4, 4, time() * 4 + idx * 0.5)),
+                    scale: wave(1, 1.2, time() * 3 + idx),
+                    angle: wave(-9, 9, time() * 3 + idx),
+                }) : undefined,
+            }),
+            pos(width()/2, 30),
+            anchor("center"),
+            z(50)
+        ])
+        let streak_shadow = add([
+            text(streak_caption.text, {
+                font: "pixel",
+                size: 36,
+                transform: streak >= 3 ? (idx, ch) => ({
+                    color: hsl2rgb((time() * 0.2 + idx * 0.1) % 1, 0.7, 0.8),
+                    pos: vec2(0, wave(-4, 4, time() * 4 + idx * 0.5)),
+                    scale: wave(1, 1.2, time() * 3 + idx),
+                    angle: wave(-9, 9, time() * 3 + idx),
+                }) : undefined,
+            }),
+            pos(streak_caption.pos.x +4, streak_caption.pos.y +4),
+            anchor("center"),
+            color(0,0,0),
+            opacity(0.4)
+        ])
 
         // Icone du support
         let icon = add([
@@ -345,7 +395,7 @@ async function main() {
             scale(scaleValue*2),
             anchor("bot"),
             z(90),
-            area(),
+            area(31*scaleValue, 200*scaleValue),
             "betty"
         ])
         betty.flipX = true
@@ -359,13 +409,24 @@ async function main() {
             z(80),
             "betty"
         ])
-        let betty_quest = add([
+        let betty_info = add([
             sprite("quest"),
-            pos(betty.pos.x, betty.pos.y - 170),
-            scale (scaleValue * 2),
+            pos(betty.pos.x, betty.pos.y - 200),
+            scale(scaleValue *2),
             anchor("bot"),
+            area(),
             z(80),
             opacity(0),
+            "betty"
+        ])
+        let info_shadow = add([
+            sprite("info"),
+            pos(betty_info.pos.x + 5, betty_info.pos.y + 5),
+            scale(scaleValue * 2),
+            anchor("bot"),
+            color(0,0,0),
+            opacity(0),
+            z(70),
             "betty"
         ])
         //#endregion
@@ -407,6 +468,7 @@ async function main() {
                 // On prend une question 'autre' selon la position déterminée dans question_autre_gen
                 } else if (compteur_question === question_autre_gen){
                     let randnum = Math.floor(rand(autres.length))
+                    console.log(randnum, autres)
                     if (autres[randnum].activite1_gagnante === "TRUE"){
                         return {
                             scriptee : true,
@@ -442,7 +504,7 @@ async function main() {
                             caption : autres_jeu[randnum].question,
                             activite1_gagne : true,
                             commentaire : autres_jeu[randnum].commentaire,
-                            explication : autres[randnum].explication
+                            explication : autres_jeu[randnum].explication
                         }
                     } else {
                         return{
@@ -645,6 +707,8 @@ async function main() {
                     || (!question.activite1_gagne) && (clicked == 2)
                     || (question.theme === "Egal")){
                     streak++
+                    streak_caption.text = getTranslation("STREAK").replace("{streak}", streak) + (streak > 1 ? " !" : ".")
+                    streak_shadow.text = getTranslation("STREAK").replace("{streak}", streak) + (streak > 1 ? " !" : ".")
                     let score_color
                     // Multiplicateur
                     switch (true) {
@@ -708,11 +772,12 @@ async function main() {
                     play("fail", {
                         volume: 0.5
                     })
+                    streak_caption.text = getTranslation("STREAK").replace("{streak}", streak) + (streak > 1 ? " !" : ".")
+                    streak_shadow.text = getTranslation("STREAK").replace("{streak}", streak) + (streak > 1 ? " !" : ".")
                 } 
             }
             card1.onClick(() => {
                 if (locked || showingResults) return
-                    locked = true
                     clicked = 1
                     tween(
                         scaleValue,
@@ -726,7 +791,8 @@ async function main() {
                         easings.easeOutElastic
                     );
                     onMouseRelease(() => { 
-                        if (showingResults) return
+                        if (showingResults || locked) return
+                        locked = true
                         scoreEffect(card1, card1_text)
                         wait(0.4, () => {
                             displayResults(question, card1, card1_shadow, card1_text, card2, card2_shadow, card2_text)
@@ -735,7 +801,6 @@ async function main() {
             });
             card2.onClick(() => {
                 if (locked || showingResults) return
-                locked = true
                 clicked = 2
                 tween(
                     scaleValue,
@@ -749,7 +814,8 @@ async function main() {
                     easings.easeOutElastic
                 );
                 onMouseRelease(() => {
-                    if (showingResults) return
+                    if (showingResults || locked) return
+                    locked = true
                     scoreEffect(card2, card2_text)
                     wait(0.4, () => {
                         displayResults(question, card1, card1_shadow, card1_text, card2, card2_shadow, card2_text)
@@ -907,7 +973,7 @@ async function main() {
                 text(caption_result, {
                     font: "pixel",
                     size: 72,
-                    width: 500,
+                    width: 800,
                     align: "center",
                     letterSpacing: 6,
                     transform: (idx, ch) => ({
@@ -924,7 +990,7 @@ async function main() {
                 text(caption_result, {
                     font: "pixel",
                     size: 72,
-                    width: 500,
+                    width: 800,
                     align: "center",
                     letterSpacing: 6,
                     transform: (idx, ch) => ({
@@ -977,10 +1043,18 @@ async function main() {
                 ])
                 let lock = false
                 suivant_bouton.onClick(() => {
-                    if(lock) return
+                    if(lock || explanation) return
                     lock = true
                     if (curTween1) curTween1.cancel()
                     if (curTween2) curTween2.cancel()
+                    play(choose(foldSounds), {
+                        volume:0.3
+                    })
+                    wait(0.3, () =>{
+                        play(choose(foldSounds), {
+                            volume : 0.3
+                        })
+                    })
                     curTween1 = tween(
                         card1.pos,
                         vec2(-300, card1.pos.y),
@@ -1077,6 +1151,7 @@ async function main() {
                     "results_element"
                 ])
                 suivant_bouton.onClick(() => {
+                    if (explanation) return
                     go("finalResults", {score: score})
                 })
             }
@@ -1085,16 +1160,27 @@ async function main() {
             // Dialogue
 
             betty.play("idle_active")
-            betty_quest.opacity = 1
+            betty_info.opacity = 1
+            info_shadow.opacity = 0.4
             betty.onClick(() => {
+                bettyClick()
+            })
+            betty_info.onClick(()=>{
+                bettyClick()
+            })
+            function bettyClick(){
+                if (explanation) return
+                explanation = true
+                exited = false
                 betty.play("talk")
-                betty_quest.opacity = 0
+                betty_info.opacity = 0
+                info_shadow.opacity = 0
                 let bulle = add([
                     sprite("bulle"),
                     pos(betty.pos.x, betty.pos.y - 180),
                     scale(scaleValue*5),
                     anchor("botright"),
-                    area(),
+                    area({ shape: new Rect(vec2(-4, -12), 99, 44) }),
                     z(100),
                     "bulle"
                 ])
@@ -1146,16 +1232,16 @@ async function main() {
                             txt.letterCount + 1,
                             txt.renderedText.length,
                         );
-                        // play(, {
-                        //     volume: 0.2,
-                        // });
-                        console.log(txt.renderedText.length, txt.letterCount)
+                        play("talk2", {
+                            volume: 0.1,
+                        });
                         if (txt.letterCount === txt.renderedText.length) {
                             isTalking = false;
                             writing.cancel();
                             betty.play("idle_active")
                             close.opacity = 1
                         }
+                        if(exited) writing.cancel()
                     });
                 }
                 startWriting(question.explication)
@@ -1168,10 +1254,12 @@ async function main() {
                     "bulle"
                 ])
                 bulle.onClick(()=>{
+                    exited = true
                     destroyAll("bulle")
                     betty.play("idle")
+                    explanation = false
                 })
-            })
+            }
         }
     })
     //#endregion
@@ -1233,6 +1321,7 @@ async function main() {
         ])
 
         suivant_bouton.onClick(()=>{
+            if (explanation) return
             go("titleScreen")
         })
     })

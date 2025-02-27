@@ -15,13 +15,29 @@
             <img id="bg-icon" src="assets/board_game.png">
             <img id="vg-icon" src="assets/video_game.png">
         </div>
-        <div class="checkbox-container">
-            <img id="checkbox-equipement" class="checkbox" src="assets/full_checkbox.png">
-            <span id="checkbox-label" class="checkbox-label">Par équipement</span>
+        <div class="checkbox-container-vertical">
+            <div class="checkbox-container">
+                <img id="checkbox-changement-climatique" class="checkbox-scenario" src="assets/full_checkbox.png">
+                <span id="checkbox-label" class="checkbox-scenario-label">Changement climatique</span>
+            </div>
+            <div class="checkbox-container">
+                <img id="checkbox-metaux" class="checkbox-scenario" src="assets/empty_checkbox.png">
+                <span id="checkbox-label" class="checkbox-scenario-label">Metaux</span>
+            </div>
+            <div class="checkbox-container">
+                <img id="checkbox-particules-fines" class="checkbox-scenario" src="assets/empty_checkbox.png">
+                <span id="checkbox-label" class="checkbox-scenario-label">Particules fines</span>
+            </div>
         </div>
-        <div class="checkbox-container">
-            <img id="checkbox-cycle" class="checkbox" src="assets/empty_checkbox.png">
-            <span id="checkbox-label" class="checkbox-label">Par étape de cycle de vie</span>
+        <div class="checkbox-container-horizontal">
+            <div class="checkbox-container">
+                <img id="checkbox-equipement" class="checkbox-acv" src="assets/full_checkbox.png">
+                <span id="checkbox-label" class="checkbox-acv-label">Par équipement</span>
+            </div>
+            <div class="checkbox-container">
+                <img id="checkbox-cycle" class="checkbox-acv" src="assets/empty_checkbox.png">
+                <span id="checkbox-label" class="checkbox-acv-label">Par étape de cycle de vie</span>
+            </div>
         </div>
     </div>
     <div id="chart"></div>
