@@ -60,7 +60,11 @@ body {
 }
 
 .checkbox-scenario-label, .checkbox-acv-label{
-        font-size: 14px;
+    font-size: 14px;
     flex: 1;
     font-family: sans-serif;
+}
+
+.hidden{
+    display: none;
 }

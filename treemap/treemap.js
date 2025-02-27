@@ -48,12 +48,19 @@ d3.csv(lien_français).then(function(data){
     };
 
     //#region Boutons
+    
+    let scenario_choisi = 'changement climatique'
 
     let bg_icon = document.getElementById('bg-icon');
     let vg_icon = document.getElementById("vg-icon");
 
     let jds_toggle = false;
     let jv_toggle = false;
+
+    // Toutes les options sont cachées par défaut
+    document.querySelectorAll('.checkbox-container').forEach(container =>{
+        container.style.display = 'none';
+    });
     // Bouton jeu de plateau
     bg_icon.addEventListener("mouseover", function(){ bg_icon.src = bg_color_path; });
     bg_icon.addEventListener("mouseleave", function(){
@@ -67,8 +74,14 @@ d3.csv(lien_français).then(function(data){
         vg_icon.src = vg_icon_path;
         document.getElementById('chart').innerHTML = '';
         genereJeuDeSociete(jds_changementClimatique, contribution_choisie, marge)
+    
+        // On montre seulement les options qui ont du sens pour le JdS
+        document.querySelectorAll('.checkbox-container').forEach(container => {
+            container.style.display = 'none';
+        });
+        document.getElementById('checkbox-equipement').parentElement.style.display = 'flex';
+        document.getElementById('checkbox-cycle').parentElement.style.display = 'flex';
     });
-
     // Bouton jeu vidéo
     vg_icon.addEventListener("mouseover", function(){ vg_icon.src = vg_color_path; });
     vg_icon.addEventListener("mouseleave", function(){
@@ -81,14 +94,68 @@ d3.csv(lien_français).then(function(data){
         jv_toggle = true;
         bg_icon.src = bg_icon_path;
         document.getElementById('chart').innerHTML = '';
-        genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, marge);
+
+        // Show all checkboxes for video game
+        document.querySelectorAll('.checkbox-container').forEach(container => {
+            container.style.display = 'flex';
+        });
+
+        genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, scenario_choisi, marge);
     });
 
     // Boutons par scenario
-    // Add new buttons for each consumption mode
-let btn_changement_climatique = document.getElementById('btn-changement-climatique');
-let btn_metaux = document.getElementById('btn-metaux');
-let btn_particules_fines = document.getElementById('btn-particules-fines');
+    let checkbox_changement_climatique = document.getElementById('checkbox-changement-climatique');
+    //let changement_climatique_toggle = true
+
+    let checkbox_metaux = document.getElementById('checkbox-metaux');
+    //let metaux_toggle = false
+
+    let checkbox_particules_fines = document.getElementById('checkbox-particules-fines');
+    //let particules_fines_toggle = false
+
+    function clickCheckbox(checkbox){
+        document.getElementById('chart').innerHTML = '';
+        checkbox.src = checkbox_full;
+        switch (checkbox.id){
+            case 'checkbox-changement-climatique':
+                checkbox_metaux.src = checkbox_empty
+                checkbox_particules_fines.src = checkbox_empty
+                return 'changement climatique'
+            case 'checkbox-metaux':
+                checkbox_changement_climatique.src = checkbox_empty
+                checkbox_particules_fines.src = checkbox_empty
+                return 'metaux'
+            case 'checkbox-particules-fines':
+                checkbox_changement_climatique.src = checkbox_empty
+                checkbox_metaux.src = checkbox_empty
+                return 'particules fines'
+        }
+    }
+    checkbox_changement_climatique.addEventListener("click", () => {
+        scenario_choisi = clickCheckbox(checkbox_changement_climatique)
+        if (jv_toggle){
+            genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, scenario_choisi, marge)
+        } else if (jds_toggle){
+            genereJeuDeSociete(jds_changementClimatique, contribution_choisie, marge)
+        }
+    })
+    checkbox_metaux.addEventListener("click", () => {
+        scenario_choisi = clickCheckbox(checkbox_metaux)
+        if (jv_toggle){
+            genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, scenario_choisi, marge)
+        } else if (jds_toggle){
+            genereJeuDeSociete(jds_changementClimatique, contribution_choisie, marge)
+        }
+    })
+    checkbox_particules_fines.addEventListener("click", () => {
+        scenario_choisi = clickCheckbox(checkbox_particules_fines)
+        if (jv_toggle){
+            genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, scenario_choisi, marge)
+        } else if (jds_toggle){
+            genereJeuDeSociete(jds_changementClimatique, contribution_choisie, marge)
+        }
+    })
+    
 
     // Checkboxes pour la contribution
     let checkbox_equipement = document.getElementById('checkbox-equipement');
@@ -109,7 +176,7 @@ let btn_particules_fines = document.getElementById('btn-particules-fines');
             cycle_toggle = false;
         }
         if (jv_toggle){
-            genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, marge)
+            genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, scenario_choisi, marge)
         } else if (jds_toggle){
             genereJeuDeSociete(jds_changementClimatique, contribution_choisie, marge)
         }
@@ -125,13 +192,13 @@ let btn_particules_fines = document.getElementById('btn-particules-fines');
             equipement_toggle = false;
         }
         if (jv_toggle){
-            genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, marge)
+            genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, scenario_choisi, marge)
         } else if (jds_toggle){
             genereJeuDeSociete(jds_changementClimatique, contribution_choisie, marge)
         }
     });
 
-    function genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, marge){
+    function genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, scenario, marge){
         // Tri selon la contribution
         jv_data_changement_climatique = jv_changementClimatique.filter(d => d.contribution === contribution_choisie);
         jv_data_metaux = jv_metaux.filter(d => d.contribution === contribution_choisie);
@@ -144,9 +211,21 @@ let btn_particules_fines = document.getElementById('btn-particules-fines');
 
         // Fonction pour créer les treemaps. On donne le dataset, la largeur, la hauteur
         // Ainsi que la marge qui sépare les éléments entre eux
-        buildTreemap(jv_final_data_changement_climatique, 600, 600, marge);
-        buildTreemap(jv_final_data_metaux, 600, 600, marge);
-        buildTreemap(jv_final_data_particules_fines, 600, 600, marge);
+
+        switch (scenario){
+            case "changement climatique":
+                buildTreemap(jv_final_data_changement_climatique, 1000, 600, marge);
+                break;
+            case "metaux":
+                buildTreemap(jv_final_data_metaux, 1000, 600, marge);
+                break;
+            case "particules fines":
+                buildTreemap(jv_final_data_particules_fines, 1000, 600, marge)
+                break;
+            default:
+                buildTreemap(jv_final_data_changement_climatique, 1000, 600, marge);
+        }      
+        
     }
 
     function genereJeuDeSociete(jds_changementClimatique, contribution_choisie, marge){
