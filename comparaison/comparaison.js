@@ -1,4 +1,4 @@
-import { loadData, questions_JV, questions_JdS, questions_autres, translations} from './dataLoader.js';
+import { loadData, questions_JV, questions_JdS, translations} from './dataLoader.js';
 
 //#region initialisation 
 // false: fiche v1, true: fiche v3
@@ -144,7 +144,7 @@ async function main() {
     let jv 
     let clicked = 0
     let categorie
-    let autres
+    //let autres
     let questionsEgales
     let autres_jeu
     let score = 0
@@ -162,11 +162,12 @@ async function main() {
     let dernierThemeChoisi = null
     let isTalking = false
     let exited = true
+    let closeCooldown = false
 
 
     // Constantes: détermine le nombre de questions & lesquelles sont scriptées.
     const nbr_questions = 10
-    const question_autre_jeu = 4
+    const question_autre_jeu = [4, 7]
     const question_autre_gen = 7
     const question_egale = 9
     const langue = "fr"
@@ -258,7 +259,7 @@ async function main() {
             } else {
                 categorie = [...questions_JdS]
             }
-            autres = [...questions_autres]
+            //autres = [...questions_autres]
 
             // Sépare les questions 'égales'
             questionsEgales = categorie.filter(question => question.theme === "Egal")
@@ -410,7 +411,7 @@ async function main() {
             "betty"
         ])
         let betty_info = add([
-            sprite("quest"),
+            sprite("info"),
             pos(betty.pos.x, betty.pos.y - 200),
             scale(scaleValue *2),
             anchor("bot"),
@@ -466,34 +467,34 @@ async function main() {
                         explication : questionsEgales[randnum].explication
                     }
                 // On prend une question 'autre' selon la position déterminée dans question_autre_gen
-                } else if (compteur_question === question_autre_gen){
-                    let randnum = Math.floor(rand(autres.length))
-                    console.log(randnum, autres)
-                    if (autres[randnum].activite1_gagnante === "TRUE"){
-                        return {
-                            scriptee : true,
-                            text1 : autres[randnum].description_activite1,
-                            text2 : autres[randnum].description_activite2,
-                            theme : autres[randnum].theme,
-                            caption : autres[randnum].question,
-                            activite1_gagne : true,
-                            commentaire : autres[randnum].commentaire,
-                            explication : autres[randnum].explication
-                        }
-                    } else {
-                        return{
-                            scriptee : true,
-                            text1 : autres[randnum].description_activite1,
-                            text2 : autres[randnum].description_activite2,
-                            theme : autres[randnum].theme,
-                            caption : autres[randnum].question,
-                            activite1_gagne : false,
-                            commentaire : autres[randnum].commentaire,
-                            explication : autres[randnum].explication
-                        }
-                    }
+                // } else if (compteur_question === question_autre_gen){
+                //     let randnum = Math.floor(rand(autres.length))
+                //     console.log(randnum, autres)
+                //     if (autres[randnum].activite1_gagnante === "TRUE"){
+                //         return {
+                //             scriptee : true,
+                //             text1 : autres[randnum].description_activite1,
+                //             text2 : autres[randnum].description_activite2,
+                //             theme : autres[randnum].theme,
+                //             caption : autres[randnum].question,
+                //             activite1_gagne : true,
+                //             commentaire : autres[randnum].commentaire,
+                //             explication : autres[randnum].explication
+                //         }
+                //     } else {
+                //         return{
+                //             scriptee : true,
+                //             text1 : autres[randnum].description_activite1,
+                //             text2 : autres[randnum].description_activite2,
+                //             theme : autres[randnum].theme,
+                //             caption : autres[randnum].question,
+                //             activite1_gagne : false,
+                //             commentaire : autres[randnum].commentaire,
+                //             explication : autres[randnum].explication
+                //         }
+                //     }
                 // On prend une question 'autre jeu' selon la position déterminée dans question_autre_categorie
-                } else if (compteur_question === question_autre_jeu){
+                } else if (question_autre_jeu.includes(compteur_question)){
                     let randnum = Math.floor(rand(autres_jeu.length))
                     if (autres_jeu[randnum].activite1_gagnante === "TRUE"){
                         return {
@@ -1170,6 +1171,8 @@ async function main() {
             })
             function bettyClick(){
                 if (explanation) return
+                closeCooldown = true
+                wait(0.5, () => {closeCooldown = false})
                 explanation = true
                 exited = false
                 betty.play("talk")
@@ -1253,7 +1256,8 @@ async function main() {
                     z(70),
                     "bulle"
                 ])
-                bulle.onClick(()=>{
+                onClick(()=>{
+                    if (closeCooldown) return
                     exited = true
                     destroyAll("bulle")
                     betty.play("idle")

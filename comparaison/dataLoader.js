@@ -45,9 +45,9 @@ async function loadData(testing) {
 
     // Séparation des données - pairings
     for (let i = 0; i < CSVdata.length; i++) {
-        if (CSVdata[i].theme === "Autre") {
+        /*if (CSVdata[i].theme === "Autre") {
             questions_autres.push(CSVdata[i]);
-        } else if (CSVdata[i].jeu_video == "TRUE" && CSVdata[i].theme !== "Autre") {
+        } else*/ if (CSVdata[i].jeu_video == "TRUE" && CSVdata[i].theme !== "Autre") {
             questions_JV.push(CSVdata[i]);
         } else if (CSVdata[i].jeu_video == "FALSE" && CSVdata[i].theme !== "Autre") {
             questions_JdS.push(CSVdata[i]);
