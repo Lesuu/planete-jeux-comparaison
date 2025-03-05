@@ -169,7 +169,6 @@ async function main() {
     // Constantes: détermine le nombre de questions & lesquelles sont scriptées.
     const nbr_questions = 10
     const question_autre_jeu = [4, 7]
-    const question_autre_gen = 7
     const question_egale = 9
     const langue = "fr"
 
@@ -177,6 +176,7 @@ async function main() {
     const background_col = rgb(42, 138, 109)
     const correct_color = hsl2rgb(120/360, 0.6, 0.65)
     const wrong_color = hsl2rgb(337/360, 0.8, 0.7)
+    const egal_color = hsl2rgb(60/360, 0.7, 0.65)
     //#endregion
     // #region Ecran d'accueil
 
@@ -735,10 +735,22 @@ async function main() {
                             score_effect.color = hsl2rgb((time() * 1.5) % 1, 1, 0.5);
                         });
                     }                     
-                    card.color = correct_color
                     card.z = 60
                     card_text.z = 65
+                    // Si c'est une question égale, on colorie les 2 cartes en jauneen jaune
+                    if (question.theme === "Egal"){
+                        card.color = egal_color
+                        if (clicked === 2){
+                            card1.color = egal_color
+                        } else if (clicked === 1){
+                            card2.color = egal_color
+                        } 
+                    } else {
+                        // Si c'est correct, on colorie la carte cliquée en vert
+                        card.color = correct_color
+                    }
                 } else {
+                    // Si c'est faux, on colorie la carte cliquée en rouge
                     card.color = wrong_color
                     card.z = 40
                     card_text.z = 45
