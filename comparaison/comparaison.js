@@ -10,7 +10,7 @@ kaplay({
     letterbox:true,
     width:1920,
     height:1080,
-    stretch:true,
+    stretch:false,
 })
 
 // On attend que les données soient chargées pour lancer le programme
@@ -163,6 +163,7 @@ async function main() {
     let isTalking = false
     let exited = true
     let closeCooldown = false
+    let isSkipping = false
 
 
     // Constantes: détermine le nombre de questions & lesquelles sont scriptées.
@@ -466,33 +467,6 @@ async function main() {
                         commentaire : questionsEgales[randnum].commentaire,
                         explication : questionsEgales[randnum].explication
                     }
-                // On prend une question 'autre' selon la position déterminée dans question_autre_gen
-                // } else if (compteur_question === question_autre_gen){
-                //     let randnum = Math.floor(rand(autres.length))
-                //     console.log(randnum, autres)
-                //     if (autres[randnum].activite1_gagnante === "TRUE"){
-                //         return {
-                //             scriptee : true,
-                //             text1 : autres[randnum].description_activite1,
-                //             text2 : autres[randnum].description_activite2,
-                //             theme : autres[randnum].theme,
-                //             caption : autres[randnum].question,
-                //             activite1_gagne : true,
-                //             commentaire : autres[randnum].commentaire,
-                //             explication : autres[randnum].explication
-                //         }
-                //     } else {
-                //         return{
-                //             scriptee : true,
-                //             text1 : autres[randnum].description_activite1,
-                //             text2 : autres[randnum].description_activite2,
-                //             theme : autres[randnum].theme,
-                //             caption : autres[randnum].question,
-                //             activite1_gagne : false,
-                //             commentaire : autres[randnum].commentaire,
-                //             explication : autres[randnum].explication
-                //         }
-                //     }
                 // On prend une question 'autre jeu' selon la position déterminée dans question_autre_categorie
                 } else if (question_autre_jeu.includes(compteur_question)){
                     let randnum = Math.floor(rand(autres_jeu.length))
@@ -1172,7 +1146,7 @@ async function main() {
             function bettyClick(){
                 if (explanation) return
                 closeCooldown = true
-                wait(0.5, () => {closeCooldown = false})
+                wait(0.3, () => {closeCooldown = false})
                 explanation = true
                 exited = false
                 betty.play("talk")
@@ -1215,7 +1189,6 @@ async function main() {
                         transform: (idx, ch) => ({
                             pos: vec2(0, wave(-1, 1, time() * 3 + idx * 0.5)),
                             angle: wave(-2, 2, time() * 3 + idx),
-                            // color: hsl2rgb(210/360, 0.12, 0.8),
                         }),
                     }),
                     pos(bulle.pos.x - bulle.width*3.1, bulle.pos.y/1.33),
@@ -1229,12 +1202,17 @@ async function main() {
                     isTalking = true;
                     txt.letterCount = 0;
                     txt.text = dialog;
+                    isSkipping = false;
                 
                     const writing = loop(0.02, () => {
-                        txt.letterCount = Math.min(
-                            txt.letterCount + 1,
-                            txt.renderedText.length,
-                        );
+                        if(isSkipping){
+                            txt.letterCount = txt.renderedText.length;
+                        } else {
+                            txt.letterCount = Math.min(
+                                txt.letterCount + 1,
+                                txt.renderedText.length,
+                            );
+                        }
                         play("talk2", {
                             volume: 0.1,
                         });
@@ -1247,6 +1225,9 @@ async function main() {
                         if(exited) writing.cancel()
                     });
                 }
+                function skipDialog() {
+                    isSkipping = true
+                }
                 startWriting(question.explication)
                 let assombrissement = add([
                     rect(1920, 1080),
@@ -1258,10 +1239,14 @@ async function main() {
                 ])
                 onClick(()=>{
                     if (closeCooldown) return
-                    exited = true
-                    destroyAll("bulle")
-                    betty.play("idle")
-                    explanation = false
+                    if (isTalking){
+                        skipDialog()
+                    } else{
+                        exited = true
+                        destroyAll("bulle")
+                        betty.play("idle")
+                        explanation = false
+                    }
                 })
             }
         }
