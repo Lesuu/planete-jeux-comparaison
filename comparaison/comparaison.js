@@ -1,8 +1,6 @@
 import { loadData, questions_JV, questions_JdS, translations} from './dataLoader.js';
 
 //#region initialisation 
-// false: fiche v1, true: fiche v3
-let testing = true
 
 // Initialisation de Kaplay
 kaplay({
@@ -20,16 +18,23 @@ main()
 async function main() {
     //#endregion
     //#region Asset loading
-    await load(loadData(testing))
+    await load(loadData())
 
     loadFont("pixel", "assets/fonts/m6x11plus.ttf")
     loadFont("pixelthin", "assets/fonts/m5x7.ttf")
     loadFont("kaph", "assets/fonts/Kaph-Regular.ttf", {
         outline: {
-            width: 3,
+            width: 2,
             color: rgb(0,0,0),
         },
         letterSpacing : -5,
+    });
+    loadFont("pixeloutline", "assets/fonts/m6x11plus.ttf", {
+        outline: {
+            width: 3,
+            color: rgb(0,0,0),
+        },
+        letterSpacing : 5
     });
 
     loadSound("fail","assets/audio/fail.mp3")
@@ -165,6 +170,7 @@ async function main() {
     let exited = true
     let closeCooldown = false
     let isSkipping = false
+    let picto_sprite
 
 
     // Constantes: détermine le nombre de questions & lesquelles sont scriptées.
@@ -187,7 +193,6 @@ async function main() {
     }
 
     scene("titleScreen", async () => {
-
         // Shader CRT
         onUpdate(() => {
             usePostEffect("crt", crtEffect());
@@ -197,6 +202,182 @@ async function main() {
         compteur_question = 0
         multiplier = 1
         streak = 0
+
+        // "Appuie pour commencer"
+        let start_shadow = add([
+            text(getTranslation("START"), {
+                font: "pixel",
+                size: 72,
+                transform: (idx, ch) => ({
+                    pos: vec2(0, wave(-1, 1, time() * 3 + idx * 0.5)),
+                    angle: wave(-2, 2, time() * 3 + idx),
+                }),
+            }),
+            pos(960 + 5, 800 + 5),
+            anchor("center"),
+            color(0,0,0),
+            opacity(0.4)
+        ])        
+        let start_caption = start_shadow.add([
+            text(getTranslation("START"), {
+                font: "pixel",
+                size: 72,
+                transform: (idx, ch) => ({
+                    pos: vec2(0, wave(-1, 1, time() * 3 + idx * 0.5)),
+                    angle: wave(-2, 2, time() * 3 + idx),
+                }),
+            }),
+            pos(-5, -5),
+            anchor("center"),
+            opacity(),
+        ])
+
+        // On fait flasher le texte 'appuie pour commencer'
+        loop(1.7, () =>{
+            start_caption.opacity = 1
+            start_shadow.opacity = 0.4
+            wait(1, () => {
+                start_caption.opacity = 0
+                start_shadow.opacity = 0
+            })
+        })
+
+        // Titre principal
+        let main_shadow = add([
+            text(getTranslation("TITRE"), {
+                font: "pixeloutline",
+                size: 136,
+                width : 1200,
+                align: "center", 
+                transform: (idx, ch) => ({
+                    pos: vec2(0, wave(-1, 1, time() * 3 + idx * 0.5)),
+                    angle: wave(-2, 2, time() * 3 + idx),
+                }),
+            }),
+            pos(960 + 10, 300 + 10),
+            anchor("center"),
+            color(0,0,0),
+            opacity(0.4),
+        ])
+        let main_title = main_shadow.add([
+            text(getTranslation("TITRE"), {
+                font: "pixeloutline",
+                size: 136,
+                width: 1200,
+                align: "center",
+                transform: (idx, ch) => ({
+                    pos: vec2(0, wave(-1, 1, time() * 3 + idx * 0.5)),
+                    angle: wave(-2, 2, time() * 3 + idx),
+                }),
+            }),
+            pos(-10, -10),
+            anchor("center"),
+        ])
+        // On fait bouger le titre 
+        const basePos = main_shadow.pos.clone();
+        main_shadow.onUpdate(() => {
+            const angle = time() * 1.5
+            main_shadow.pos.y = basePos.y + 10 * Math.sin(angle) * Math.cos(angle);
+            main_shadow.pos.x = basePos.x + 10 * Math.sin(angle);
+        });
+
+        // "quiz"
+        let quiz_shadow = add([
+            text("Quiz", {
+                font: "pixeloutline",
+                size: 90,
+                transform: (idx, ch) => ({
+                    pos: vec2(0, wave(-1, 1, time() * 3 + idx * 0.5)),
+                    angle: wave(-2, 2, time() * 3 + idx),
+                }),
+            }),
+            pos(960 + 5, 550 + 5),
+            anchor("center"),
+            color(0,0,0),
+            opacity(0.4)
+        ])
+        let quiz_title = quiz_shadow.add([
+            text("Quiz", {
+                font: "pixeloutline",
+                size: 90,
+                transform: (idx, ch) => ({
+                    pos: vec2(0, wave(-1, 1, time() * 3 + idx * 0.5)),
+                    angle: wave(-2, 2, time() * 3 + idx),
+                }),
+            }),
+            pos(-5, -5),
+            anchor("center"),
+        ])
+
+        // Eventail
+        let cardSprites = ["spades", "clubs", "hearts", "diamonds"]
+        let cardFan = 6
+        let card1 = add([
+            sprite(choose(cardSprites)),
+            pos(70, 620),
+            rotate(5),
+            scale(1.3),
+            anchor("botleft"),
+            z(50)
+        ])
+        for (let i = 1; i<cardFan; i++){
+            let l = i
+            if (i > 3){
+                l = i - 4
+            }
+            card1.add([
+                sprite(choose(cardSprites)),
+                rotate(i * 12),
+                pos(i + 3, 0),
+                anchor("botleft"),
+                z(50)
+            ])
+        }
+        let cardShadows = add([
+            sprite("spades"),
+            pos(70 + 10, 620 + 10),
+            rotate(5),
+            scale(1.3),
+            anchor("botleft"),
+            color(0,0,0),
+            opacity(0.4),
+            z(40)
+        ])
+        for (let i = 1; i<cardFan; i++){
+            cardShadows.add([
+                sprite("spades"),
+                rotate(i * 12),
+                pos(i + 3, 0),
+                anchor("botleft"),
+                color(0,0,0),
+                opacity(0.4),
+            ])
+        }
+
+        let betty = add([
+            sprite("betty", {anim: "idle"}),
+            pos(1640, 580),
+            anchor("center"),
+            scale(5),
+            z(100)
+        ])
+        betty.flipX = true
+        let betty_shadow = add([
+            pos(betty.pos.x, betty.pos.y + 100),
+            opacity(0.3),
+            circle(40),
+            scale(1.5, 0.5),
+            color(0, 0, 0),
+            anchor("center"),
+            z(80)
+        ])
+
+        onClick(() => {
+            go("chooseCategory")
+        });
+        
+    })
+    scene("chooseCategory", async () => {
 
         // Elements UI
         let title = add([
@@ -408,9 +589,11 @@ async function main() {
         })
         await both_area.onClick(() => {
             onMouseRelease(async () => {
-                categorie_choisie = "both"
-                await separationDonnees(categorie_choisie)
-                go("questions")
+                if (both_hover){
+                    categorie_choisie = "both"
+                    await separationDonnees(categorie_choisie)
+                    go("questions")
+                }
             })
         })
     })
@@ -602,7 +785,8 @@ async function main() {
                         caption : questionsEgales[randnum].question,
                         activite1_gagne : true,
                         commentaire : questionsEgales[randnum].commentaire,
-                        explication : questionsEgales[randnum].explication
+                        explication : questionsEgales[randnum].explication,
+                        categorie : questionsEgales[randnum].jeu_video
                     }
                 // On prend une question 'autre jeu' selon la position déterminée dans question_autre_categorie
                 } else if (question_autre_jeu.includes(compteur_question)){
@@ -616,7 +800,8 @@ async function main() {
                             caption : autres_jeu[randnum].question,
                             activite1_gagne : true,
                             commentaire : autres_jeu[randnum].commentaire,
-                            explication : autres_jeu[randnum].explication
+                            explication : autres_jeu[randnum].explication,
+                            categorie : autres_jeu[randnum].jeu_video
                         }
                     } else {
                         return{
@@ -627,7 +812,8 @@ async function main() {
                             caption : autres_jeu[randnum].question,
                             activite1_gagne : false,
                             commentaire : autres_jeu[randnum].commentaire,
-                            explication : autres_jeu[randnum].explication
+                            explication : autres_jeu[randnum].explication,
+                            categorie : autres_jeu[randnum].jeu_video
                         }
                     }
 
@@ -674,7 +860,8 @@ async function main() {
                             caption : chosenQuestion.question,
                             activite1_gagne : true,
                             commentaire : chosenQuestion.commentaire,
-                            explication : chosenQuestion.explication
+                            explication : chosenQuestion.explication,
+                            categorie : chosenQuestion.jeu_video
                         };
                     } else if (chosenQuestion.activite1_gagnante === "FALSE"){
                         return{
@@ -685,7 +872,8 @@ async function main() {
                             caption : chosenQuestion.question,
                             activite1_gagne : false,
                             commentaire : chosenQuestion.commentaire,
-                            explication : chosenQuestion.explication
+                            explication : chosenQuestion.explication,
+                            categorie : chosenQuestion.jeu_video
                         };
                     } 
                 }
@@ -732,6 +920,18 @@ async function main() {
                 anchor("center"),
                 z(55),
                 rotate(0),
+                "card1"
+            ])
+            if (question.categorie === "TRUE") {
+                picto_sprite = "jv_color"
+            } else if (question.categorie === "FALSE"){
+                picto_sprite = "jds_color"
+            }
+            let cardIco = card1.add([
+                sprite(picto_sprite),
+                pos(100, 200),
+                anchor("center"),
+                z(55),
                 "card1"
             ])
 
