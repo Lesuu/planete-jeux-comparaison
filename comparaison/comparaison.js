@@ -48,6 +48,7 @@ async function main() {
     let isSkipping = false
     let picto_sprite
     let picto_pos
+    let picto_scale
     let streak_opacity = 0
 
     // Constantes: détermine le nombre de questions & lesquelles sont scriptées.
@@ -112,6 +113,7 @@ async function main() {
     loadSprite("jds_color", "assets/sprites/bg_color.png")
     loadSprite("button", "assets/sprites/button_textless.png")
     loadSprite("bulle", "assets/sprites/bulle.png")
+    loadSprite("blank_card", "assets/sprites/blank_card.png")
     loadSpriteAtlas("assets/sprites/cards.png", {
         "spades" : {
             "x": 0,
@@ -784,8 +786,9 @@ async function main() {
             }
 
             // Choix aléatoire du type la carte
-            let sprite1 = (randi() === 0 ? "spades" : "clubs")
-            let sprite2 = (randi() === 0 ? "diamonds" : "hearts")
+            // let sprite1 = (randi() === 0 ? "spades" : "clubs")
+            // let sprite2 = (randi() === 0 ? "diamonds" : "hearts")
+            let card_sprite = "blank_card"
 
             //#region choixQuestion
             function choixQuestion(){
@@ -903,7 +906,7 @@ async function main() {
             let scoreEffectTriggered = false
 
             let card1 = add([
-                sprite(sprite1),
+                sprite(card_sprite),
                 pos(x_card1, height()*1.2),
                 scale(scaleValue),  
                 anchor("center"),
@@ -914,7 +917,7 @@ async function main() {
                 "card1"
             ])
             let card1_shadow = add([
-                sprite(sprite1),
+                sprite(card_sprite),
                 color(0,0,0),
                 opacity(0.4),
                 pos(x_card1 + 20, height()*1.2),
@@ -940,16 +943,18 @@ async function main() {
             ])
             if (question.categorie === "TRUE") {
                 picto_sprite = "jv_color"
-                picto_pos = vec2(60, -98)
+                picto_pos = vec2(-58, -97)
+                picto_scale = 0.4
             } else if (question.categorie === "FALSE"){
                 picto_sprite = "jds_color"
-                picto_pos = vec2(65, -95)
+                picto_pos = vec2(-57, -93)
+                picto_scale = 0.5
             }
             let card1_picto1 = card1.add([
                 sprite(picto_sprite),
                 pos(picto_pos),
                 anchor("center"),
-                scale(0.4),
+                scale(picto_scale),
                 z(55),
                 "card1"
             ])
@@ -957,7 +962,7 @@ async function main() {
                 sprite(picto_sprite),
                 pos(picto_pos.x * -1, picto_pos.y * -1),
                 anchor("center"),
-                scale(0.4),
+                scale(picto_scale),
                 z(55),
                 "card1"
             ])
@@ -965,7 +970,7 @@ async function main() {
 
             // Carte 2
             let card2 = add([
-                sprite(sprite2),
+                sprite(card_sprite),
                 pos(x_card2, height()*1.3),
                 scale(scaleValue),  
                 anchor("center"),
@@ -976,7 +981,7 @@ async function main() {
                 "card2"
             ])
             let card2_shadow = add([
-                sprite(sprite2),
+                sprite(card_sprite),
                 color(0,0,0),
                 opacity(0.4),
                 pos(x_card2 + 20, height()*1.3),
@@ -1004,7 +1009,7 @@ async function main() {
                 sprite(picto_sprite),
                 pos(picto_pos),
                 anchor("center"),
-                scale(0.4),
+                scale(picto_scale),
                 z(55),
                 "card1"
             ])
@@ -1012,7 +1017,7 @@ async function main() {
                 sprite(picto_sprite),
                 pos(picto_pos.x * -1, picto_pos.y * -1),
                 anchor("center"),
-                scale(0.4),
+                scale(picto_scale),
                 z(55),
                 "card1"
             ])
