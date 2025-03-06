@@ -20,19 +20,65 @@ async function main() {
     //#region Asset loading
     await load(loadData())
 
+    // #region Variables
+    // Variables globales
+    let categorie_choisie 
+    let clicked = 0
+    let categorie
+    //let autres
+    let questionsEgales
+    let autres_jeu
+    let score = 0
+    let compteur_question 
+    let jv_hover
+    let jds_hover
+    let both_hover = false
+    let question = {}
+    let score_effect = null
+    let streak = 0
+    let multiplier = 1
+    let locked = false
+    let showingResults = false
+    let usedThemes = []
+    let explanation = false
+    let dernierThemeChoisi = null
+    let isTalking = false
+    let exited = true
+    let closeCooldown = false
+    let isSkipping = false
+    let picto_sprite
+    let picto_pos
+    let streak_opacity = 0
+
+    // Constantes: détermine le nombre de questions & lesquelles sont scriptées.
+    const nbr_questions = 10
+    const question_autre_jeu = [4, 7]
+    const question_egale = 9
+
+    // Langue
+    const langue = "fr"
+
+    // Couleurs
+    const background_col = rgb(42, 138, 109)
+    const text_color = rgb(56, 71, 74)
+    const correct_color = hsl2rgb(120/360, 0.6, 0.65)
+    const wrong_color = hsl2rgb(337/360, 0.8, 0.7)
+    const egal_color = hsl2rgb(60/360, 0.7, 0.65)
+    //#endregion
+
     loadFont("pixel", "assets/fonts/m6x11plus.ttf")
     loadFont("pixelthin", "assets/fonts/m5x7.ttf")
     loadFont("kaph", "assets/fonts/Kaph-Regular.ttf", {
         outline: {
-            width: 2,
-            color: rgb(0,0,0),
+            width: 3,
+            color: text_color,
         },
         letterSpacing : -5,
     });
     loadFont("pixeloutline", "assets/fonts/m6x11plus.ttf", {
         outline: {
             width: 3,
-            color: rgb(0,0,0),
+            color: text_color,
         },
         letterSpacing : 5
     });
@@ -144,48 +190,7 @@ async function main() {
 
     const scaleValue = 2.3;
     //#endregion
-    // #region Variables
-    // Variables globales
-    let categorie_choisie 
-    let clicked = 0
-    let categorie
-    //let autres
-    let questionsEgales
-    let autres_jeu
-    let score = 0
-    let compteur_question 
-    let jv_hover
-    let jds_hover
-    let both_hover = false
-    let question = {}
-    let score_effect = null
-    let streak = 0
-    let multiplier = 1
-    let locked = false
-    let showingResults = false
-    let usedThemes = []
-    let explanation = false
-    let dernierThemeChoisi = null
-    let isTalking = false
-    let exited = true
-    let closeCooldown = false
-    let isSkipping = false
-    let picto_sprite
-    let picto_pos
 
-
-    // Constantes: détermine le nombre de questions & lesquelles sont scriptées.
-    const nbr_questions = 10
-    const question_autre_jeu = [4, 7]
-    const question_egale = 9
-    const langue = "fr"
-
-    // Couleurs
-    const background_col = rgb(42, 138, 109)
-    const correct_color = hsl2rgb(120/360, 0.6, 0.65)
-    const wrong_color = hsl2rgb(337/360, 0.8, 0.7)
-    const egal_color = hsl2rgb(60/360, 0.7, 0.65)
-    //#endregion
     // #region Ecran d'accueil
 
     //Fonction pour la traduction des textes
@@ -678,6 +683,7 @@ async function main() {
             }),
             pos(width()/2, 30),
             anchor("center"),
+            opacity(streak_opacity),
             z(50)
         ])
         let streak_shadow = add([
@@ -694,7 +700,7 @@ async function main() {
             pos(streak_caption.pos.x +4, streak_caption.pos.y +4),
             anchor("center"),
             color(0,0,0),
-            opacity(0.4)
+            opacity(streak_opacity - 0.6)
         ])
 
         // Icone du support
@@ -723,7 +729,7 @@ async function main() {
         //#region Betty
         let betty = add([
             sprite("betty", {anim: "idle"}),
-            pos(width() / 1.08, height() / 1.25),
+            pos(1700, 864),
             scale(scaleValue*2),
             anchor("bot"),
             z(90),
@@ -925,7 +931,7 @@ async function main() {
                     lineSpacing : 10, 
                     align: "center"
                 }),
-                color(56, 71, 74),
+                color(text_color),
                 pos(card1.pos),
                 anchor("center"),
                 z(55),
@@ -987,7 +993,7 @@ async function main() {
                     lineSpacing : 10,
                     align: "center"
                 }),
-                color(56, 71, 74),
+                color(text_color),
                 pos(card2.pos),
                 anchor("center"),
                 z(55),
@@ -1060,6 +1066,11 @@ async function main() {
                     streak++
                     streak_caption.text = getTranslation("STREAK").replace("{streak}", streak) + (streak > 1 ? " !" : ".")
                     streak_shadow.text = getTranslation("STREAK").replace("{streak}", streak) + (streak > 1 ? " !" : ".")
+                    if (streak == 2){
+                        streak_caption.opacity = 1
+                        streak_shadow.opacity = 0.4
+                        streak_opacity = 1
+                    }
                     let score_color
                     // Multiplicateur
                     switch (true) {
@@ -1137,6 +1148,9 @@ async function main() {
                     })
                     streak_caption.text = getTranslation("STREAK").replace("{streak}", streak) + (streak > 1 ? " !" : ".")
                     streak_shadow.text = getTranslation("STREAK").replace("{streak}", streak) + (streak > 1 ? " !" : ".")
+                    streak_caption.opacity = 0
+                    streak_opacity = 0
+                    streak_shadow.opacity = 0
                 } 
             }
             card1.onClick(() => {
@@ -1562,7 +1576,7 @@ async function main() {
                     }),
                     anchor("topleft"),
                     pos(bulle.pos.x - 1120, bulle.pos.y - 570),
-                    color(56, 71, 74),
+                    color(text_color),
                     z(110),
                     {
                         letterCount: 0,
