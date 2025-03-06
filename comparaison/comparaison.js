@@ -171,6 +171,7 @@ async function main() {
     let closeCooldown = false
     let isSkipping = false
     let picto_sprite
+    let picto_pos
 
 
     // Constantes: détermine le nombre de questions & lesquelles sont scriptées.
@@ -213,7 +214,7 @@ async function main() {
                     angle: wave(-2, 2, time() * 3 + idx),
                 }),
             }),
-            pos(960 + 5, 800 + 5),
+            pos(960 + 5, 900 + 5),
             anchor("center"),
             color(0,0,0),
             opacity(0.4)
@@ -254,7 +255,7 @@ async function main() {
                     angle: wave(-2, 2, time() * 3 + idx),
                 }),
             }),
-            pos(960 + 10, 300 + 10),
+            pos(960 + 10, 200 + 10),
             anchor("center"),
             color(0,0,0),
             opacity(0.4),
@@ -291,7 +292,7 @@ async function main() {
                     angle: wave(-2, 2, time() * 3 + idx),
                 }),
             }),
-            pos(960 + 5, 550 + 5),
+            pos(960 + 5, 540 + 5),
             anchor("center"),
             color(0,0,0),
             opacity(0.4)
@@ -353,6 +354,15 @@ async function main() {
                 opacity(0.4),
             ])
         }
+        let card_icon_sprite = ["jv_color", "jds_color"]
+        let card_icon = add ([
+            sprite(choose(card_icon_sprite)),
+            pos(card1.pos.x + 210, card1.pos.y + 35),
+            scale(2),
+            rotate(65),
+            anchor("center"),
+            z(60)
+        ])
 
         let betty = add([
             sprite("betty", {anim: "idle"}),
@@ -924,16 +934,28 @@ async function main() {
             ])
             if (question.categorie === "TRUE") {
                 picto_sprite = "jv_color"
+                picto_pos = vec2(60, -98)
             } else if (question.categorie === "FALSE"){
                 picto_sprite = "jds_color"
+                picto_pos = vec2(65, -95)
             }
-            let cardIco = card1.add([
+            let card1_picto1 = card1.add([
                 sprite(picto_sprite),
-                pos(100, 200),
+                pos(picto_pos),
                 anchor("center"),
+                scale(0.4),
                 z(55),
                 "card1"
             ])
+            let card1_picto2 = card1.add([
+                sprite(picto_sprite),
+                pos(picto_pos.x * -1, picto_pos.y * -1),
+                anchor("center"),
+                scale(0.4),
+                z(55),
+                "card1"
+            ])
+            card1_picto2.flipY = true
 
             // Carte 2
             let card2 = add([
@@ -972,6 +994,23 @@ async function main() {
                 rotate(0),
                 "card2"
             ])
+            let card2_picto1 = card2.add([
+                sprite(picto_sprite),
+                pos(picto_pos),
+                anchor("center"),
+                scale(0.4),
+                z(55),
+                "card1"
+            ])
+            let card2_picto2 = card2.add([
+                sprite(picto_sprite),
+                pos(picto_pos.x * -1, picto_pos.y * -1),
+                anchor("center"),
+                scale(0.4),
+                z(55),
+                "card1"
+            ])
+            card2_picto2.flipY = true
             //#endregion
 
             //#region Tween!!
