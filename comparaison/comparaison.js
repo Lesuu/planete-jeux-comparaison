@@ -141,7 +141,7 @@ async function main() {
     //#endregion
     // #region Variables
     // Variables globales
-    let jv 
+    let categorie_choisie 
     let clicked = 0
     let categorie
     //let autres
@@ -151,6 +151,7 @@ async function main() {
     let compteur_question 
     let jv_hover
     let jds_hover
+    let both_hover = false
     let question = {}
     let score_effect = null
     let streak = 0
@@ -201,7 +202,11 @@ async function main() {
         let title = add([
             text(getTranslation("OPTION"), {
                 font: "pixel",
-                size: 54
+                size: 90,
+                transform: (idx, ch) => ({
+                    pos: vec2(0, wave(-1, 1, time() * 3 + idx * 0.5)),
+                    angle: wave(-2, 2, time() * 3 + idx),
+                }),
             }),
             pos(width()/2 , height()/5),
             anchor("center"),
@@ -210,7 +215,11 @@ async function main() {
         let title_shadow = add([
             text(getTranslation("OPTION"), {
                 font: "pixel",
-                size: 54
+                size: 90,
+                transform: (idx, ch) => ({
+                    pos: vec2(0, wave(-1, 1, time() * 3 + idx * 0.5)),
+                    angle: wave(-2, 2, time() * 3 + idx),
+                }),
             }),
             pos(title.pos.x + 6, title.pos.y + 6),
             anchor("center"),
@@ -219,20 +228,106 @@ async function main() {
         ])
         let jv_icon = add([
             sprite("jv_icon"),
-            pos(width()/2.5, height()/2),
-            scale(scaleValue*1.3),  
-            anchor("right"),
+            pos(480, 470),
+            scale(scaleValue*1.5),  
+            anchor("center"),
             area(),
             "jv_icon"
         ])
+
+        let jv_shadow = add([
+            text(getTranslation("JEU VIDEO"), {
+                font:"pixel",
+                size : 54
+            }),
+            anchor("center"),
+            pos(jv_icon.pos.x + 5, jv_icon.pos.y + 160 + 5),
+            color(0,0,0),
+            opacity(0.4),
+            z(40)
+        ])
+        let jv_caption = jv_shadow.add([
+            text(getTranslation("JEU VIDEO"), {
+                font: "pixel",
+                size: 54
+            }),
+            pos(-5, -5),
+            anchor("center"),
+            z(50)
+        ])
+
         let jds_icon = add([
             sprite("jds_icon"),
-            pos(width()/1.8, height()/2),
+            pos(1440, 470),
             scale(scaleValue*1.8),  
-            anchor("left"),
+            anchor("center"),
             area(),
             "jds_icon"
         ])
+
+        let jds_shadow = add([
+            text(getTranslation("JEU DE SOCIETE"), {
+                font:"pixel",
+                size : 54
+            }),
+            anchor("center"),
+            pos(jds_icon.pos.x + 5, jds_icon.pos.y + 160 + 5),
+            color(0,0,0),
+            opacity(0.4),
+            z(40)
+        ])
+        let jds_caption = jds_shadow.add([
+            text(getTranslation("JEU DE SOCIETE"), {
+                font: "pixel",
+                size: 54
+            }),
+            pos(-5, -5),
+            anchor("center"),
+            z(50)
+        ])
+
+        let jv_both = add([
+            sprite("jv_icon"),
+            pos(860, 740),
+            scale(scaleValue*1.3),  
+            anchor("center"),
+            rotate(-10),
+            "jv_icon"
+        ])
+        let jds_both = add([
+            sprite("jds_icon"),
+            pos(1060, 760),
+            scale(scaleValue*1.5),  
+            anchor("center"),
+            rotate(10),
+            "jds_icon"
+        ])
+        let both_area = add([
+            pos(740, 620),
+            rect(440, 250),
+            area(),
+            opacity(0)
+        ])
+
+        let both_shadow = add([
+            text(getTranslation("BOTH"), {
+                size: 54,
+                font: "pixel"
+            }),
+            pos(960 + 5, 900 + 5),
+            anchor("center"),
+            color(0,0,0),
+            opacity(0.4)
+        ])
+        let both_caption = both_shadow.add([
+            text(getTranslation("BOTH"), {
+                size: 54,
+                font: "pixel"
+            }),
+            pos(-5, -5),
+            anchor("center")
+        ])
+
         // Changement de la texture quand on survole les icones...
         jv_icon.onHover(() => {
             jv_icon.sprite = "jv_color"
@@ -253,12 +348,33 @@ async function main() {
             jds_hover = false
         })
 
+        function bothHover(){
+            if (!both_hover){
+                jv_both.sprite = "jv_color"
+                jds_both.sprite = "jds_color"
+                both_hover = true
+            } else if (both_hover){
+                jv_both.sprite = "jv_icon"
+                jds_both.sprite = "jds_icon"
+                both_hover = false
+            }
+        }
+
+        both_area.onHover(() => bothHover())
+        both_area.onHoverEnd(()=> bothHover())
+
+
+        // Quand on survole both, les icones se 
+
+
         // Changement de scène, on trie les données selon le support choisit
-        async function separationDonnees(jv){
-            if (jv){
+        async function separationDonnees(cat){
+            if (cat === "jv"){
                 categorie = [...questions_JV]
-            } else {
+            } else if (cat === "jds"){
                 categorie = [...questions_JdS]
+            } else if (cat === "both"){
+                categorie = [...questions_JV, ...questions_JdS]
             }
             //autres = [...questions_autres]
 
@@ -275,8 +391,8 @@ async function main() {
         await jv_icon.onClick(() => {
             onMouseRelease(async ()=>{
                 if (jv_hover){
-                    jv = true
-                    await separationDonnees(jv)
+                    categorie_choisie = "jv"
+                    await separationDonnees(categorie_choisie)
                     go("questions")
                 }
             })
@@ -284,10 +400,17 @@ async function main() {
         await jds_icon.onClick(() => {
             onMouseRelease(async ()=>{
                 if (jds_hover){
-                    jv = false
-                    await separationDonnees(jv)
+                    categorie_choisie = "jds"
+                    await separationDonnees(categorie_choisie)
                     go("questions")
                 }
+            })
+        })
+        await both_area.onClick(() => {
+            onMouseRelease(async () => {
+                categorie_choisie = "both"
+                await separationDonnees(categorie_choisie)
+                go("questions")
             })
         })
     })
@@ -298,13 +421,11 @@ async function main() {
     scene("questions", async () => {
         // Couleur du background dépend du support choisi
         let icon_sprite
-        if (jv){
-            setBackground(background_col)
+        if (categorie_choisie === "jv"){
             icon_sprite = "jv_color"
-        } else {
-            setBackground(background_col)
+        } else if (categorie_choisie === "jds"){
             icon_sprite = "jds_color" 
-        }
+        } 
 
         // Compteur de question
 
@@ -384,11 +505,27 @@ async function main() {
         ])
 
         // Icone du support
-        let icon = add([
-            sprite(icon_sprite),
-            pos(width() - width()/1.255, height()*0.058),
-            anchor("center"),
-        ])
+        if (categorie_choisie === "both"){
+            let icon1 = add([
+                sprite("jv_color"),
+                pos(380, 65),
+                anchor("center"),
+                rotate(-10)
+            ])
+            let icon2 = add([
+                sprite("jds_color"),
+                pos(440, 65),
+                anchor("center"),
+                scale(1.3),
+                rotate(10)
+            ])
+        } else { 
+            let icon = add([
+                sprite(icon_sprite),
+                pos(390, 65),
+                anchor("center"),
+            ])
+        }
 
         //#region Betty
         let betty = add([

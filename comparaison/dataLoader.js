@@ -27,7 +27,7 @@ async function loadData(testing) {
     questions_JV = [];
     questions_JdS = [];
     translations = {};
-    questions_autres = [];
+    //questions_autres = [];
 
     if (!testing) {
         CSVdata = await getCSV(lien);
