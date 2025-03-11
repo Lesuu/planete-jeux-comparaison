@@ -633,6 +633,15 @@ async function main() {
             area(31*scaleValue, 200*scaleValue),
             "betty"
         ])
+        let betty_shadow = add([
+            pos(betty.pos.x, betty.pos.y),
+            opacity(0.3),
+            circle(40),
+            scale(1.5, 0.5),
+            color(0, 0, 0),
+            anchor("center"),
+            z(80)
+        ])
         betty.flipX = true
         // Star emitter
         // Initialize a timer variable

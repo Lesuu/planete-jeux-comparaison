@@ -73,9 +73,9 @@ export function loadAssets(){
             "x": 0,
             "y": 0,
             "width": 124,
-            "height": 78,
+            "height": 156,
             "sliceX": 4,
-            "sliceY": 2,
+            "sliceY": 4,
             "anims": {
                 "idle": {
                     "from": 0,
