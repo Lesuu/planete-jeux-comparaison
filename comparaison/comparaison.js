@@ -287,7 +287,7 @@ async function main() {
         ])
 
         onClick(() => {
-            go("finalResults", {score: 200})
+            go("chooseCategory")
         });
         
     })
@@ -1608,7 +1608,7 @@ async function main() {
                     angle: wave(-9, 9, time() * 3 + idx),
                 }),
             }),
-            pos(width()/2, 350),
+            pos(width()/2, 150),
             anchor("center"),
             z(10)
         ])
