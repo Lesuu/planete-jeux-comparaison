@@ -94,6 +94,23 @@ export function loadAssets(){
                     "to": 7,
                     "speed": 10,
                     "loop": true,
+                },
+                "happy": {
+                    "from": 8,
+                    "to": 9,
+                    "speed": 2,
+                    "loop": true,
+                },
+                "white": {
+                    "from": 10,
+                    "to": 11,
+                    "speed": 1.5,
+                    "loop": true,
+                },
+                "owch": {
+                    "from": 12,
+                    "to": 12,
+                    "speed": 0.2,
                 }
             }
         },
