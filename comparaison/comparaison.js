@@ -1603,7 +1603,7 @@ async function main() {
     //#endregion
     //#region Résultats finaux
     scene("finalResults", ({score}) =>{
-        createBarChart()
+        createBarChart(langue)
 
         let scoreLabel = add([
             text(getTranslation("FINAL").replace("{score}", score),{
@@ -1640,44 +1640,6 @@ async function main() {
             color(0,0,0),
             opacity(0.4)
         ])
-        let suivant_bouton = add([
-            sprite("button"),
-            pos(width()/2, height()/1.1),
-            scale(scaleValue*1.5),  
-            anchor("center"),
-            area(),
-        ])
-
-        let fin = add([
-            text(getTranslation("TERMINER"),{
-                font: "pixel",
-                size: 54,
-                align: "center",
-                letterSpacing : 6
-            }),
-            pos(suivant_bouton.pos),
-            anchor("center"),
-            z(20),
-            "results_element"
-        ])
-
-        let fin_shadow = add([
-            text(getTranslation("TERMINER"),{
-                font: "pixel",
-                size: 54,
-                align: "center",
-                letterSpacing : 6
-            }),
-            color(93, 27, 27),
-            pos(suivant_bouton.pos.x + 5, suivant_bouton.pos.y + 5),
-            anchor("center"),
-            "results_element"
-        ])
-
-        suivant_bouton.onClick(()=>{
-            if (explanation) return
-            go("titleScreen")
-        })
     })
     //#endregion
     go("titleScreen")

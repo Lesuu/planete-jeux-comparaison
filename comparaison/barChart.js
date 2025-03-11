@@ -1,4 +1,4 @@
-export function createBarChart(){
+export function createBarChart(langue){
     // Données du bar chart
     const data = [
         { label: "1 ordinateur portable",    carbon: 193,  impact: 48.47 },
@@ -69,10 +69,41 @@ export function createBarChart(){
         // On ajoute les barres dans un tableau pour les modifier plus tard
         bars.push({bars: bar, text: shadow})
     });
+    let terminer_label
+    let continue_label
+    switch(langue){
+        case "fr": 
+            terminer_label = "TERMINER";
+            continue_label = "Appuie pour continuer"
+            break;
+        case "en": 
+            terminer_label = "END"; 
+            continue_label = "Press to continue"
+            break;
+    }
+    // Prompt pour continuer
+    let continue_prompt = add([
+        text(continue_label, {
+            font: "pixelthin",
+            size: 54,
+            width: 1070,
+            align: "center",
+            transform: (idx, ch) => ({
+                pos: vec2(0, wave(-1, 1, time() * 3 + idx * 0.5)),
+                angle: wave(-2, 2, time() * 3 + idx),
+            }),
+        }),
+        pos(960, baseLineY + 200),
+        color(150, 200, 150),
+        z(110),
+        anchor("center"),
+        opacity(1),
+    ])
     // Quand l'utilisateur clique, on rajoute la dernière barre (même logique)
     onClick(()=>{
         if (done) return
         done = true
+        continue_prompt.destroy()
         tweens.forEach(tween => tween.finish());
         const finalData = { label: "1 aller-retour Genève-New York en avion", carbon: 1770, impact: 444.5 }
         // On recalcule la taille des barres existantes
@@ -147,6 +178,43 @@ export function createBarChart(){
                 },
                 easings.easeInQuad
             )
+            console.log(terminer_label)
+            let suivant_bouton = add([
+                sprite("button"),
+                pos(width()/2, height()/1.1),
+                scale(3.5),  
+                anchor("center"),
+                area(),
+            ])
+            let fin = add([
+                text(terminer_label,{
+                    font: "pixel",
+                    size: 54,
+                    align: "center",
+                    letterSpacing : 6
+                }),
+                pos(suivant_bouton.pos),
+                anchor("center"),
+                z(20),
+                "results_element"
+            ])
+    
+            let fin_shadow = add([
+                text(terminer_label,{
+                    font: "pixel",
+                    size: 54,
+                    align: "center",
+                    letterSpacing : 6
+                }),
+                color(93, 27, 27),
+                pos(suivant_bouton.pos.x + 5, suivant_bouton.pos.y + 5),
+                anchor("center"),
+                "results_element"
+            ])
+    
+            suivant_bouton.onClick(()=>{
+                go("titleScreen")
+            })
         })
     })
 }
