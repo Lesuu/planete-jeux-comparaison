@@ -268,7 +268,6 @@ async function main() {
             anchor("center"),
             z(60)
         ])
-
         let betty = add([
             sprite("betty", {anim: "idle"}),
             pos(1640, 580),
@@ -622,10 +621,12 @@ async function main() {
             ])
         }
 
-        //#region Betty
+        //#region Betty    
+        // On choisi l'animation selon la streak
+        let streak_anim = streak >= 3 ? "happy" : "idle"
         let betty = add([
-            sprite("betty", {anim: "idle"}),
-            pos(1700, 864),
+            sprite("betty", {anim: streak_anim}),
+            pos(1730, 930),
             scale(scaleValue*2),
             anchor("bot"),
             z(90),
@@ -633,36 +634,67 @@ async function main() {
             "betty"
         ])
         betty.flipX = true
-        let betty_shadow = add([
-            pos(betty.pos.x, betty.pos.y),
-            scale(1.5, 0.5),
-            opacity(0.3),
-            circle(30),
-            color(0, 0, 0),
+        // Star emitter
+        // Initialize a timer variable
+        let starTimer = 0;
+
+        betty.onUpdate(() => {
+            if (streak >= 3 && !showingResults) {
+                starTimer += dt();
+                if (starTimer >= 0.5) {
+                    starTimer = 0;
+
+                    const star = add([
+                        pos(betty.pos.x, betty.pos.y - 90),
+                        sprite("star"),
+                        scale(rand(0.5, 1)),
+                        body(),
+                        lifespan(1, { fade: 0.5 }),
+                        opacity(1),
+                        rotate(rand(0, 360)),
+                        move(choose([LEFT, RIGHT]), rand(60, 240)),
+                        "betty"
+                    ]);
+                    star.jump(rand(320, 640));
+                }
+            }
+        });
+        // Hihlight jaune derrière Betty pour quand iel a qqch à dire
+        let betty_highlight = add([
+            sprite("betty", {anim: "white"}),
+            pos(betty.pos.x, betty.pos.y - 91),
+            scale(scaleValue*2.2),
             anchor("center"),
-            z(80),
-            "betty"
-        ])
-        let betty_info = add([
-            sprite("info"),
-            pos(betty.pos.x, betty.pos.y - 200),
-            scale(scaleValue *2),
-            anchor("bot"),
-            area(),
-            z(80),
+            z(85),
+            area(31*scaleValue, 200*scaleValue),
+            color(255, 255, 0),
             opacity(0),
             "betty"
         ])
+        betty_highlight.flipX = true
         let info_shadow = add([
             sprite("info"),
-            pos(betty_info.pos.x + 5, betty_info.pos.y + 5),
-            scale(scaleValue * 2),
-            anchor("bot"),
+            pos(betty.pos.x + 1.5, betty.pos.y - 240 + 1.5),
+            scale(scaleValue * 2.2),
+            anchor("center"),
             color(0,0,0),
             opacity(0),
             z(70),
             "betty"
         ])
+        let betty_info = info_shadow.add([
+            sprite("info"),
+            pos(-1.5, -1.5),
+            anchor("center"),
+            area(),
+            z(80),
+            opacity(0),
+            "betty"
+        ])
+        let baseScale = betty.scale.clone()
+        info_shadow.onUpdate(() => {
+            info_shadow.scale = vec2(baseScale.x + wave(-0.5, 0.5, time() * 4), baseScale.y + wave(-0.5, 0.5, time() * 4))
+        })
         //#endregion
 
         displayQuestion()
@@ -1040,8 +1072,11 @@ async function main() {
                     card.color = wrong_color
                     card.z = 40
                     card_text.z = 45
+                    // On fait trembler l'écran
                     shake(10)
-
+                    // Betty est choquée
+                    betty.play("owch")
+                    // On joue le son de l'erreur
                     play("fail", {
                         volume: 0.5
                     })
@@ -1436,8 +1471,10 @@ async function main() {
             // Dialogue
 
             betty.play("idle_active")
+            betty_highlight.play("white")
             betty_info.opacity = 1
             info_shadow.opacity = 0.4
+            betty_highlight.opacity = 1
             betty.onClick(() => {
                 bettyClick()
             })
@@ -1453,6 +1490,7 @@ async function main() {
                 betty.play("talk")
                 betty_info.opacity = 0
                 info_shadow.opacity = 0
+                betty_highlight.opacity = 0
                 let bulle = add([
                     sprite("bulle"),
                     pos(betty.pos.x, betty.pos.y - 180),
@@ -1559,19 +1597,33 @@ async function main() {
 
         let scoreLabel = add([
             text(getTranslation("FINAL").replace("{score}", score),{
-                font: "pixel",
-                size: 72,
-                align: "center"
+                font: "pixeloutline",
+                size: 90,
+                align: "center",
+                width: 1200,
+                letterSpacing: 6,
+                transform: (idx, ch) => ({
+                    pos: vec2(0, wave(-4, 4, time() * 4 + idx * 0.5)),
+                    scale: wave(1, 1.2, time() * 3 + idx),
+                    angle: wave(-9, 9, time() * 3 + idx),
+                }),
             }),
-            pos(width()/2, height()/6),
+            pos(width()/2, 350),
             anchor("center"),
             z(10)
         ])
         let scoreLabel_shadow = add([
             text(getTranslation("FINAL").replace("{score}", score),{
-                font: "pixel",
-                size: 72,
-                align: "center"
+                font: "pixeloutline",
+                size: 90,
+                align: "center",
+                width: 1200,
+                letterSpacing: 6,
+                transform: (idx, ch) => ({
+                    pos: vec2(0, wave(-4, 4, time() * 4 + idx * 0.5)),
+                    scale: wave(1, 1.2, time() * 3 + idx),
+                    angle: wave(-9, 9, time() * 3 + idx),
+                }),
             }),
             pos(scoreLabel.pos.x + 5, scoreLabel.pos.y + 5),
             anchor("center"),
