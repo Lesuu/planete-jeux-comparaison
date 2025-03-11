@@ -125,6 +125,12 @@ export function loadAssets(){
             "y": 0,
             "width": 18,
             "height": 17
+        },
+        "star": {
+            "x" : 124,
+            "y" : 25,
+            "width": 30,
+            "height": 30,
         }
     })
 }

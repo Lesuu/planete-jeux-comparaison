@@ -1075,6 +1075,7 @@ async function main() {
                     } else {
                         // Si c'est correct, on colorie la carte cliquée en vert
                         card.color = correct_color
+                        betty.play("happy")
                     }
                 } else {
                     // Si c'est faux, on colorie la carte cliquée en rouge
