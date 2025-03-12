@@ -54,6 +54,8 @@ async function main() {
     let picto_scale
     let streak_opacity = 0
     let restart_button
+    let eng_button
+    let fr_button
 
     // Constantes: détermine le nombre de questions & lesquelles sont scriptées.
     const nbr_questions = 10
@@ -61,7 +63,7 @@ async function main() {
     const question_egale = 9
 
     // Langue
-    const langue = "fr"
+    let langue = "fr"
 
     // Couleurs
     const background_col = rgb(42, 138, 109)
@@ -99,10 +101,25 @@ async function main() {
         return translations[key][langue]
     }
     // Fonction pour restart
-    function restart(){
+    function windowButtons(){
         restart_button.onClick(()=>{
-            go("titleScreen")
+            location.reload()
         })
+        eng_button.onClick(()=>{
+            langue = "eng"
+            updateTexts()
+        })
+        fr_button.onClick(()=>{
+            langue = "fr"
+            updateTexts()
+        })
+    }
+    function updateTexts(){
+        if (getSceneName() === "titleScreen"){
+            go("titleScreen")
+        } else if (getSceneName() === "chooseCategory"){
+            go("chooseCategory")
+        }
     }
 
     scene("titleScreen", async () => {
@@ -117,12 +134,14 @@ async function main() {
             rect(width(), 60),
             pos(0,0),
             color(180, 180, 180),
-            stay()
+            stay(),
+            "window"
         ])
         windowsBar.add([
             rect(width()- 10, 50),
             pos(5, 5),
-            color(0, 0, 255)
+            color(0, 0, 255),
+            "window"
         ])
         windowsBar.add([
             text("quiz.exe", {
@@ -130,16 +149,52 @@ async function main() {
                 size: 36
             }),
             pos(15, 7),
+            stay(),
+            "window"
+        ])
+        windowsBar.add([
+            rect(5, height()),
+            color(180,180,180),
+            stay()
+        ])
+        windowsBar.add([
+            rect(5, height()),
+            pos(width() - 5, 0),
+            color(180,180,180),
+            stay()
+        ])
+        windowsBar.add([
+            rect(width(), 5),
+            pos(0, height()-5),
+            color(180,180,180),
             stay()
         ])
         restart_button = add([
             sprite("restart"),
             pos(width() - 55, 10),
             scale(2),
-            area({ shape: new Rect(vec2(-16, 0), 40, 35 ) }),
-            stay()
+            area({ shape: new Rect(vec2(-16, 10), 25, 25 ) }),
+            stay(),
+            "window"
         ])
-        restart()
+        eng_button = add([
+            sprite("en"),
+            pos(width() - 105, 10),
+            scale(2),
+            area({ shape: new Rect(vec2(-16, 8), 25, 25 ) }),
+            stay(),
+            "window"
+        ])
+        fr_button = add([
+            sprite("fr"),
+            pos(width() - 155, 10),
+            scale(2),
+            area({ shape: new Rect(vec2(-16, 0), 25, 25 ) }),
+            stay(),
+            "window"
+        ])
+        
+        windowButtons()
         
 
         // Réinitialisation du score
@@ -324,14 +379,20 @@ async function main() {
             anchor("center"),
             z(80)
         ])
+        let screen = add([
+            rect(width(), height()- 80),
+            area(),
+            pos(0, 80),
+            opacity(0)
+        ])
 
-        onClick(() => {
+        screen.onClick(() => {
             go("chooseCategory")
         });
         
     })
     scene("chooseCategory", async () => {
-        restart()
+        windowButtons()
         // Elements UI
         let title = add([
             text(getTranslation("OPTION"), {
@@ -551,7 +612,9 @@ async function main() {
     // Scène où on pose les questions
     
     scene("questions", async () => {
-        restart()
+        windowButtons()
+        eng_button.destroy()
+        fr_button.destroy()
         // Couleur du background dépend du support choisi
         let icon_sprite
         if (categorie_choisie === "jv"){
@@ -1643,7 +1706,7 @@ async function main() {
     //#endregion
     //#region Résultats finaux
     scene("finalResults", ({score}) =>{
-        restart()
+        windowButtons()
         createBarChart(langue)
 
         let scoreLabel = add([

@@ -137,6 +137,18 @@ export function loadAssets(){
             "y" : 55,
             "width": 22,
             "height": 21,
-        }
+        },
+        "fr": {
+            "x" : 124,
+            "y" : 76,
+            "width": 22,
+            "height": 21,
+        },
+        "en": {
+            "x" : 124,
+            "y" : 97,
+            "width": 22,
+            "height": 21,
+        },
     })
 }

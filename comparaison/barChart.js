@@ -76,7 +76,7 @@ export function createBarChart(langue){
             terminer_label = "TERMINER";
             continue_label = "Appuie pour continuer"
             break;
-        case "en": 
+        case "eng": 
             terminer_label = "END"; 
             continue_label = "Press to continue"
             break;
