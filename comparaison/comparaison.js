@@ -53,6 +53,7 @@ async function main() {
     let picto_pos
     let picto_scale
     let streak_opacity = 0
+    let restart_button
 
     // Constantes: détermine le nombre de questions & lesquelles sont scriptées.
     const nbr_questions = 10
@@ -97,12 +98,50 @@ async function main() {
     function getTranslation(key){
         return translations[key][langue]
     }
+    // Fonction pour restart
+    function restart(){
+        restart_button.onClick(()=>{
+            go("titleScreen")
+        })
+    }
 
     scene("titleScreen", async () => {
+        //éléments universels
         // Shader CRT
         onUpdate(() => {
             usePostEffect("crt", crtEffect());
         });
+
+        // Barre windows en haut de l'écran
+        let windowsBar = add([
+            rect(width(), 60),
+            pos(0,0),
+            color(180, 180, 180),
+            stay()
+        ])
+        windowsBar.add([
+            rect(width()- 10, 50),
+            pos(5, 5),
+            color(0, 0, 255)
+        ])
+        windowsBar.add([
+            text("quiz.exe", {
+                font: "pixel",
+                size: 36
+            }),
+            pos(15, 7),
+            stay()
+        ])
+        restart_button = add([
+            sprite("restart"),
+            pos(width() - 55, 10),
+            scale(2),
+            area({ shape: new Rect(vec2(-16, 0), 40, 35 ) }),
+            stay()
+        ])
+        restart()
+        
+
         // Réinitialisation du score
         score = 0
         compteur_question = 0
@@ -160,7 +199,7 @@ async function main() {
                     angle: wave(-2, 2, time() * 3 + idx),
                 }),
             }),
-            pos(960 + 10, 200 + 10),
+            pos(960 + 10, 230 + 10),
             anchor("center"),
             color(0,0,0),
             opacity(0.4),
@@ -197,7 +236,7 @@ async function main() {
                     angle: wave(-2, 2, time() * 3 + idx),
                 }),
             }),
-            pos(960 + 5, 540 + 5),
+            pos(960 + 5, 590 + 5),
             anchor("center"),
             color(0,0,0),
             opacity(0.4)
@@ -220,7 +259,7 @@ async function main() {
         let cardFan = 6
         let card1 = add([
             sprite(choose(cardSprites)),
-            pos(70, 620),
+            pos(70, 680),
             rotate(5),
             scale(1.3),
             anchor("botleft"),
@@ -241,7 +280,7 @@ async function main() {
         }
         let cardShadows = add([
             sprite("spades"),
-            pos(70 + 10, 620 + 10),
+            pos(70 + 10, 680 + 10),
             rotate(5),
             scale(1.3),
             anchor("botleft"),
@@ -270,7 +309,7 @@ async function main() {
         ])
         let betty = add([
             sprite("betty", {anim: "idle"}),
-            pos(1640, 580),
+            pos(1640, 620),
             anchor("center"),
             scale(5),
             z(100)
@@ -292,7 +331,7 @@ async function main() {
         
     })
     scene("chooseCategory", async () => {
-
+        restart()
         // Elements UI
         let title = add([
             text(getTranslation("OPTION"), {
@@ -512,6 +551,7 @@ async function main() {
     // Scène où on pose les questions
     
     scene("questions", async () => {
+        restart()
         // Couleur du background dépend du support choisi
         let icon_sprite
         if (categorie_choisie === "jv"){
@@ -528,7 +568,7 @@ async function main() {
                 font: "pixel",
                 size: 54
             }),
-            pos(width() - width()/1.11, height()*0.06),
+            pos(width() - width()/1.11, 120),
             anchor("center"),
             z(50)
         ]);
@@ -549,7 +589,7 @@ async function main() {
                 font: "pixel",
                 size: 54
             }),
-            pos(width()/1.1, height()*0.06),
+            pos(width()/1.1, 120),
             anchor("center"),
             z(50)
         ])
@@ -576,7 +616,7 @@ async function main() {
                     angle: wave(-9, 9, time() * 3 + idx),
                 }) : undefined,
             }),
-            pos(width()/2, 30),
+            pos(width()/2, 28),
             anchor("center"),
             opacity(streak_opacity),
             z(50)
@@ -602,13 +642,13 @@ async function main() {
         if (categorie_choisie === "both"){
             let icon1 = add([
                 sprite("jv_color"),
-                pos(380, 65),
+                pos(380, compteur_caption.pos.y),
                 anchor("center"),
                 rotate(-10)
             ])
             let icon2 = add([
                 sprite("jds_color"),
-                pos(440, 65),
+                pos(440, compteur_caption.pos.y),
                 anchor("center"),
                 scale(1.3),
                 rotate(10)
@@ -616,7 +656,7 @@ async function main() {
         } else { 
             let icon = add([
                 sprite(icon_sprite),
-                pos(390, 65),
+                pos(390, compteur_caption.pos.y),
                 anchor("center"),
             ])
         }
@@ -1522,7 +1562,7 @@ async function main() {
                         },
                     }),
                     anchor("topleft"),
-                    pos(bulle.pos.x - 1120, bulle.pos.y - 570),
+                    pos(bulle.pos.x - 1120, bulle.pos.y - 590),
                     color(text_color),
                     z(110),
                     {
@@ -1603,6 +1643,7 @@ async function main() {
     //#endregion
     //#region Résultats finaux
     scene("finalResults", ({score}) =>{
+        restart()
         createBarChart(langue)
 
         let scoreLabel = add([

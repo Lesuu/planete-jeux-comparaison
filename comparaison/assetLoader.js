@@ -131,6 +131,12 @@ export function loadAssets(){
             "y" : 25,
             "width": 30,
             "height": 30,
+        }, 
+        "restart": {
+            "x" : 124,
+            "y" : 55,
+            "width": 22,
+            "height": 21,
         }
     })
 }
