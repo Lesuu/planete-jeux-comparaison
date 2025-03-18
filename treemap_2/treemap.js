@@ -50,27 +50,44 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
                     type: 'treemap',
                     visibleMin: 0.0001,
                     label: {
-                    show: true,
-                    formatter: '{b}'
+                        // Texte à l'intérieur des cases
+                        show: true,
+                        formatter: '{b}',
+                        textStyle: {
+                            fontFamily: 'm6x11', 
+                            fontSize: 27, 
+                            textBorderColor: '#38474a',
+                            textBorderWidth: 2,
+                            //fontWeight: 'bold' 
+                        }
                     },
                     upperLabel: {
                     show: true,
-                    height: 30
+                    height: 35,
+                    // Texte de l'intitulé du treemap
+                    textStyle: {
+                        fontFamily : 'm6x11',
+                        fontSize: 23,
+                        textBorderColor: '#38474a',
+                        textBorderWidth: 2,
+                        color: '#fff'
+                    }
                     },
                     itemStyle: {
-                    borderColor: '#fff'
+                        borderColor: '#fff'
                     },
                     levels: [
                     {
                         itemStyle: {
-                        borderColor: '#777',
-                        borderWidth: 0,
-                        gapWidth: 1
+                            borderColor: '#777',
+                            borderWidth: 0,
+                            gapWidth: 1
                         },
                         upperLabel: { show: false }
                     },
                     {
                         itemStyle: {
+                        // Couleur du tour du treemap
                         borderColor: '#555',
                         borderWidth: 5,
                         gapWidth: 1
@@ -82,7 +99,6 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
                         itemStyle: { borderWidth: 5, gapWidth: 1, borderColorSaturation: 0.6 }
                     }
                     ],
-                    // Wrap the converted data in an array if your function returns a single root node.
                     data: [convertedData]
                 }]
             });
