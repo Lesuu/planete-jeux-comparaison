@@ -6,7 +6,7 @@ import { loadData, questions_JV, questions_JdS, translations} from './dataLoader
 
 // Initialisation de Kaplay
 kaplay({
-    background : [42, 138, 109],
+    background : [0,0,0],
     letterbox:true,
     width:1920,
     height:1080,
@@ -123,6 +123,7 @@ async function main() {
     }
 
     scene("titleScreen", async () => {
+        setBackground(background_col)
         //éléments universels
         // Shader CRT
         onUpdate(() => {
