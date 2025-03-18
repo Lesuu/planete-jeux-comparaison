@@ -17,8 +17,8 @@ let langue = "fr";
 
 // Initialisation de Kaplay
 kaplay({
-    background : [200,60,60],
-    letterbox:true,
+    background : [138, 42 ,42],
+    letterbox:false,
     width:1920,
     height:1080,
     stretch:false,
@@ -31,10 +31,10 @@ loadAssets();
 // Chargement du texte
 let translations = await load(importText(lien_meta_text));
 // Effet CRT
-// loadShaderURL("crt", null, "assets/shaders/crt.frag");
-// const crtEffect = () => ({
-//     "u_flatness": 9 ,
-// });   
+loadShaderURL("crt", null, "assets/shaders/crt.frag");
+const crtEffect = () => ({
+    "u_flatness": 4 ,
+});   
 
 // Traductions
 function getTranslation(key){
@@ -43,6 +43,10 @@ function getTranslation(key){
 
 // Menu principal
 scene("titleScreen", async () => {
+    // onUpdate(() =>{
+    //     usePostEffect("crt", crtEffect());
+    // })
+
     // Fenêtre windows autour de l'écran:
     createWindow();
     restart_button = add([
@@ -71,12 +75,6 @@ scene("titleScreen", async () => {
     ])
     windowButtons(restart_button, eng_button, fr_button)
    
-
-    // Effet CRT:
-    // onUpdate(() => {
-    //     usePostEffect("crt", crtEffect());
-    // });
-
     // 'appuyez pour commencer'
     let start_shadow = add([
         text(getTranslation("START"), {
@@ -126,7 +124,6 @@ scene("titleScreen", async () => {
     betty.flipX = true
     // On fait flasher le texte 'appuie pour commencer'
     loop(1.7, () =>{
-        console.log("flash")
         start_caption.opacity = 1
         start_shadow.opacity = 0.4
         wait(1, () => {
@@ -141,7 +138,6 @@ scene("titleScreen", async () => {
         opacity(0)
     ])
     clickArea.onClick(() => {
-        console.log("click")
         go("treemap")
     })
 })

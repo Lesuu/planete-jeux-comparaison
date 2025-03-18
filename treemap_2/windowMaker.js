@@ -11,11 +11,12 @@ export function createWindow(){
     windowsBar.add([
         rect(width()- 10, 50),
         pos(5, 5),
-        color(0, 0, 255),
+        color(39, 0, 216),
+        stay(),
         "window"
     ])
     windowsBar.add([
-        text("treemap.exe", {
+        text("data.exe", {
             font: "pixel",
             size: 36
         }),
@@ -58,7 +59,7 @@ export function windowsTreemapContainer(){
     treemapWindow.add([
         rect(1693, 24),
         pos(3, 3),
-        color(0, 0, 255),
+        color(39, 0, 216),
     ])
     treemapWindow.add([
         text("treemap.exe", {

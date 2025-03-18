@@ -1,9 +1,3 @@
-// définition d'une taille par défaut
-// const cont = document.querySelector("#container");
-// cont.style.width = window.innerWidth+20+"px";
-// cont.style.height = window.innerHeight-40+"px";
-
-
 export function generateTreemap(plateforme, scenario, contribution, etage1, zoom) {    
     const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2RjJYuns3gy3P3p45n8_pm8yqqDCWqHfVON3xswfWfHk3vLgpdP6YhbIO/pub?gid=74008056&single=true&output=csv';
     
@@ -19,7 +13,6 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
     treemapContainer.style.pointerEvents = "auto";
     treemapContainer.style.zIndex = "10";
     document.body.appendChild(treemapContainer);
-
     
     return new Promise((resolve, reject) => {
         $.get(csvUrl, function(csvText) {
