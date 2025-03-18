@@ -156,19 +156,22 @@ async function main() {
         windowsBar.add([
             rect(5, height()),
             color(180,180,180),
-            stay()
+            stay(),
+            "window"
         ])
         windowsBar.add([
             rect(5, height()),
             pos(width() - 5, 0),
             color(180,180,180),
-            stay()
+            stay(),
+            "window"
         ])
         windowsBar.add([
             rect(width(), 5),
             pos(0, height()-5),
             color(180,180,180),
-            stay()
+            stay(),
+            "window"
         ])
         restart_button = add([
             sprite("restart"),
@@ -247,7 +250,7 @@ async function main() {
         let main_shadow = add([
             text(getTranslation("TITRE"), {
                 font: "pixeloutline",
-                size: 136,
+                size: 126,
                 width : 1200,
                 align: "center", 
                 transform: (idx, ch) => ({
@@ -263,16 +266,18 @@ async function main() {
         let main_title = main_shadow.add([
             text(getTranslation("TITRE"), {
                 font: "pixeloutline",
-                size: 136,
+                size: 126,
                 width: 1200,
                 align: "center",
                 transform: (idx, ch) => ({
+                    color: hsl2rgb((time() * 0.2 + idx * 0.1) % 1, 0.7, 0.8),
                     pos: vec2(0, wave(-1, 1, time() * 3 + idx * 0.5)),
                     angle: wave(-2, 2, time() * 3 + idx),
                 }),
             }),
             pos(-10, -10),
             anchor("center"),
+            scale()
         ])
         // On fait bouger le titre 
         const basePos = main_shadow.pos.clone();

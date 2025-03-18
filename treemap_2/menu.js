@@ -32,7 +32,7 @@ bg_icon.addEventListener("click", function(){
     jv_toggle = false;
     vg_icon.src = vg_icon_path;
     document.getElementById('chart').innerHTML = '';
-    genereJeuDeSociete(jds_changementClimatique, contribution_choisie, marge)
+    //genereJeuDeSociete(jds_changementClimatique, contribution_choisie, marge)
 
     // On montre seulement les options qui ont du sens pour le JdS
     document.querySelectorAll('.checkbox-container').forEach(container => {
@@ -59,7 +59,7 @@ vg_icon.addEventListener("click", function(){
         container.style.display = 'flex';
     });
 
-    genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, scenario_choisi, marge);
+    //genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, scenario_choisi, marge);
 });
 
 // Boutons par scenario
@@ -93,25 +93,25 @@ function clickCheckbox(checkbox){
 checkbox_changement_climatique.addEventListener("click", () => {
     scenario_choisi = clickCheckbox(checkbox_changement_climatique)
     if (jv_toggle){
-        genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, scenario_choisi, marge)
+        //genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, scenario_choisi, marge)
     } else if (jds_toggle){
-        genereJeuDeSociete(jds_changementClimatique, contribution_choisie, marge)
+        //genereJeuDeSociete(jds_changementClimatique, contribution_choisie, marge)
     }
 })
 checkbox_metaux.addEventListener("click", () => {
     scenario_choisi = clickCheckbox(checkbox_metaux)
     if (jv_toggle){
-        genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, scenario_choisi, marge)
+        //genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, scenario_choisi, marge)
     } else if (jds_toggle){
-        genereJeuDeSociete(jds_changementClimatique, contribution_choisie, marge)
+        //genereJeuDeSociete(jds_changementClimatique, contribution_choisie, marge)
     }
 })
 checkbox_particules_fines.addEventListener("click", () => {
     scenario_choisi = clickCheckbox(checkbox_particules_fines)
     if (jv_toggle){
-        genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, scenario_choisi, marge)
+        //genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, scenario_choisi, marge)
     } else if (jds_toggle){
-        genereJeuDeSociete(jds_changementClimatique, contribution_choisie, marge)
+        //genereJeuDeSociete(jds_changementClimatique, contribution_choisie, marge)
     }
 })
 // Checkboxes pour la contribution
@@ -133,8 +133,8 @@ checkbox_equipement.addEventListener("click", function(){
         cycle_toggle = false;
     }
     if (jv_toggle){
-        genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, scenario_choisi, marge)
+        //genereJeuVideo(jv_changementClimatique, jv_metaux, jv_particulesFines, contribution_choisie, scenario_choisi, marge)
     } else if (jds_toggle){
-        genereJeuDeSociete(jds_changementClimatique, contribution_choisie, marge)
+        //genereJeuDeSociete(jds_changementClimatique, contribution_choisie, marge)
     }
 });
