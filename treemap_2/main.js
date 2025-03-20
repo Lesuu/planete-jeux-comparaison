@@ -183,6 +183,7 @@ scene("treemap", async () => {
 
 //#region Menu treemap
 function treemapButtons(){
+    // "Catégorie":
     let vg_button = add([
         sprite("button"),
         pos(109, 170),
@@ -235,6 +236,113 @@ function treemapButtons(){
         vg_button_icon.sprite = "vg_color";
         bg_button_icon.sprite = "bg_icon";
     });
+    // Indicateurs:
+    let indicateurs = add([
+        text(getTranslation("INDICATEURS_LABEL"), {
+            font: "pixel",
+            size: 54,
+        }),
+        pos(194 + 4, 370 + 4),
+        color(0,0,0),
+        anchor("top"),
+        opacity(0.4)
+    ])
+    indicateurs.add([
+        text(getTranslation("INDICATEURS_LABEL"), {
+            font: "pixel",
+            size: 54,
+        }),
+        pos(-4, -4),
+        anchor("top")
+    ])
+    let changclim_button = add([
+        sprite("button"),
+        pos(194, 520),
+        area(),
+        anchor("center"),
+        scale(1.3)
+    ])
+    // Changement climatique
+    let changclim_button_icon = changclim_button.add([
+        sprite("changement_climatique"),
+        anchor("center"),
+        pos(0, 0),
+        scale(1/1.3)
+    ])
+    changclim_button.add([
+        text(getTranslation("CHANGEMENT CLIMATIQUE"), {
+            font: "pixel",
+            size: 18,
+        }),
+        anchor("top"),
+        pos(0,43)
+    ])
+    changclim_button.onClick(() => {
+        buttonPressed(changclim_button, changclim_button_icon, "Changement climatique", "scenario");
+    });
+
+    // Métaux
+    let metaux_button = add([
+        sprite("button"),
+        pos(194, 720),
+        area(),
+        anchor("center"),
+        scale(1.3)
+    ])
+    let metaux_button_icon = metaux_button.add([
+        sprite("metaux"),
+        anchor("center"),
+        pos(0, 0),
+        scale(1/1.3)
+    ])
+    metaux_button.add([
+        text(getTranslation("METAUX"), {
+            font: "pixel",
+            size: 18,
+        }),
+        anchor("top"),
+        pos(0,43)
+    ])
+    metaux_button.onClick(() => {
+        buttonPressed(metaux_button, metaux_button_icon, "Ressources minérales et métalliques", "scenario");
+    });
+    // Métaux
+    let particules_fines_button = add([
+        sprite("button"),
+        pos(194, 920),
+        area(),
+        anchor("center"),
+        scale(1.3)
+    ])
+    let particules_fines_button_icon = particules_fines_button.add([
+        sprite("particules_fines"),
+        anchor("center"),
+        pos(0, -5),
+        scale(1/1.3)
+    ])
+    particules_fines_button_icon.add([
+        sprite("particules_fines"),
+        anchor("center"),
+        pos(0, 10),
+        scale(0.9)
+    ])
+    particules_fines_button_icon.add([
+        sprite("particules_fines"),
+        anchor("center"),
+        pos(0, 20),
+        scale(0.8)
+    ])
+    particules_fines_button.add([
+        text(getTranslation("PARTICULES FINES"), {
+            font: "pixel",
+            size: 18,
+        }),
+        anchor("top"),
+        pos(0,43)
+    ])
+    particules_fines_button.onClick(() => {
+        buttonPressed(particules_fines_button, particules_fines_button_icon, "Particules fines", "scenario");
+    });
 
     onMouseRelease(() => {
         if (current_button_pressed){
@@ -251,13 +359,10 @@ async function buttonPressed(button, icon, choix, catégorie){
     switch(catégorie){
         case "plateforme":
             plateforme_choisie = choix;
-            console.log("plateforme!", etage1_jds, etage1_jv)
             if (!etage1_jds.includes(etage1_choisi)){
                 etage1_choisi = "Jouer à un petit jeu de société (ex. Bandido)";
-                console.log(etage1_choisi)
             } else if (!etage1_jv.includes(etage1_choisi)){
                 etage1_choisi = "Jouer sur console";
-                console.log(etage1_choisi)
             };
             break;
         case "scenario":
@@ -274,7 +379,6 @@ async function buttonPressed(button, icon, choix, catégorie){
     current_icon = icon;
     button.sprite = "button_pressed";
     icon.pos = vec2(icon.pos.x + 2, icon.pos.y + 2);
-    console.log(plateforme_choisie)
     await generateTreemap(plateforme_choisie, scenario_choisi, contribution_choisie, etage1_choisi, zoom);
     document.body.removeChild(loadingOverlay);
 }

@@ -81,12 +81,12 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
             myChart.setOption({
                 tooltip: {
                     formatter: function(info) {
-                    // Get the numeric value and build a display path.
-                    var value = info.value;
-                    var treePath = info.treePathInfo.map(item => item.name).slice(1).join('/');
-                    var explication = info.data.explication ? ('<br>' + info.data.explication) : '';
-                    return `<div class="tooltip-title">${echarts.format.encodeHTML(treePath)}</div>
-                            Case: ${value}${explication}`;
+                    // Etiquette quand on hover (désactivée car inutile)
+                    // var value = info.value;
+                    // var treePath = info.treePathInfo.map(item => item.name).slice(1).join('/');
+                    // var explication = info.data.explication ? ('<br>' + info.data.explication) : '';
+                    // return `<div class="tooltip-title">${echarts.format.encodeHTML(treePath)}</div>
+                    //         Case: ${value}${explication}`;
                     }
                 },
                 series: [{
@@ -132,13 +132,21 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
                     },
                     {
                         itemStyle: {
-                        // Couleur du tour du treemap
-                        borderColor: '#555',
-                        borderWidth: 5,
-                        gapWidth: 1
+                            // Couleur du tour du treemap
+                            borderColor: '#555',
+                            borderWidth: 5,
+                            gapWidth: 1
                         },
                         emphasis: { itemStyle: { borderColor: '#ddd' } }
                     },
+                    // {
+                    //     itemStyle: {
+                    //         // Couleur du tour du treemap
+                    //         borderColor: '#555',
+                    //         borderWidth: 5,
+                    //         gapWidth: 2
+                    //     },
+                    // },
                     {
                         colorSaturation: [0.35, 0.5],
                         itemStyle: { borderWidth: 5, gapWidth: 1, borderColorSaturation: 0.6 }
@@ -161,9 +169,7 @@ function conversionDonnees(allData, plateforme, scenario, contribution, etage1) 
     let root = { name: title, path: etage1, children: [] };
     
     // Filtrage des données
-    console.log(allData)
     let data = allData.filter(d => d.treemap === plateforme && d.scenario === scenario && d.etage_1 === etage1 && d.contribution === contribution);
-    console.log(data)
 
     // On progresse à travers les différents étages
     data.forEach(row => {
