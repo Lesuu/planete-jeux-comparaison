@@ -1,3 +1,5 @@
+import { getTranslation, langue } from "./main.js"
+
 //#region Main Window   
 // Création de la fenêtre windows
 export function createWindow(){
@@ -50,14 +52,14 @@ export function createWindow(){
 //#region Treemap
 export function windowsTreemapContainer(){
     let treemapWindow = add([
-        rect(1700, 30),
-        pos(200, 200),
+        rect(1510, 30),
+        pos(384, 200),
         color(180, 180, 180),
         stay(),
         "window"
     ])
     treemapWindow.add([
-        rect(1693, 24),
+        rect(1507, 24),
         pos(3, 3),
         color(39, 0, 216),
     ])
@@ -76,12 +78,12 @@ export function windowsTreemapContainer(){
     ])
     treemapWindow.add([
         rect(3, 860),
-        pos(1697, 0),
+        pos(1510, 0),
         color(180,180,180),
         stay()
     ])
     treemapWindow.add([
-        rect(1700, 3),
+        rect(1513, 3),
         pos(0, 860),
         color(180,180,180),
         stay()

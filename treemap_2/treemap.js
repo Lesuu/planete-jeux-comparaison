@@ -1,19 +1,66 @@
+import { getTranslation, langue } from "./main.js"
+
+export let etage1_jv = []
+export let etage1_jds = []
+
+
+export function listEtages() {
+    const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2RjJYuns3gy3P3p45n8_pm8yqqDCWqHfVON3xswfWfHk3vLgpdP6YhbIO/pub?gid=74008056&single=true&output=csv';
+    
+    return new Promise((resolve, reject) => {
+        $.get(csvUrl, function(csvText) {
+            // Parse CSV using PapaParse.
+            const parsed = Papa.parse(csvText, { header: true });
+            const allData = parsed.data;    
+
+            etage1_jv = [...new Set(allData.filter(d => d.treemap === "Jeu vidéo").map(d => d.etage_1))];
+            etage1_jds = [...new Set(allData.filter(d => d.treemap === "Jeu de société").map(d => d.etage_1))];
+
+            resolve({ etage1_jv, etage1_jds });
+        }).fail((err) => {
+            reject(err);
+        });
+    });
+}
+
 export function generateTreemap(plateforme, scenario, contribution, etage1, zoom) {    
     const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2RjJYuns3gy3P3p45n8_pm8yqqDCWqHfVON3xswfWfHk3vLgpdP6YhbIO/pub?gid=74008056&single=true&output=csv';
     
+    let existingContainer = document.getElementById("treemapContainer");
+    if (existingContainer) {
+        existingContainer.remove();
+    }
+
     const treemapContainer = document.createElement("div");
     treemapContainer.id = "treemapContainer";
     treemapContainer.style.position = "absolute";
     treemapContainer.style.top = "230px";
-    treemapContainer.style.left = "203px";
+    treemapContainer.style.left = "387px";
     treemapContainer.style.right = "220px";
     treemapContainer.style.bottom = "5px";
-    treemapContainer.style.width = "1694px";
+    treemapContainer.style.width = "1507px";
     treemapContainer.style.height = "830px";
     treemapContainer.style.pointerEvents = "auto";
     treemapContainer.style.zIndex = "10";
     document.body.appendChild(treemapContainer);
-    
+
+    let loadingOverlay = document.createElement("div");
+    loadingOverlay.id = "loadingOverlay";
+    loadingOverlay.style.position = "absolute";
+    loadingOverlay.style.top = "230px";
+    loadingOverlay.style.left = "387px";
+    loadingOverlay.style.right = "220px";
+    loadingOverlay.style.bottom = "5px";
+    loadingOverlay.style.width = "1507px";
+    loadingOverlay.style.height = "830px";
+    loadingOverlay.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+    loadingOverlay.style.display = "flex";
+    loadingOverlay.style.justifyContent = "center";
+    loadingOverlay.style.alignItems = "center";
+    loadingOverlay.style.zIndex = "9999"; 
+    loadingOverlay.innerHTML = `<h1 style='color: white;'>${getTranslation("CHARGEMENT")}</h1>`;
+    document.body.appendChild(loadingOverlay);
+
     return new Promise((resolve, reject) => {
         $.get(csvUrl, function(csvText) {
             // Parse CSV using PapaParse.
@@ -22,8 +69,6 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
 
             // Conversion des données
             let convertedData = conversionDonnees(allData, plateforme, scenario, contribution, etage1);
-
-            
 
             //generate treemap
             if (!treemapContainer) {

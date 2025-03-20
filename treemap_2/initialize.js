@@ -4,31 +4,46 @@ export function loadAssets(){
     loadFont("pixel", "assets/fonts/m6x11plus.ttf")
     loadFont("pixelthin", "assets/fonts/m5x7.ttf")
     //#region UI
+    // Boutons windows:
+    loadSpriteAtlas("assets/sprites/windowsbutton.png", {
+        "button":{
+            "x": 0,
+            "y": 0,
+            "width": 80,
+            "height": 80
+        },
+        "button_pressed":{
+            "x": 80,
+            "y": 0,
+            "width": 80,
+            "height": 80
+        },
+    });
     // Icones + checkbox:
     loadSpriteAtlas("assets/sprites/icons_spreadsheet.png", {
         "bg_icon": {
-            "x": 0,
-            "y": 0,
-            "width": 64,
-            "height": 64
-        },
-        "bg_color": {
             "x": 64,
             "y": 0,
             "width": 64,
             "height": 64
         },
-        "vg_icon": {
+        "bg_color": {
             "x": 0,
+            "y": 0,
+            "width": 64,
+            "height": 64
+        },
+        "vg_icon": {
+            "x": 80,
             "y": 64,
-            "width": 160,
-            "height": 128
+            "width": 80,
+            "height": 64
         },
         "vg_color": {
-            "x": 160,
+            "x": 0,
             "y": 64,
-            "width": 160,
-            "height": 128
+            "width": 80,
+            "height": 64
         },
         "empty_checkbox": {
             "x": 128,
@@ -44,7 +59,7 @@ export function loadAssets(){
         },
     });
     // Bouton
-    loadSprite("button", "assets/sprites/button_textless.png")
+    loadSprite("button_red", "assets/sprites/button_textless.png")
     // Bulle de dialogue
     loadSprite("bulle", "assets/sprites/bulle.png")
     //#endregion
@@ -132,6 +147,12 @@ export function loadAssets(){
             "height": 21,
         },
     });
+    //Pictogrammes
+    loadSprite("changement_climatique", "assets/pictos/changclim.png")
+    loadSprite("cycle_de_vie", "assets/pictos/cycle.png")
+    loadSprite("metaux", "assets/pictos/Metaux.png")
+    loadSprite("par_equipement", "assets/pictos/parequipement.png")
+    loadSprite("particules_fines", "assets/pictos/partfines.png")
     //#endregion
 };
 
