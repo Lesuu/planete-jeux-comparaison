@@ -345,6 +345,8 @@ function treemapButtons(){
         text(getTranslation("CYCLE DE VIE"), {
             font: "pixel",
             size: 18,
+            width: 100,
+            align: "center"
         }),
         anchor("top"),
         pos(0,43)
