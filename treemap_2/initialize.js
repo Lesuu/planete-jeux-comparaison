@@ -147,12 +147,23 @@ export function loadAssets(){
             "height": 21,
         },
     });
-    //Pictogrammes
+    // Pictogrammes:
+    // Indicateurs
     loadSprite("changement_climatique", "assets/pictos/changclim.png")
     loadSprite("cycle_de_vie", "assets/pictos/cycle.png")
     loadSprite("metaux", "assets/pictos/Metaux.png")
     loadSprite("par_equipement", "assets/pictos/parequipement.png")
     loadSprite("particules_fines", "assets/pictos/partfines.png")
+
+    // Scenarios
+    loadSprite("telephone", "assets/pictos/telephone.png")
+    loadSprite("portable", "assets/pictos/portable.png")
+    loadSprite("pc", "assets/pictos/pc.png")
+    loadSprite("console", "assets/pictos/console.png")
+    loadSprite("cloud", "assets/pictos/cloud.png")
+
+    loadSprite("petit_jeu", "assets/pictos/petit_jeu.png")
+    loadSprite("jeu_moyen", "assets/pictos/jeu_moyen.png")
     //#endregion
 };
 

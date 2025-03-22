@@ -4,7 +4,7 @@ import { loadAssets, importText } from "./initialize.js";
 import { createWindow, windowButtons, windowsTreemapContainer } from "./windowMaker.js";
 
 let plateforme_choisie = "Jeu vidéo";
-let scenario_choisi = "Changement climatique";
+let indicateur_choisi = "Changement climatique";
 let contribution_choisie = "par équipement";
 let etage1_choisi = "Jouer sur console";
 let current_button_pressed = null;
@@ -17,6 +17,7 @@ const lien_meta_text = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQI
 // Variable globales:
 let restart_button, eng_button, fr_button;
 export let langue = "fr";
+export let loading = false
 
 // Initialisation de Kaplay
 kaplay({
@@ -30,8 +31,6 @@ kaplay({
 
 // etage1
 listEtages().then(({ etage1_jv, etage1_jds }) => {
-    console.log("etage1_jv from main.js:", etage1_jv);
-    console.log("etage1_jds from main.js:", etage1_jds);
 }).catch(err => {
     console.error("Error fetching etage1 data:", err);
 });
@@ -158,27 +157,9 @@ scene("treemap", async () => {
     windowButtons(restart_button, eng_button, fr_button)
     windowsTreemapContainer();
     treemapButtons();
+    scenarioJvButtons();
 
-    // Ecran de chargement
-    // let loadingOverlay = document.createElement("div");
-    // loadingOverlay.id = "loadingOverlay";
-    // loadingOverlay.style.position = "absolute";
-    // loadingOverlay.style.top = "230px";
-    // loadingOverlay.style.left = "387px";
-    // loadingOverlay.style.right = "220px";
-    // loadingOverlay.style.bottom = "5px";
-    // loadingOverlay.style.width = "1507px";
-    // loadingOverlay.style.height = "830px";
-    // loadingOverlay.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
-    // loadingOverlay.style.display = "flex";
-    // loadingOverlay.style.justifyContent = "center";
-    // loadingOverlay.style.alignItems = "center";
-    // loadingOverlay.style.zIndex = "9999"; 
-    // loadingOverlay.innerHTML = `<h1 style='color: white;'>${getTranslation("CHARGEMENT")}</h1>`;
-    // document.body.appendChild(loadingOverlay);
-
-    await generateTreemap(plateforme_choisie, scenario_choisi, contribution_choisie, etage1_choisi, zoom);
-    document.body.removeChild(loadingOverlay);
+    await generateTreemap(plateforme_choisie, indicateur_choisi, contribution_choisie, etage1_choisi, zoom);
 })
 
 //#region Menu treemap
@@ -189,13 +170,13 @@ function treemapButtons(){
         pos(109, 170),
         area(),
         anchor("center"),
-        scale(1.8)
+        scale(1.8),
     ])
     let vg_button_icon = vg_button.add([
-        sprite("vg_icon"),
+        sprite("vg_color"),
         anchor("center"),
         pos(0, 0),
-        scale(1/1.15)
+        scale(1/1.15),
     ])
     vg_button.add([
         text(getTranslation("JEU VIDEO"), {
@@ -227,11 +208,13 @@ function treemapButtons(){
         pos(0,43)
     ])
     bg_button.onClick(() => {
+        scenarioJdsButtons();
         buttonPressed(bg_button, bg_button_icon, "Jeu de société", "plateforme");
         bg_button_icon.sprite = "bg_color";
         vg_button_icon.sprite = "vg_icon";
     });
     vg_button.onClick(() => {
+        scenarioJvButtons();
         buttonPressed(vg_button, vg_button_icon, "Jeu vidéo", "plateforme");
         vg_button_icon.sprite = "vg_color";
         bg_button_icon.sprite = "bg_icon";
@@ -278,7 +261,7 @@ function treemapButtons(){
         pos(0,43)
     ])
     changclim_button.onClick(() => {
-        buttonPressed(changclim_button, changclim_button_icon, "Changement climatique", "scenario");
+        buttonPressed(changclim_button, changclim_button_icon, "Changement climatique", "indicateur");
     });
 
     // Métaux
@@ -304,9 +287,9 @@ function treemapButtons(){
         pos(0,43)
     ])
     metaux_button.onClick(() => {
-        buttonPressed(metaux_button, metaux_button_icon, "Ressources minérales et métalliques", "scenario");
+        buttonPressed(metaux_button, metaux_button_icon, "Ressources minérales et métalliques", "indicateur");
     });
-    // Métaux
+    // Particules fines
     let particules_fines_button = add([
         sprite("button"),
         pos(194, 920),
@@ -341,7 +324,58 @@ function treemapButtons(){
         pos(0,43)
     ])
     particules_fines_button.onClick(() => {
-        buttonPressed(particules_fines_button, particules_fines_button_icon, "Particules fines", "scenario");
+        buttonPressed(particules_fines_button, particules_fines_button_icon, "Particules fines", "indicateur");
+    });
+
+    // Par étape de cycle de vie:
+    let cycle_de_vie_button = add([
+        sprite("button"),
+        pos(1564, 170),
+        area(),
+        anchor("center"),
+        scale(1.3)
+    ])
+    let cycle_de_vie_button_icon = cycle_de_vie_button.add([
+        sprite("cycle_de_vie"),
+        anchor("center"),
+        pos(0, 0),
+        scale(1/1.3)
+    ])
+    cycle_de_vie_button.add([
+        text(getTranslation("CYCLE DE VIE"), {
+            font: "pixel",
+            size: 18,
+        }),
+        anchor("top"),
+        pos(0,43)
+    ])
+    cycle_de_vie_button.onClick(() => {
+        buttonPressed(cycle_de_vie_button, cycle_de_vie_button_icon, "par étape de cycle de vie", "contribution");
+    });
+    // Par équipement
+    let par_equipement_button = add([
+        sprite("button"),
+        pos(1734, 170),
+        area(),
+        anchor("center"),
+        scale(1.3)
+    ])
+    let par_equipement_button_icon = par_equipement_button.add([
+        sprite("par_equipement"),
+        anchor("center"),
+        pos(0, 0),
+        scale(1/1.3)
+    ])
+    par_equipement_button.add([
+        text(getTranslation("PAR EQUIPEMENT"), {
+            font: "pixel",
+            size: 18,
+        }),
+        anchor("top"),
+        pos(0,43)
+    ])
+    par_equipement_button.onClick(() => {
+        buttonPressed(par_equipement_button, par_equipement_button_icon, "par équipement", "contribution");
     });
 
     onMouseRelease(() => {
@@ -354,19 +388,260 @@ function treemapButtons(){
     })
 }
 
+// Fonctions pour les boutons scénarios:
+// JV
+function scenarioJvButtons(){
+    destroyAll("bg_buttons")
+    let telephone_button = add([
+        sprite("button"),
+        pos(550, 170),
+        area(),
+        anchor("center"),
+        scale(1.3),
+        "vg_buttons"
+    ])
+    let telephone_button_icon = telephone_button.add([
+        sprite("telephone"),
+        anchor("center"),
+        pos(0, 0),
+        scale(1/1.3),
+        "vg_buttons"
+    ])
+    telephone_button.add([
+        text(getTranslation("TELEPHONE"), {
+            font: "pixel",
+            size: 18,
+        }),
+        anchor("top"),
+        pos(0,43),
+        "vg_buttons"
+    ])
+    // portable
+    let portable_button = add([
+        sprite("button"),
+        pos(720, 170),
+        area(),
+        anchor("center"),
+        scale(1.3),
+        "vg_buttons"
+    ])
+    let portable_button_icon = portable_button.add([
+        sprite("portable"),
+        anchor("center"),
+        pos(0, 0),
+        scale(1/1.3),
+        "vg_buttons"
+    ])
+    portable_button.add([
+        text(getTranslation("PORTABLE"), {
+            font: "pixel",
+            size: 18,
+            width: 100,
+            align: "center"
+        }),
+        anchor("top"),
+        pos(0,43),
+        "vg_buttons"
+    ])
+    // Fixe
+    let fixe_button = add([
+        sprite("button"),
+        pos(890, 170),
+        area(),
+        anchor("center"),
+        scale(1.3),
+        "vg_buttons"
+    ])
+    let fixe_button_icon = fixe_button.add([
+        sprite("pc"),
+        anchor("center"),
+        pos(0, 0),
+        scale(1/1.3),
+        "vg_buttons"
+    ])
+    fixe_button.add([
+        text(getTranslation("FIXE"), {
+            font: "pixel",
+            size: 18,
+            width: 100,
+            align: "center"
+        }),
+        anchor("top"),
+        pos(0,43),
+        "vg_buttons"
+    ])
+    // Console
+    let console_button = add([
+        sprite("button"),
+        pos(1060, 170),
+        area(),
+        anchor("center"),
+        scale(1.3),
+        "vg_buttons"
+    ])
+    let console_button_icon = console_button.add([
+        sprite("console"),
+        anchor("center"),
+        pos(0, 0),
+        scale(1/1.3),
+        "vg_buttons"
+    ])
+    console_button.add([
+        text(getTranslation("CONSOLE"), {
+            font: "pixel",
+            size: 18,
+        }),
+        anchor("top"),
+        pos(0,43),
+        "vg_buttons"
+    ])
+    // Cloud
+    let cloud_button = add([
+        sprite("button"),
+        pos(1230, 170),
+        area(),
+        anchor("center"),
+        scale(1.3),
+        "vg_buttons"
+    ])
+    let cloud_button_icon = cloud_button.add([
+        sprite("cloud"),
+        anchor("center"),
+        pos(0, 0),
+        scale(1/1.3),
+        "vg_buttons"
+    ])
+    cloud_button.add([
+        text(getTranslation("CLOUD"), {
+            font: "pixel",
+            size: 18,
+        }),
+        anchor("top"),
+        pos(0,43),
+        "vg_buttons"
+    ]);
+
+    cloud_button.onClick(() => {
+        buttonPressed(cloud_button, cloud_button_icon, "Cloud gaming sur console", "etage1");
+    });
+    portable_button.onClick(() => {
+        buttonPressed(portable_button, portable_button_icon, "Jouer sur ordinateur portable", "etage1");
+    });
+    telephone_button.onClick(() => {
+        buttonPressed(telephone_button, telephone_button_icon, "Jouer sur téléphone", "etage1");
+    });
+    console_button.onClick(() => {
+        buttonPressed(console_button, console_button_icon, "Jouer sur console", "etage1");
+    });
+    fixe_button.onClick(() => {
+        buttonPressed(fixe_button, fixe_button_icon, "Jouer sur ordinateur fixe", "etage1");
+    });
+
+}
+// JdS
+function scenarioJdsButtons(){
+    destroyAll("vg_buttons")
+    // Petit jeu
+    let petit_jeu_button = add([
+        sprite("button"),
+        pos(720, 170),
+        area(),
+        anchor("center"),
+        scale(1.3),
+        "bg_buttons"
+    ])
+    let petit_jeu_button_icon = petit_jeu_button.add([
+        sprite("petit_jeu"),
+        anchor("center"),
+        pos(0, 0),
+        scale(1),
+        "bg_buttons"
+    ])
+    petit_jeu_button.add([
+        text(getTranslation("PETIT JEU"), {
+            font: "pixel",
+            size: 18,
+        }),
+        anchor("top"),
+        pos(0,43),
+        "bg_buttons"
+    ])
+    // Jeu moyen
+    let jeu_moyen_button = add([
+        sprite("button"),
+        pos(890, 170),
+        area(),
+        anchor("center"),
+        scale(1.3),
+        "bg_buttons"
+    ])
+    let jeu_moyen_button_icon = jeu_moyen_button.add([
+        sprite("jeu_moyen"),
+        anchor("center"),
+        pos(0, 0),
+        scale(1),
+        "bg_buttons"
+    ])
+    jeu_moyen_button.add([
+        text(getTranslation("JEU MOYEN"), {
+            font: "pixel",
+            size: 18,
+        }),
+        anchor("top"),
+        pos(0,43),
+        "bg_buttons"
+    ])
+    // Grand jeu
+    let grand_jeu_button = add([
+        sprite("button"),
+        pos(1060, 170),
+        area(),
+        anchor("center"),
+        scale(1.3),
+        "bg_buttons"
+    ])
+    let grand_jeu_button_icon = grand_jeu_button.add([
+        sprite("bg_icon"),
+        anchor("center"),
+        pos(0, 0),
+        scale(1),
+        "bg_buttons"
+    ])
+    grand_jeu_button.add([
+        text(getTranslation("GRAND JEU"), {
+            font: "pixel",
+            size: 18,
+        }),
+        anchor("top"),
+        pos(0,43),
+        "bg_buttons"
+    ])
+    // Fonction des boutons
+    petit_jeu_button.onClick(() => {
+        buttonPressed(petit_jeu_button, petit_jeu_button_icon, "Jouer à un petit jeu de société (ex. Bandido)", "etage1");
+    });
+    jeu_moyen_button.onClick(() => {
+        buttonPressed(jeu_moyen_button, jeu_moyen_button_icon, "Jouer à un jeu de société moyen (ex. Celestia)", "etage1");
+    });
+    grand_jeu_button.onClick(() => {
+        buttonPressed(grand_jeu_button, grand_jeu_button_icon, "Jouer à un grand jeu de société (ex. Catan)", "etage1");
+    });
+};
+
 // Fonction pour quand on appuie sur un bouton
 async function buttonPressed(button, icon, choix, catégorie){
     switch(catégorie){
         case "plateforme":
             plateforme_choisie = choix;
-            if (!etage1_jds.includes(etage1_choisi)){
-                etage1_choisi = "Jouer à un petit jeu de société (ex. Bandido)";
-            } else if (!etage1_jv.includes(etage1_choisi)){
+            if (etage1_jds.includes(etage1_choisi) && plateforme_choisie === "Jeu vidéo"){
                 etage1_choisi = "Jouer sur console";
+            }
+            if (etage1_jv.includes(etage1_choisi) && plateforme_choisie === "Jeu de société"){
+                etage1_choisi = "Jouer à un petit jeu de société (ex. Bandido)";
             };
             break;
-        case "scenario":
-            scenario_choisi = choix;
+        case "indicateur":
+            indicateur_choisi = choix;
             break;
         case "contribution":
             contribution_choisie = choix;
@@ -379,8 +654,7 @@ async function buttonPressed(button, icon, choix, catégorie){
     current_icon = icon;
     button.sprite = "button_pressed";
     icon.pos = vec2(icon.pos.x + 2, icon.pos.y + 2);
-    await generateTreemap(plateforme_choisie, scenario_choisi, contribution_choisie, etage1_choisi, zoom);
-    document.body.removeChild(loadingOverlay);
+    await generateTreemap(plateforme_choisie, indicateur_choisi, contribution_choisie, etage1_choisi, zoom);
 }
 //#endregion
 

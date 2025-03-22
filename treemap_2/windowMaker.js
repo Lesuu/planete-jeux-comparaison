@@ -51,18 +51,21 @@ export function createWindow(){
 
 //#region Treemap
 export function windowsTreemapContainer(){
+    // Top
     let treemapWindow = add([
         rect(1510, 30),
-        pos(384, 200),
+        pos(384, 300),
         color(180, 180, 180),
         stay(),
         "window"
     ])
+    // Ligne bleue
     treemapWindow.add([
         rect(1507, 24),
         pos(3, 3),
         color(39, 0, 216),
     ])
+    // Caption
     treemapWindow.add([
         text("treemap.exe", {
             font: "pixel",
@@ -71,20 +74,23 @@ export function windowsTreemapContainer(){
         pos(10, 5),
         stay()
     ])
+    // Left
     treemapWindow.add([
-        rect(3, 860),
+        rect(3, 760),
         color(180,180,180),
         stay()
     ])
+    // Right
     treemapWindow.add([
-        rect(3, 860),
+        rect(3, 760),
         pos(1510, 0),
         color(180,180,180),
         stay()
     ])
+    // Bottom
     treemapWindow.add([
         rect(1513, 3),
-        pos(0, 860),
+        pos(0, 760),
         color(180,180,180),
         stay()
     ])
