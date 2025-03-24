@@ -1,7 +1,7 @@
 //#region Initialisation
 import { generateTreemap, etage1_jds, etage1_jv, listEtages } from "./treemap.js";
 import { loadAssets, importText } from "./initialize.js";
-import { createWindow, windowButtons, windowsTreemapContainer } from "./windowMaker.js";
+import { createWindow, windowsTreemapContainer } from "./windowMaker.js";
 
 let plateforme_choisie = "Jeu vidéo";
 let indicateur_choisi = "Changement climatique";
@@ -221,7 +221,7 @@ function treemapButtons(){
     });
     // Indicateurs:
     let indicateurs = add([
-        text(getTranslation("INDICATEURS_LABEL"), {
+        text(getTranslation("INDICATEURS LABEL"), {
             font: "pixel",
             size: 54,
         }),
@@ -231,7 +231,7 @@ function treemapButtons(){
         opacity(0.4)
     ])
     indicateurs.add([
-        text(getTranslation("INDICATEURS_LABEL"), {
+        text(getTranslation("INDICATEURS LABEL"), {
             font: "pixel",
             size: 54,
         }),
@@ -327,7 +327,27 @@ function treemapButtons(){
         buttonPressed(particules_fines_button, particules_fines_button_icon, "Particules fines", "indicateur");
     });
 
-    // Par étape de cycle de vie:
+    // Contributions:
+    // Label
+    let contributions_label_shadow = add([
+        text(getTranslation("CONTRIBUTIONS LABEL"), {
+            font: "pixel",
+            size: 45,
+        }),
+        pos(1650 + 4, 64 + 4),
+        color(0,0,0),
+        anchor("top"),
+        opacity(0.4)
+    ])
+    contributions_label_shadow.add([
+        text(getTranslation("CONTRIBUTIONS LABEL"), {
+            font: "pixel",
+            size: 45,
+        }),
+        pos(-4, -4),
+        anchor("top")
+    ])
+    // Par étape de cycle de vie
     let cycle_de_vie_button = add([
         sprite("button"),
         pos(1564, 170),
@@ -388,6 +408,26 @@ function treemapButtons(){
         current_icon = null;
         }
     })
+
+    // Label scénario
+    let scenario_label_shadow = add([
+        text(getTranslation("SCENARIO LABEL"), {
+            font: "pixel",
+            size: 45,
+        }),
+        pos(890 + 4, 64 + 4),
+        color(0,0,0),
+        anchor("top"),
+        opacity(0.4)
+    ])
+    scenario_label_shadow.add([
+        text(getTranslation("SCENARIO LABEL"), {
+            font: "pixel",
+            size: 45,
+        }),
+        pos(-4, -4),
+        anchor("top")
+    ])
 }
 
 // Fonctions pour les boutons scénarios:
@@ -659,5 +699,21 @@ async function buttonPressed(button, icon, choix, catégorie){
     await generateTreemap(plateforme_choisie, indicateur_choisi, contribution_choisie, etage1_choisi, zoom);
 }
 //#endregion
+
+// Fonction pour les boutons de la fenêtre windows
+function windowButtons(restart, eng, fr){
+    let currentScene = getSceneName()
+    restart.onClick(()=>{
+        location.reload()
+    })
+    eng.onClick(()=>{
+        langue = "eng"
+        go(currentScene)
+    })
+    fr  .onClick(()=>{
+        langue = "fr"
+        go(currentScene)
+    })
+}
 
 go("titleScreen");

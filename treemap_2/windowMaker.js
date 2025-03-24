@@ -96,16 +96,3 @@ export function windowsTreemapContainer(){
     ])
 }
 //#endregion
-// Fonction pour restart
-export function windowButtons(restart, eng, fr){
-    restart.onClick(()=>{
-        location.reload()
-    })
-    eng.onClick(()=>{
-        langue = "eng"
-    })
-    fr  .onClick(()=>{
-        langue = "fr"
-    })
-}
-//#region Buttons
