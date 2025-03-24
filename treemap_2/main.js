@@ -2,6 +2,7 @@
 import { generateTreemap, etage1_jds, etage1_jv, listEtages } from "./treemap.js";
 import { loadAssets, importText } from "./initialize.js";
 import { createWindow, windowsTreemapContainer } from "./windowMaker.js";
+import { callBetty } from "./betty.js";
 
 let plateforme_choisie = "Jeu vidéo";
 let indicateur_choisi = "Changement climatique";
@@ -162,9 +163,9 @@ scene("treemap", async () => {
     await generateTreemap(plateforme_choisie, indicateur_choisi, contribution_choisie, etage1_choisi, zoom);
 })
 
-//#region Menu treemap
+//#region Boutons permanents 
 function treemapButtons(){
-    // "Catégorie":
+    //#region "Catégorie":
     let vg_button = add([
         sprite("button"),
         pos(109, 170),
@@ -219,7 +220,8 @@ function treemapButtons(){
         vg_button_icon.sprite = "vg_color";
         bg_button_icon.sprite = "bg_icon";
     });
-    // Indicateurs:
+    //#endregion
+    //#region Indicateurs:
     let indicateurs = add([
         text(getTranslation("INDICATEURS LABEL"), {
             font: "pixel",
@@ -326,8 +328,8 @@ function treemapButtons(){
     particules_fines_button.onClick(() => {
         buttonPressed(particules_fines_button, particules_fines_button_icon, "Particules fines", "indicateur");
     });
-
-    // Contributions:
+    //#endregion
+    //#region Contributions:
     // Label
     let contributions_label_shadow = add([
         text(getTranslation("CONTRIBUTIONS LABEL"), {
@@ -430,6 +432,7 @@ function treemapButtons(){
     ])
 }
 
+//#region Scénarios:
 // Fonctions pour les boutons scénarios:
 // JV
 function scenarioJvButtons(){
@@ -697,6 +700,7 @@ async function buttonPressed(button, icon, choix, catégorie){
     button.sprite = "button_pressed";
     icon.pos = vec2(icon.pos.x + 2, icon.pos.y + 2);
     await generateTreemap(plateforme_choisie, indicateur_choisi, contribution_choisie, etage1_choisi, zoom);
+    callBetty()
 }
 //#endregion
 
