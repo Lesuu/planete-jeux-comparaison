@@ -8,13 +8,21 @@ let backgroundRectangle
 let timer = 0.5
 let betty_highlight
 let bettyPeaking = false
+let nothingToSay
 
 export function callBetty() {
     let treemapContainer = document.getElementById("treemapContainer")
     let isTalking = false
+    if (currentTreemapExplanation == ""){
+        nothingToSay = true
+    } else{
+        nothingToSay = false
+    }
+    console.log(nothingToSay)
+    if (nothingToSay) return
     bettyAppears()
     betty.onClick(() => {
-        if (isTalking)return
+        if (isTalking||nothingToSay)return
         if (!bettyEngaged){
             betty_highlight.destroy()
             tween(
