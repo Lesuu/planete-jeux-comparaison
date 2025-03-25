@@ -2,12 +2,9 @@
 import { generateTreemap, etage1_jds, etage1_jv, listEtages } from "./treemap.js";
 import { loadAssets, importText } from "./initialize.js";
 import { createWindow, windowsTreemapContainer } from "./windowMaker.js";
-import { callBetty } from "./betty.js";
+import { callBetty, initializeBetty } from "./betty.js";
 
-let plateforme_choisie = "Jeu vidéo";
-let indicateur_choisi = "Changement climatique";
-let contribution_choisie = "par équipement";
-let etage1_choisi = "Jouer sur console";
+let plateforme_choisie, indicateur_choisi, contribution_choisie, etage1_choisi;
 let current_button_pressed = null;
 let current_icon = null;
 
@@ -30,11 +27,11 @@ kaplay({
     canvas: document.querySelector("#game"),
 });
 
-// etage1
-listEtages().then(({ etage1_jv, etage1_jds }) => {
-}).catch(err => {
-    console.error("Error fetching etage1 data:", err);
-});
+// // etage1
+// listEtages().then(({ etage1_jv, etage1_jds }) => {
+// }).catch(err => {
+//     console.error("Error fetching etage1 data:", err);
+// });
 
 // Charge les assets
 loadAssets();
@@ -51,13 +48,60 @@ const crtEffect = () => ({
 export function getTranslation(key){
     return translations[key][langue]
 }
+
+let jeuVideo, jeuSociete, changementClimatique, metaux, particulesFines, cycleDeVie, parEquipement, jouerSurConsole, jouerSurPortable, jouerSurTelephone, jouerSurFixe, cloudConsole, jouerPetitJeu, jouerJeuMoyen, jouerGrandJeu;
+function languageChange(){
+    // etage1
+    listEtages().then(({ etage1_jv, etage1_jds }) => {
+    }).catch(err => {
+        console.error("Error fetching etage1 data:", err);
+    });
+    console.log(etage1_jds)
+    if (langue == "fr"){
+        jeuVideo = "Jeu vidéo";
+        jeuSociete = "Jeu de société";
+        changementClimatique = "Changement climatique";
+        metaux = "Ressources minérales et métalliques";
+        particulesFines = "Particules fines";
+        cycleDeVie = "par étape de cycle de vie";
+        parEquipement = "par équipement";
+        jouerSurConsole = "Jouer sur console";
+        jouerSurPortable = "Jouer sur ordinateur portable";
+        jouerSurTelephone = "Jouer sur téléphone";
+        jouerSurFixe = "Jouer sur ordinateur fixe";
+        cloudConsole = "Cloud gaming sur console";
+        jouerPetitJeu = "Jouer à un petit jeu de société (ex. Bandido)";
+        jouerJeuMoyen = "Jouer à un jeu de société moyen (ex. Celestia)";
+        jouerGrandJeu = "Jouer à un grand jeu de société (ex. Catan)";
+    } else if (langue == "eng"){
+        jeuVideo = "Video game";
+        jeuSociete = "Board game";
+        changementClimatique = "Climate change";
+        metaux = "Metallic and mineral resources";
+        particulesFines = "Particulate matter";
+        cycleDeVie = "per life cycle stage";
+        parEquipement = "per equipment";
+        jouerSurConsole = "Console";
+        jouerSurPortable = "Laptop";
+        jouerSurTelephone = "Phone";
+        jouerSurFixe = "Desktop computer";
+        cloudConsole = "Cloud gaming";
+        jouerPetitJeu = "Small game (Bandido)";
+        jouerJeuMoyen = "Midsize game (Celestia)";
+        jouerGrandJeu = "Large game (Catan)";
+    }
+    console.log(jeuVideo, jeuSociete, changementClimatique, metaux, particulesFines, cycleDeVie, parEquipement, jouerSurConsole, jouerSurPortable, jouerSurTelephone, jouerSurFixe, cloudConsole, jouerPetitJeu, jouerJeuMoyen, jouerGrandJeu)
+    plateforme_choisie = jeuVideo;
+    indicateur_choisi = changementClimatique;
+    contribution_choisie = parEquipement;
+    etage1_choisi = jouerSurConsole;
+}
+// Initialization des langues
+languageChange()
+
 //#endregion
 //#region Menu principal
 scene("titleScreen", async () => {
-    // onUpdate(() =>{
-    //     usePostEffect("crt", crtEffect());
-    // })
-
     // Fenêtre windows autour de l'écran:
     createWindow();
     restart_button = add([
@@ -154,6 +198,8 @@ scene("titleScreen", async () => {
 })
 
 scene("treemap", async () => {
+    // Réinitialise les variables pr la logique de betty
+    initializeBetty()
     // Fonction des boutons de la fenêtre windows
     windowButtons(restart_button, eng_button, fr_button)
     windowsTreemapContainer();
@@ -210,13 +256,13 @@ function treemapButtons(){
     ])
     bg_button.onClick(() => {
         scenarioJdsButtons();
-        buttonPressed(bg_button, bg_button_icon, "Jeu de société", "plateforme");
+        buttonPressed(bg_button, bg_button_icon, jeuSociete, "plateforme");
         bg_button_icon.sprite = "bg_color";
         vg_button_icon.sprite = "vg_icon";
     });
     vg_button.onClick(() => {
         scenarioJvButtons();
-        buttonPressed(vg_button, vg_button_icon, "Jeu vidéo", "plateforme");
+        buttonPressed(vg_button, vg_button_icon, jeuVideo, "plateforme");
         vg_button_icon.sprite = "vg_color";
         bg_button_icon.sprite = "bg_icon";
     });
@@ -263,7 +309,7 @@ function treemapButtons(){
         pos(0,43)
     ])
     changclim_button.onClick(() => {
-        buttonPressed(changclim_button, changclim_button_icon, "Changement climatique", "indicateur");
+        buttonPressed(changclim_button, changclim_button_icon, changementClimatique, "indicateur");
     });
 
     // Métaux
@@ -289,7 +335,7 @@ function treemapButtons(){
         pos(0,43)
     ])
     metaux_button.onClick(() => {
-        buttonPressed(metaux_button, metaux_button_icon, "Ressources minérales et métalliques", "indicateur");
+        buttonPressed(metaux_button, metaux_button_icon, metaux, "indicateur");
     });
     // Particules fines
     let particules_fines_button = add([
@@ -326,7 +372,7 @@ function treemapButtons(){
         pos(0,43)
     ])
     particules_fines_button.onClick(() => {
-        buttonPressed(particules_fines_button, particules_fines_button_icon, "Particules fines", "indicateur");
+        buttonPressed(particules_fines_button, particules_fines_button_icon, particulesFines, "indicateur");
     });
     //#endregion
     //#region Contributions:
@@ -375,7 +421,7 @@ function treemapButtons(){
         pos(0,43)
     ])
     cycle_de_vie_button.onClick(() => {
-        buttonPressed(cycle_de_vie_button, cycle_de_vie_button_icon, "par étape de cycle de vie", "contribution");
+        buttonPressed(cycle_de_vie_button, cycle_de_vie_button_icon, cycleDeVie, "contribution");
     });
     // Par équipement
     let par_equipement_button = add([
@@ -400,7 +446,7 @@ function treemapButtons(){
         pos(0,43)
     ])
     par_equipement_button.onClick(() => {
-        buttonPressed(par_equipement_button, par_equipement_button_icon, "par équipement", "contribution");
+        buttonPressed(par_equipement_button, par_equipement_button_icon, parEquipement, "contribution");
     });
 
     onMouseRelease(() => {
@@ -569,19 +615,19 @@ function scenarioJvButtons(){
     ]);
 
     cloud_button.onClick(() => {
-        buttonPressed(cloud_button, cloud_button_icon, "Cloud gaming sur console", "etage1");
+        buttonPressed(cloud_button, cloud_button_icon, cloudConsole, "etage1");
     });
     portable_button.onClick(() => {
-        buttonPressed(portable_button, portable_button_icon, "Jouer sur ordinateur portable", "etage1");
+        buttonPressed(portable_button, portable_button_icon, jouerSurPortable, "etage1");
     });
     telephone_button.onClick(() => {
-        buttonPressed(telephone_button, telephone_button_icon, "Jouer sur téléphone", "etage1");
+        buttonPressed(telephone_button, telephone_button_icon, jouerSurTelephone, "etage1");
     });
     console_button.onClick(() => {
-        buttonPressed(console_button, console_button_icon, "Jouer sur console", "etage1");
+        buttonPressed(console_button, console_button_icon, jouerSurConsole, "etage1");
     });
     fixe_button.onClick(() => {
-        buttonPressed(fixe_button, fixe_button_icon, "Jouer sur ordinateur fixe", "etage1");
+        buttonPressed(fixe_button, fixe_button_icon, jouerSurFixe, "etage1");
     });
 
 }
@@ -665,13 +711,13 @@ function scenarioJdsButtons(){
     ])
     // Fonction des boutons
     petit_jeu_button.onClick(() => {
-        buttonPressed(petit_jeu_button, petit_jeu_button_icon, "Jouer à un petit jeu de société (ex. Bandido)", "etage1");
+        buttonPressed(petit_jeu_button, petit_jeu_button_icon, jouerPetitJeu, "etage1");
     });
     jeu_moyen_button.onClick(() => {
-        buttonPressed(jeu_moyen_button, jeu_moyen_button_icon, "Jouer à un jeu de société moyen (ex. Celestia)", "etage1");
+        buttonPressed(jeu_moyen_button, jeu_moyen_button_icon, jouerJeuMoyen, "etage1");
     });
     grand_jeu_button.onClick(() => {
-        buttonPressed(grand_jeu_button, grand_jeu_button_icon, "Jouer à un grand jeu de société (ex. Catan)", "etage1");
+        buttonPressed(grand_jeu_button, grand_jeu_button_icon, jouerGrandJeu, "etage1");
     });
 };
 
@@ -680,11 +726,11 @@ async function buttonPressed(button, icon, choix, catégorie){
     switch(catégorie){
         case "plateforme":
             plateforme_choisie = choix;
-            if (etage1_jds.includes(etage1_choisi) && plateforme_choisie === "Jeu vidéo"){
-                etage1_choisi = "Jouer sur console";
+            if (etage1_jds.includes(etage1_choisi) && plateforme_choisie === jeuVideo){
+                etage1_choisi = jouerSurConsole;
             }
-            if (etage1_jv.includes(etage1_choisi) && plateforme_choisie === "Jeu de société"){
-                etage1_choisi = "Jouer à un petit jeu de société (ex. Bandido)";
+            if (etage1_jv.includes(etage1_choisi) && plateforme_choisie === jeuSociete){
+                etage1_choisi = jouerPetitJeu;
             };
             break;
         case "indicateur":
@@ -701,6 +747,7 @@ async function buttonPressed(button, icon, choix, catégorie){
     current_icon = icon;
     button.sprite = "button_pressed";
     icon.pos = vec2(icon.pos.x + 2, icon.pos.y + 2);
+    console.log(plateforme_choisie, indicateur_choisi, contribution_choisie, etage1_choisi)
     await generateTreemap(plateforme_choisie, indicateur_choisi, contribution_choisie, etage1_choisi, zoom);
     callBetty()
 }
@@ -714,10 +761,12 @@ function windowButtons(restart, eng, fr){
     })
     eng.onClick(()=>{
         langue = "eng"
+        languageChange()
         go(currentScene)
     })
-    fr  .onClick(()=>{
+    fr.onClick(()=>{
         langue = "fr"
+        languageChange()
         go(currentScene)
     })
 }

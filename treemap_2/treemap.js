@@ -8,16 +8,22 @@ export let etage1_jv = []
 export let etage1_jds = []
 
 export function listEtages() {
-    const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2RjJYuns3gy3P3p45n8_pm8yqqDCWqHfVON3xswfWfHk3vLgpdP6YhbIO/pub?gid=74008056&single=true&output=csv';
-    
+    const lien_fr = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2RjJYuns3gy3P3p45n8_pm8yqqDCWqHfVON3xswfWfHk3vLgpdP6YhbIO/pub?gid=74008056&single=true&output=csv';
+    const lien_eng = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2RjJYuns3gy3P3p45n8_pm8yqqDCWqHfVON3xswfWfHk3vLgpdP6YhbIO/pub?gid=895638476&single=true&output=csv';
+
+    let csvUrl = langue === "fr" ? lien_fr : lien_eng;
+
+    let jeuVideo = langue === "fr" ? "Jeu vidéo" : "Video game";
+    let jeuDeSociete = langue === "fr" ? "Jeu de société" : "Board game";
+
     return new Promise((resolve, reject) => {
         $.get(csvUrl, function(csvText) {
             // Parse CSV using PapaParse.
             const parsed = Papa.parse(csvText, { header: true });
             const allData = parsed.data;    
 
-            etage1_jv = [...new Set(allData.filter(d => d.treemap === "Jeu vidéo").map(d => d.etage_1))];
-            etage1_jds = [...new Set(allData.filter(d => d.treemap === "Jeu de société").map(d => d.etage_1))];
+            etage1_jv = [...new Set(allData.filter(d => d.treemap === jeuVideo).map(d => d.etage_1))];
+            etage1_jds = [...new Set(allData.filter(d => d.treemap === jeuDeSociete).map(d => d.etage_1))];
 
             resolve({ etage1_jv, etage1_jds });
         }).fail((err) => {
@@ -27,7 +33,7 @@ export function listEtages() {
 }
 
 let isGenerating = false;
-export function createLoadingOverlay() {
+function createLoadingOverlay() {
     let loadingOverlay = document.createElement("div");
     loadingOverlay.id = "loadingOverlay";
     loadingOverlay.style.position = "absolute";
@@ -53,8 +59,12 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
         return;
     }
     isGenerating = true;
-    const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2RjJYuns3gy3P3p45n8_pm8yqqDCWqHfVON3xswfWfHk3vLgpdP6YhbIO/pub?gid=74008056&single=true&output=csv';
-    
+    const lien_fr = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2RjJYuns3gy3P3p45n8_pm8yqqDCWqHfVON3xswfWfHk3vLgpdP6YhbIO/pub?gid=74008056&single=true&output=csv';
+    const lien_eng = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2RjJYuns3gy3P3p45n8_pm8yqqDCWqHfVON3xswfWfHk3vLgpdP6YhbIO/pub?gid=895638476&single=true&output=csv';
+
+    let csvUrl = langue === "fr" ? lien_fr : lien_eng;
+    console.log(csvUrl)
+
     let existingContainer = document.getElementById("treemapContainer");
     if (existingContainer) {
         existingContainer.remove();
@@ -81,6 +91,7 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
             const parsed = Papa.parse(csvText, { header: true });
             const allData = parsed.data;  
 
+            console.log(allData)
             // Conversion des données
             let convertedData = conversionDonnees(allData, plateforme, scenario, contribution, etage1);
 
@@ -187,7 +198,7 @@ function conversionDonnees(allData, plateforme, scenario, contribution, etage1) 
     
     // Filtrage des données
     let data = allData.filter(d => d.treemap === plateforme && d.scenario === scenario && d.etage_1 === etage1 && d.contribution === contribution);
-
+    console.log(data)
     setCurrentTreemapExplanation(data[0].explication);
 
     // On progresse à travers les différents étages

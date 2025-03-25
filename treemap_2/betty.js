@@ -1,4 +1,3 @@
-import { createLoadingOverlay } from "./treemap.js"
 import { currentTreemapExplanation } from "./global.js"
 
 let bettyEngaged = false
@@ -8,7 +7,35 @@ let backgroundRectangle
 let timer = 0.5
 let betty_highlight
 let bettyPeaking = false
-let nothingToSay
+let nothingToSay = false
+
+export function initializeBetty() {
+    bettyEngaged = false;
+    bettyPeaking = false;
+    nothingToSay = false;
+    timer = 0.5;
+}
+
+function createTreemapOverlay() {
+    let treemapOverlay = document.createElement("div");
+    treemapOverlay.id = "treemapOverlay";
+    treemapOverlay.style.position = "absolute";
+    treemapOverlay.style.top = "100px";
+    treemapOverlay.style.left = "387px";
+    treemapOverlay.style.right = "220px";
+    treemapOverlay.style.bottom = "5px";
+    treemapOverlay.style.width = "1507px";
+    treemapOverlay.style.height = "730px";
+    treemapOverlay.style.display = "flex";
+    treemapOverlay.style.justifyContent = "center";
+    treemapOverlay.style.alignItems = "center";
+    treemapOverlay.style.zIndex = "20"; 
+    treemapOverlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)"
+    treemapContainer.style.pointerEvents = "none"
+    document.body.appendChild(treemapOverlay);
+
+    return treemapOverlay
+}
 
 export function callBetty() {
     let treemapContainer = document.getElementById("treemapContainer")
@@ -48,12 +75,8 @@ export function callBetty() {
         }
         quest_marker.opacity = 0
         backgroundRectangle.opacity = 0.5
-        let treemapOverlay = createLoadingOverlay()
-        treemapOverlay.innerHTML = ""
-        treemapOverlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)"
-        treemapContainer.style.pointerEvents = "none"
+        let treemapOverlay = createTreemapOverlay()
         isTalking = true
-
         wait(timer, () => {
             bettyExplication(betty) 
         })  
@@ -62,7 +85,7 @@ export function callBetty() {
         if (!isTalking) return
         speechBubble.remove()
         betty.play("idle")
-        document.getElementById("loadingOverlay").remove()
+        document.getElementById("treemapOverlay").remove()
         backgroundRectangle.opacity = 0
         //document.removeEventListener('mousedown', onClicked)
         treemapContainer.style.pointerEvents = "auto"
@@ -142,12 +165,12 @@ function bettyAppears(){
     })
 }
 
-function bettyExplication(betty){
+async function bettyExplication(betty){
     betty.play("talk")
     // Création de la bulle
     let speechBubble = document.createElement("div")
     speechBubble.id = "speechBubble"
-    document.body.appendChild(speechBubble)
+    await document.body.appendChild(speechBubble)
 
     // Création du paragraphe
     let speechText = document.createElement("p")
