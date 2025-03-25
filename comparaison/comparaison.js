@@ -15,12 +15,14 @@ kaplay({
 
 // On attend que les données soient chargées pour lancer le programme
 
+let langue = "fr"
 
 main()
 async function main() {
     //#endregion
     //#region Data loading
-    await load(loadData())
+    // Langue
+    await load(loadData(langue))
     //#endregion
 
     // #region Variables
@@ -56,14 +58,12 @@ async function main() {
     let restart_button
     let eng_button
     let fr_button
+    let loading = false
 
     // Constantes: détermine le nombre de questions & lesquelles sont scriptées.
     const nbr_questions = 10
     const question_autre_jeu = [4, 7]
     const question_egale = 9
-
-    // Langue
-    let langue = "fr"
 
     // Couleurs
     const background_col = rgb(42, 138, 109)
@@ -114,12 +114,32 @@ async function main() {
             updateTexts()
         })
     }
-    function updateTexts(){
-        if (getSceneName() === "titleScreen"){
-            go("titleScreen")
-        } else if (getSceneName() === "chooseCategory"){
-            go("chooseCategory")
-        }
+    async function updateTexts(){
+        loading = true
+        let currentScene = getSceneName()
+        add([
+            text("Loading...", {
+                font: "pixel",
+                size: 54,
+            }),
+            pos(width()/2, height()/2),
+            z(150),
+            anchor("center"),
+            "loading"
+        ])
+        add([
+            rect(width(), height()),
+            color(0,0,0),
+            opacity(0.5),
+            z(140),
+            area(),
+            "loading"
+        ])
+        console.log(langue)
+        await loadData(langue)
+        destroyAll("loading")
+        loading = false
+        go(currentScene)
     }
 
     scene("titleScreen", async () => {
@@ -393,6 +413,7 @@ async function main() {
         ])
 
         screen.onClick(() => {
+            if (loading) return
             go("chooseCategory")
         });
         
@@ -587,6 +608,7 @@ async function main() {
 
         await jv_icon.onClick(() => {
             onMouseRelease(async ()=>{
+                if (loading) return
                 if (jv_hover){
                     categorie_choisie = "jv"
                     await separationDonnees(categorie_choisie)
@@ -596,6 +618,7 @@ async function main() {
         })
         await jds_icon.onClick(() => {
             onMouseRelease(async ()=>{
+                if (loading) return
                 if (jds_hover){
                     categorie_choisie = "jds"
                     await separationDonnees(categorie_choisie)
@@ -605,6 +628,7 @@ async function main() {
         })
         await both_area.onClick(() => {
             onMouseRelease(async () => {
+                if (loading) return
                 if (both_hover){
                     categorie_choisie = "both"
                     await separationDonnees(categorie_choisie)

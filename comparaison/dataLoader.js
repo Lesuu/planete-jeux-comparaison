@@ -8,9 +8,10 @@ let translations = {};
 
 
 // Liens vers les fichiers CSV
-//const lien = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQWBSQtcLt8CbTPN-TvHnrCt1h24GtoXiWxBCoo3nqbrTSqLuc93FeogkFsOrfS_qF-YDyhTk5E0aau/pub?gid=0&single=true&output=csv';
-const lien= 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQWBSQtcLt8CbTPN-TvHnrCt1h24GtoXiWxBCoo3nqbrTSqLuc93FeogkFsOrfS_qF-YDyhTk5E0aau/pub?gid=1185013817&single=true&output=csv';
+const lien_eng = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQWBSQtcLt8CbTPN-TvHnrCt1h24GtoXiWxBCoo3nqbrTSqLuc93FeogkFsOrfS_qF-YDyhTk5E0aau/pub?gid=1414253908&single=true&output=csv';
+const lien_fr = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQWBSQtcLt8CbTPN-TvHnrCt1h24GtoXiWxBCoo3nqbrTSqLuc93FeogkFsOrfS_qF-YDyhTk5E0aau/pub?gid=1185013817&single=true&output=csv';
 const lien_meta = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQWBSQtcLt8CbTPN-TvHnrCt1h24GtoXiWxBCoo3nqbrTSqLuc93FeogkFsOrfS_qF-YDyhTk5E0aau/pub?gid=826164962&single=true&output=csv';
+let lien
 
 async function getCSV(url) {
     const response = await fetch(url);
@@ -23,11 +24,17 @@ async function getCSV(url) {
     return parsedData.data;
 }
 
-async function loadData() {
+async function loadData(langue) {
     questions_JV = [];
     questions_JdS = [];
     translations = {};
     //questions_autres = [];
+    if (langue === "fr"){
+        lien = lien_fr;
+    } else if (langue === "eng"){
+        lien = lien_eng;
+    }
+    console.log("lien", langue, lien)
 
     CSVdata = await getCSV(lien);
     metaText = await getCSV(lien_meta);
