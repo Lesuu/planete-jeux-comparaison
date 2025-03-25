@@ -278,7 +278,7 @@ async function main() {
                     angle: wave(-2, 2, time() * 3 + idx),
                 }),
             }),
-            pos(960 + 10, 230 + 10),
+            pos(960 + 10, 300 + 10),
             anchor("center"),
             color(0,0,0),
             opacity(0.4),
@@ -317,7 +317,7 @@ async function main() {
                     angle: wave(-2, 2, time() * 3 + idx),
                 }),
             }),
-            pos(960 + 5, 590 + 5),
+            pos(960 + 5, 660 + 5),
             anchor("center"),
             color(0,0,0),
             opacity(0.4)

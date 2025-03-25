@@ -63,7 +63,6 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
     const lien_eng = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2RjJYuns3gy3P3p45n8_pm8yqqDCWqHfVON3xswfWfHk3vLgpdP6YhbIO/pub?gid=895638476&single=true&output=csv';
 
     let csvUrl = langue === "fr" ? lien_fr : lien_eng;
-    console.log(csvUrl)
 
     let existingContainer = document.getElementById("treemapContainer");
     if (existingContainer) {
@@ -91,7 +90,6 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
             const parsed = Papa.parse(csvText, { header: true });
             const allData = parsed.data;  
 
-            console.log(allData)
             // Conversion des données
             let convertedData = conversionDonnees(allData, plateforme, scenario, contribution, etage1);
 
@@ -198,7 +196,6 @@ function conversionDonnees(allData, plateforme, scenario, contribution, etage1) 
     
     // Filtrage des données
     let data = allData.filter(d => d.treemap === plateforme && d.scenario === scenario && d.etage_1 === etage1 && d.contribution === contribution);
-    console.log(data)
     setCurrentTreemapExplanation(data[0].explication);
 
     // On progresse à travers les différents étages

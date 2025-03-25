@@ -45,7 +45,6 @@ export function callBetty() {
     } else{
         nothingToSay = false
     }
-    console.log(nothingToSay)
     if (nothingToSay) return
     bettyAppears()
     betty.onClick(() => {

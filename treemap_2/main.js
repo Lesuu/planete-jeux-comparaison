@@ -56,7 +56,6 @@ function languageChange(){
     }).catch(err => {
         console.error("Error fetching etage1 data:", err);
     });
-    console.log(etage1_jds)
     if (langue == "fr"){
         jeuVideo = "Jeu vidéo";
         jeuSociete = "Jeu de société";
@@ -90,7 +89,6 @@ function languageChange(){
         jouerJeuMoyen = "Midsize game (Celestia)";
         jouerGrandJeu = "Large game (Catan)";
     }
-    console.log(jeuVideo, jeuSociete, changementClimatique, metaux, particulesFines, cycleDeVie, parEquipement, jouerSurConsole, jouerSurPortable, jouerSurTelephone, jouerSurFixe, cloudConsole, jouerPetitJeu, jouerJeuMoyen, jouerGrandJeu)
     plateforme_choisie = jeuVideo;
     indicateur_choisi = changementClimatique;
     contribution_choisie = parEquipement;
@@ -104,6 +102,7 @@ languageChange()
 scene("titleScreen", async () => {
     // Fenêtre windows autour de l'écran:
     createWindow();
+    // Boutons de la fenêtre windows
     restart_button = add([
         sprite("restart"),
         pos(width() - 55, 10),
@@ -128,8 +127,43 @@ scene("titleScreen", async () => {
         stay(),
         "window"
     ])
+    // Fonctionnalité des boutons
     windowButtons(restart_button, eng_button, fr_button)
    
+    // Titre
+    let main_shadow = add([
+        text(getTranslation("TITRE"), {
+            font: "pixel",
+            size: 126,
+            width : 1200,
+            align: "center", 
+            transform: (idx, ch) => ({
+                pos: vec2(0, wave(-1, 1, time() * 3 + idx * 0.5)),
+                angle: wave(-2, 2, time() * 3 + idx),
+            }),
+        }),
+        pos(960 + 10, 280 + 10),
+        anchor("center"),
+        color(0,0,0),
+        opacity(0.4),
+    ])
+    let main_title = main_shadow.add([
+        text(getTranslation("TITRE"), {
+            font: "pixel",
+            size: 126,
+            width: 1200,
+            align: "center",
+            transform: (idx, ch) => ({
+                color: hsl2rgb((time() * 0.2 + idx * 0.1) % 1, 0.7, 0.8),
+                pos: vec2(0, wave(-1, 1, time() * 3 + idx * 0.5)),
+                angle: wave(-2, 2, time() * 3 + idx),
+            }),
+        }),
+        pos(-10, -10),
+        anchor("center"),
+        scale()
+    ])
+
     // 'appuyez pour commencer'
     let start_shadow = add([
         text(getTranslation("START"), {
@@ -162,7 +196,7 @@ scene("titleScreen", async () => {
 
     let betty = add([
         sprite("betty", {anim: "happy"}),
-        pos(1550, 540),
+        pos(1550, 600),
         scale(4),
         anchor("center"),
         z(20)
@@ -747,7 +781,6 @@ async function buttonPressed(button, icon, choix, catégorie){
     current_icon = icon;
     button.sprite = "button_pressed";
     icon.pos = vec2(icon.pos.x + 2, icon.pos.y + 2);
-    console.log(plateforme_choisie, indicateur_choisi, contribution_choisie, etage1_choisi)
     await generateTreemap(plateforme_choisie, indicateur_choisi, contribution_choisie, etage1_choisi, zoom);
     callBetty()
 }
