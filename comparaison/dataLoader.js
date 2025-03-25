@@ -34,7 +34,6 @@ async function loadData(langue) {
     } else if (langue === "eng"){
         lien = lien_eng;
     }
-    console.log("lien", langue, lien)
 
     CSVdata = await getCSV(lien);
     metaText = await getCSV(lien_meta);

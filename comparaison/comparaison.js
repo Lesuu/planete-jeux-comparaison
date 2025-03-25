@@ -17,6 +17,11 @@ kaplay({
 
 let langue = "fr"
 
+//Fonction pour la traduction des textes
+export function getTranslation(key){
+    return translations[key][langue]
+}
+
 main()
 async function main() {
     //#endregion
@@ -95,11 +100,6 @@ async function main() {
     //#endregion
 
     // #region Ecran d'accueil
-
-    //Fonction pour la traduction des textes
-    function getTranslation(key){
-        return translations[key][langue]
-    }
     // Fonction pour restart
     function windowButtons(){
         restart_button.onClick(()=>{
@@ -135,7 +135,6 @@ async function main() {
             area(),
             "loading"
         ])
-        console.log(langue)
         await loadData(langue)
         destroyAll("loading")
         loading = false
@@ -1737,43 +1736,7 @@ async function main() {
     //#region Résultats finaux
     scene("finalResults", ({score}) =>{
         windowButtons()
-        createBarChart(langue)
-
-        let scoreLabel = add([
-            text(getTranslation("FINAL").replace("{score}", score),{
-                font: "pixeloutline",
-                size: 90,
-                align: "center",
-                width: 1200,
-                letterSpacing: 6,
-                transform: (idx, ch) => ({
-                    pos: vec2(0, wave(-4, 4, time() * 4 + idx * 0.5)),
-                    scale: wave(1, 1.2, time() * 3 + idx),
-                    angle: wave(-9, 9, time() * 3 + idx),
-                }),
-            }),
-            pos(width()/2, 150),
-            anchor("center"),
-            z(10)
-        ])
-        let scoreLabel_shadow = add([
-            text(getTranslation("FINAL").replace("{score}", score),{
-                font: "pixeloutline",
-                size: 90,
-                align: "center",
-                width: 1200,
-                letterSpacing: 6,
-                transform: (idx, ch) => ({
-                    pos: vec2(0, wave(-4, 4, time() * 4 + idx * 0.5)),
-                    scale: wave(1, 1.2, time() * 3 + idx),
-                    angle: wave(-9, 9, time() * 3 + idx),
-                }),
-            }),
-            pos(scoreLabel.pos.x + 5, scoreLabel.pos.y + 5),
-            anchor("center"),
-            color(0,0,0),
-            opacity(0.4)
-        ])
+        createBarChart(langue, score)
     })
     //#endregion
     go("titleScreen")
