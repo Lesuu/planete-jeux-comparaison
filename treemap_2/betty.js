@@ -1,50 +1,115 @@
+import { createLoadingOverlay } from "./treemap.js"
+import { currentTreemapExplanation } from "./global.js"
+
+let bettyEngaged = false
+let betty
+let quest_marker
+let backgroundRectangle
+let timer = 0.5
+let betty_highlight
+let bettyPeaking = false
+
 export function callBetty() {
+    let treemapContainer = document.getElementById("treemapContainer")
+    let isTalking = false
+    bettyAppears()
+    betty.onClick(() => {
+        if (isTalking)return
+        if (!bettyEngaged){
+            betty_highlight.destroy()
+            tween(
+                betty.pos.x,
+                betty.pos.x - 90,
+                0.5,
+                (val) => {
+                    betty.pos.x = val
+                },
+                easings.easeInOutQuad
+            )
+            tween(
+                betty.angle,
+                betty.angle + 20,
+                0.3,
+                (val) => {
+                    betty.angle = val
+                },
+                easings.easeInOutQuad
+            )
+            bettyEngaged = true
+            timer = 0
+        }
+        quest_marker.opacity = 0
+        backgroundRectangle.opacity = 0.5
+        let treemapOverlay = createLoadingOverlay()
+        treemapOverlay.innerHTML = ""
+        treemapOverlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)"
+        treemapContainer.style.pointerEvents = "none"
+        isTalking = true
+
+        wait(timer, () => {
+            bettyExplication(betty) 
+        })  
+    })
+    document.addEventListener('mousedown', function onClicked(){
+        if (!isTalking) return
+        speechBubble.remove()
+        betty.play("idle")
+        document.getElementById("loadingOverlay").remove()
+        backgroundRectangle.opacity = 0
+        //document.removeEventListener('mousedown', onClicked)
+        treemapContainer.style.pointerEvents = "auto"
+        wait(0.1, () => {
+            isTalking = false
+        })
+    })
+    
+}
+
+function bettyAppears(){
+    if (bettyEngaged || bettyPeaking) {
+        quest_marker.opacity = 1  
+        betty.play("idle_active") 
+        if (betty_highlight){
+            betty_highlight.play("white")
+        } 
+        return
+    }
     destroyAll("betty")
-    let backgroundRectangle = add([
+    bettyPeaking = true
+    backgroundRectangle = add([
         rect(width(), height()),
         pos(0, 0),
         color(0, 0, 0),
-        opacity(0.4),
+        opacity(0),
         "betty"
     ])
-    let betty = add([
+    betty = add([
         sprite("betty", {anim : "idle_active"}),
-        pos(1990, 800),
+        pos(1990, 1020),
         scale(4),
         area(),
         anchor("bot"),
         rotate(0),
         "betty"
     ])
-    let quest_marker = betty.add([
+    betty.flipX = true
+    quest_marker = betty.add([
         sprite("quest"),
-        pos(0, -40),
+        pos(0, -45),
         anchor("bot"),
+        opacity(1),
         "betty"
     ])
-    betty.onClick(() => {
-        quest_marker.destroy()
-        tween(
-            betty.pos.x,
-            betty.pos.x - 90,
-            1,
-            (val) => {
-                betty.pos.x = val
-            },
-            easings.easeInOutQuad
-        )
-        tween(
-            betty.angle,
-            betty.angle + 20,
-            0.5,
-            (val) => {
-                betty.angle = val
-            },
-            easings.easeInOutQuad
-        )
-        bettyExplication()   
-    })
-    betty.flipX = true
+    betty_highlight = add([
+        sprite("betty", {anim : "white"}),
+        pos(betty.pos.x, betty.pos.y + 5),
+        scale(4.3),
+        anchor("bot"),
+        z(-5),
+        color(255, 255, 0),
+        "betty"
+    ])
+    betty_highlight.flipX = true
     wait(0.5, () => {
         tween(
             betty.pos.x,
@@ -52,6 +117,7 @@ export function callBetty() {
             1,
             (val) => {
                 betty.pos.x = val
+                betty_highlight.pos.x = val
             },
             easings.easeInOutQuad
         )
@@ -61,12 +127,23 @@ export function callBetty() {
             1,
             (val) => {
                 betty.angle = val
+                betty_highlight.angle = val
             },
             easings.easeInOutQuad
         )
     })
 }
 
-function bettyExplication(){
-    let bulle = add([])
+function bettyExplication(betty){
+    betty.play("talk")
+    // Création de la bulle
+    let speechBubble = document.createElement("div")
+    speechBubble.id = "speechBubble"
+    document.body.appendChild(speechBubble)
+
+    // Création du paragraphe
+    let speechText = document.createElement("p")
+    speechText.id = "speechText"
+    speechText.innerHTML = currentTreemapExplanation
+    speechBubble.appendChild(speechText)
 }

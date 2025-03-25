@@ -168,7 +168,7 @@ function treemapButtons(){
     //#region "Catégorie":
     let vg_button = add([
         sprite("button"),
-        pos(109, 170),
+        pos(109, 190),
         area(),
         anchor("center"),
         scale(1.8),
@@ -189,7 +189,7 @@ function treemapButtons(){
     ])
     let bg_button = add([
         sprite("button"),
-        pos(279, 170),
+        pos(279, 190),
         area(),
         anchor("center"),
         scale(1.8)
@@ -227,7 +227,7 @@ function treemapButtons(){
             font: "pixel",
             size: 54,
         }),
-        pos(194 + 4, 370 + 4),
+        pos(194 + 4, 390 + 4),
         color(0,0,0),
         anchor("top"),
         opacity(0.4)
@@ -242,7 +242,7 @@ function treemapButtons(){
     ])
     let changclim_button = add([
         sprite("button"),
-        pos(194, 520),
+        pos(194, 540),
         area(),
         anchor("center"),
         scale(1.3)
@@ -269,7 +269,7 @@ function treemapButtons(){
     // Métaux
     let metaux_button = add([
         sprite("button"),
-        pos(194, 720),
+        pos(194, 740),
         area(),
         anchor("center"),
         scale(1.3)
@@ -294,7 +294,7 @@ function treemapButtons(){
     // Particules fines
     let particules_fines_button = add([
         sprite("button"),
-        pos(194, 920),
+        pos(194, 940),
         area(),
         anchor("center"),
         scale(1.3)
@@ -331,12 +331,13 @@ function treemapButtons(){
     //#endregion
     //#region Contributions:
     // Label
+    let offset = 100
     let contributions_label_shadow = add([
         text(getTranslation("CONTRIBUTIONS LABEL"), {
             font: "pixel",
             size: 45,
         }),
-        pos(1650 + 4, 64 + 4),
+        pos(1650 - offset + 4, 834 + 4),
         color(0,0,0),
         anchor("top"),
         opacity(0.4)
@@ -352,7 +353,7 @@ function treemapButtons(){
     // Par étape de cycle de vie
     let cycle_de_vie_button = add([
         sprite("button"),
-        pos(1564, 170),
+        pos(1564 - offset, 940),
         area(),
         anchor("center"),
         scale(1.3)
@@ -379,7 +380,7 @@ function treemapButtons(){
     // Par équipement
     let par_equipement_button = add([
         sprite("button"),
-        pos(1734, 170),
+        pos(1734 - offset, 940),
         area(),
         anchor("center"),
         scale(1.3)
@@ -417,7 +418,7 @@ function treemapButtons(){
             font: "pixel",
             size: 45,
         }),
-        pos(890 + 4, 64 + 4),
+        pos(830 + 4, 834 + 4),
         color(0,0,0),
         anchor("top"),
         opacity(0.4)
@@ -436,10 +437,11 @@ function treemapButtons(){
 // Fonctions pour les boutons scénarios:
 // JV
 function scenarioJvButtons(){
+    let offset = 60
     destroyAll("bg_buttons")
     let telephone_button = add([
         sprite("button"),
-        pos(550, 170),
+        pos(550 - offset, 940),
         area(),
         anchor("center"),
         scale(1.3),
@@ -464,7 +466,7 @@ function scenarioJvButtons(){
     // portable
     let portable_button = add([
         sprite("button"),
-        pos(720, 170),
+        pos(720 - offset, 940),
         area(),
         anchor("center"),
         scale(1.3),
@@ -491,7 +493,7 @@ function scenarioJvButtons(){
     // Fixe
     let fixe_button = add([
         sprite("button"),
-        pos(890, 170),
+        pos(890 - offset, 940),
         area(),
         anchor("center"),
         scale(1.3),
@@ -518,7 +520,7 @@ function scenarioJvButtons(){
     // Console
     let console_button = add([
         sprite("button"),
-        pos(1060, 170),
+        pos(1060 - offset, 940),
         area(),
         anchor("center"),
         scale(1.3),
@@ -543,7 +545,7 @@ function scenarioJvButtons(){
     // Cloud
     let cloud_button = add([
         sprite("button"),
-        pos(1230, 170),
+        pos(1230 - offset, 940),
         area(),
         anchor("center"),
         scale(1.3),
@@ -589,7 +591,7 @@ function scenarioJdsButtons(){
     // Petit jeu
     let petit_jeu_button = add([
         sprite("button"),
-        pos(720, 170),
+        pos(720, 940),
         area(),
         anchor("center"),
         scale(1.3),
@@ -614,7 +616,7 @@ function scenarioJdsButtons(){
     // Jeu moyen
     let jeu_moyen_button = add([
         sprite("button"),
-        pos(890, 170),
+        pos(890, 940),
         area(),
         anchor("center"),
         scale(1.3),
@@ -639,7 +641,7 @@ function scenarioJdsButtons(){
     // Grand jeu
     let grand_jeu_button = add([
         sprite("button"),
-        pos(1060, 170),
+        pos(1060, 940),
         area(),
         anchor("center"),
         scale(1.3),

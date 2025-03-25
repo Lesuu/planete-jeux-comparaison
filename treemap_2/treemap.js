@@ -1,4 +1,6 @@
 import { getTranslation, langue, loading } from "./main.js"
+import { setCurrentTreemapExplanation } from "./global.js"; 
+
 
 // Tout ce qui s'appelle "scenario" devrait s'appeler "indicateur", mais changer cause des problèmes.
 
@@ -25,6 +27,26 @@ export function listEtages() {
 }
 
 let isGenerating = false;
+export function createLoadingOverlay() {
+    let loadingOverlay = document.createElement("div");
+    loadingOverlay.id = "loadingOverlay";
+    loadingOverlay.style.position = "absolute";
+    loadingOverlay.style.top = "100px";
+    loadingOverlay.style.left = "387px";
+    loadingOverlay.style.right = "220px";
+    loadingOverlay.style.bottom = "5px";
+    loadingOverlay.style.width = "1507px";
+    loadingOverlay.style.height = "730px";
+    loadingOverlay.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+    loadingOverlay.style.display = "flex";
+    loadingOverlay.style.justifyContent = "center";
+    loadingOverlay.style.alignItems = "center";
+    loadingOverlay.style.zIndex = "20"; 
+    loadingOverlay.innerHTML = `<h1 style='color: white;'>${getTranslation("CHARGEMENT")}</h1>`;
+    document.body.appendChild(loadingOverlay);
+
+    return loadingOverlay
+}
 
 export function generateTreemap(plateforme, scenario, contribution, etage1, zoom) {    
     if (isGenerating){
@@ -41,7 +63,7 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
     const treemapContainer = document.createElement("div");
     treemapContainer.id = "treemapContainer";
     treemapContainer.style.position = "absolute";
-    treemapContainer.style.top = "330px";
+    treemapContainer.style.top = "100px";
     treemapContainer.style.left = "387px";
     treemapContainer.style.right = "220px";
     treemapContainer.style.bottom = "5px";
@@ -51,29 +73,14 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
     treemapContainer.style.zIndex = "10";
     document.body.appendChild(treemapContainer);
 
-    let loadingOverlay = document.createElement("div");
-    loadingOverlay.id = "loadingOverlay";
-    loadingOverlay.style.position = "absolute";
-    loadingOverlay.style.top = "330px";
-    loadingOverlay.style.left = "387px";
-    loadingOverlay.style.right = "220px";
-    loadingOverlay.style.bottom = "5px";
-    loadingOverlay.style.width = "1507px";
-    loadingOverlay.style.height = "730px";
-    loadingOverlay.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
-    loadingOverlay.style.display = "flex";
-    loadingOverlay.style.justifyContent = "center";
-    loadingOverlay.style.alignItems = "center";
-    loadingOverlay.style.zIndex = "9999"; 
-    loadingOverlay.innerHTML = `<h1 style='color: white;'>${getTranslation("CHARGEMENT")}</h1>`;
-    document.body.appendChild(loadingOverlay);
+    let loadingOverlay = createLoadingOverlay();
 
     return new Promise((resolve, reject) => {
         $.get(csvUrl, function(csvText) {
             // Parse CSV using PapaParse.
-
             const parsed = Papa.parse(csvText, { header: true });
-            const allData = parsed.data;    
+            const allData = parsed.data;  
+
             // Conversion des données
             let convertedData = conversionDonnees(allData, plateforme, scenario, contribution, etage1);
 
@@ -181,6 +188,8 @@ function conversionDonnees(allData, plateforme, scenario, contribution, etage1) 
     // Filtrage des données
     let data = allData.filter(d => d.treemap === plateforme && d.scenario === scenario && d.etage_1 === etage1 && d.contribution === contribution);
 
+    setCurrentTreemapExplanation(data[0].explication);
+
     // On progresse à travers les différents étages
     data.forEach(row => {
         let levels = ["etage_1", "etage_2", "etage_3"];
@@ -204,9 +213,9 @@ function conversionDonnees(allData, plateforme, scenario, contribution, etage1) 
             }
         });
 
-        // At the leaf level, add the value (summing if multiple rows end here)
+        // Additionne la valeur de chaque dernier étage
         etageActuel.value = (etageActuel.value || 0) + val;
-        // Optionally, attach any explanation.
+        // On attache l'explication.
         etageActuel.explication = row.explication;
     });
     // Recursively aggregate parent node values from their children.
@@ -225,5 +234,5 @@ function conversionDonnees(allData, plateforme, scenario, contribution, etage1) 
     
     aggregateValues(root);
     return root;
-}
+}   
 //#endregion

@@ -54,7 +54,7 @@ export function windowsTreemapContainer(){
     // Top
     let treemapWindow = add([
         rect(1510, 30),
-        pos(384, 300),
+        pos(384, 70),
         color(180, 180, 180),
         stay(),
         "window"
