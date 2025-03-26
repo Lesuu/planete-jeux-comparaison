@@ -3,6 +3,7 @@ import { generateTreemap, etage1_jds, etage1_jv, listEtages } from "./treemap.js
 import { loadAssets, importText } from "./initialize.js";
 import { createWindow, windowsTreemapContainer } from "./windowMaker.js";
 import { callBetty, initializeBetty } from "./betty.js";
+import { slideshow } from "./slideshow.js";
 
 let plateforme_choisie, indicateur_choisi, contribution_choisie, etage1_choisi;
 let current_button_pressed = null;
@@ -38,11 +39,6 @@ loadAssets();
 
 // Chargement du texte
 let translations = await load(importText(lien_meta_text));
-// Effet CRT
-loadShaderURL("crt", null, "assets/shaders/crt.frag");
-const crtEffect = () => ({
-    "u_flatness": 4 ,
-});   
 
 // Traductions
 export function getTranslation(key){
@@ -227,8 +223,13 @@ scene("titleScreen", async () => {
         opacity(0)
     ])
     clickArea.onClick(() => {
-        go("treemap")
+        go("slideshow")
     })
+})
+
+// Slideshow
+scene("slideshow", () => {
+    slideshow()
 })
 
 scene("treemap", async () => {

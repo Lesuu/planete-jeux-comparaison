@@ -165,6 +165,9 @@ export function loadAssets(){
     loadSprite("petit_jeu", "assets/pictos/petit_jeu.png")
     loadSprite("jeu_moyen", "assets/pictos/jeu_moyen.png")
     //#endregion
+    //#region Sounds
+    loadSound("talk", "assets/audio/talk2.wav")
+    //#endregion
 };
 
 //#region Importation du texte
