@@ -7,7 +7,8 @@ let terminer_label
 let continue_label
 let startedTalking = false;
 let betty, bulle;
-let sequence = 0
+let sequence = 0;
+let bars = [];
 
 export function createBarChart(langue, score){
     // Données du bar chart

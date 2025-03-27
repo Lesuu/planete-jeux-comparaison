@@ -65,9 +65,9 @@ function languageChange(){
         jouerSurTelephone = "Jouer sur téléphone";
         jouerSurFixe = "Jouer sur ordinateur fixe";
         cloudConsole = "Cloud gaming sur console";
-        jouerPetitJeu = "Jouer à un petit jeu de société (ex. Bandido)";
-        jouerJeuMoyen = "Jouer à un jeu de société moyen (ex. Celestia)";
-        jouerGrandJeu = "Jouer à un grand jeu de société (ex. Catan)";
+        jouerPetitJeu = "Jouer à un petit jeu de société";
+        jouerJeuMoyen = "Jouer à un jeu de société moyen";
+        jouerGrandJeu = "Jouer à un grand jeu de société";
     } else if (langue == "eng"){
         jeuVideo = "Video game";
         jeuSociete = "Board game";
@@ -81,9 +81,9 @@ function languageChange(){
         jouerSurTelephone = "Phone";
         jouerSurFixe = "Desktop computer";
         cloudConsole = "Cloud gaming";
-        jouerPetitJeu = "Small game (Bandido)";
-        jouerJeuMoyen = "Midsize game (Celestia)";
-        jouerGrandJeu = "Large game (Catan)";
+        jouerPetitJeu = "Small game";
+        jouerJeuMoyen = "Midsize game";
+        jouerGrandJeu = "Large game";
     }
     plateforme_choisie = jeuVideo;
     indicateur_choisi = changementClimatique;

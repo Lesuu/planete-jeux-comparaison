@@ -1695,7 +1695,7 @@ async function main() {
                             );
                         }
                         play("talk2", {
-                            volume: 0.1,
+                            volume: 0.05,
                         });
                         if (txt.letterCount === txt.renderedText.length) {
                             isTalking = false;

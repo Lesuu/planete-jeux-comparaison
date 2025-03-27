@@ -3,13 +3,21 @@ let txt, betty, bulle;
 let curDialog = 0;
 let isTalking = false;
 let isSkipping = false;
-
-
+let isTweening = false
 
 export function slideshow(){
+    const histo_jv_data = [
+
+    ]
+    const histo_jds_data = [
+
+    ]
+
     const dialogs = [
-        getTranslation("INTRO"),
-        getTranslation("ACV"),
+        { text: getTranslation("INTRO"),            bubbleSize: {x: 10, y: 6}},
+        { text: getTranslation("ACV"),              bubbleSize: {x: 10, y: 12}},
+        { text : getTranslation("HISTOGRAMME JV"),  bubbleSize: {x: 5, y: 5}},
+        { text : getTranslation("HISTOGRAMME JDS"), bubbleSize: {x: 5, y: 5}}
     ];
     curDialog = 0;
     isTalking = false;
@@ -26,11 +34,13 @@ export function slideshow(){
     betty.flipX = true
 
     // Ajout de la bulle
-    let bulleScale = 10
+    let currentDialog = dialogs[curDialog];
+    let bulleScaleX = currentDialog.bubbleSize.x
+    let bulleScaleY = currentDialog.bubbleSize.y
     bulle = add([
         sprite("bulle"),
-        pos(betty.pos.x - (100 * bulleScale) , betty.pos.y - (55 * bulleScale)),
-        scale(bulleScale),
+        pos(betty.pos.x - (100 * bulleScaleX) , betty.pos.y - (55 * bulleScaleY)),
+        scale(bulleScaleX, bulleScaleY),
         "bulle"
     ])
     // Texte qu'on modifie avec 'startWriting()' pour écrire les dialogue
@@ -38,28 +48,59 @@ export function slideshow(){
         text("", {
             font: "pixelthin",
             size: 48,
-            width: (bulle.width - 20) * bulleScale ,
+            width: (bulle.width - 10) * bulleScaleX ,
             transform: (idx, ch) => {
                 return {
                     opacity: idx < txt.letterCount ? 1 : 0,
                 };
             },
         }),
-        pos(bulle.pos.x + 10 * bulleScale, bulle.pos.y + 10 + bulleScale),
+        pos(bulle.pos.x + 5 * bulleScaleX, bulle.pos.y + 5 + bulleScaleY),
         color(rgb(56, 71, 74)),
         anchor("topleft"),
         {
             letterCount: 0,
         },
     ]);
-    startWriting(dialogs[curDialog]);
-    onClick(() => {
+    startWriting(dialogs[curDialog].text);
+    onClick( async () => {
+        if(isTweening) return
         if(isTalking){
             skipDialog()
         } else {
             curDialog++;
             if(curDialog < dialogs.length){
-                startWriting(dialogs[curDialog]);
+                destroy(bulle);
+                destroy(txt);
+                if(curDialog === 2){
+                    isTweening = true
+                    await tweens()
+                    isTweening = false
+                }
+                currentDialog = dialogs[curDialog];
+                bulleScaleX = currentDialog.bubbleSize.x;
+                bulleScaleY = currentDialog.bubbleSize.y;
+                bulle = add([
+                    sprite("bulle"),
+                    pos(betty.pos.x - (100 * bulleScaleX), betty.pos.y - (55 * bulleScaleY)),
+                    scale(bulleScaleX, bulleScaleY),
+                    "bulle"
+                ]);
+                txt = add([
+                    text("", {
+                        font: "pixelthin",
+                        size: 48,
+                        width: (bulle.width - 10) * bulleScaleX,
+                        transform: (idx, ch) => {
+                            return { opacity: idx < txt.letterCount ? 1 : 0 };
+                        },
+                    }),
+                    pos(bulle.pos.x + 5 * bulleScaleX, bulle.pos.y + 5 + bulleScaleY),
+                    color(rgb(56, 71, 74)),
+                    anchor("topleft"),
+                    { letterCount: 0 },
+                ]);
+                startWriting(currentDialog.text);
             } else {
                 betty.play("idle")
                 destroy(bulle)
@@ -77,6 +118,7 @@ function startWriting(dialog) {
     txt.letterCount = 0;
     txt.text = dialog;
     isSkipping = false;
+    betty.play("talk")
 
     const writing = loop(0.02, () => {
         if(isSkipping){
@@ -100,4 +142,20 @@ function startWriting(dialog) {
 }
 function skipDialog() {
     isSkipping = true
+}
+
+function tweens(){
+    tween(
+        betty.pos,
+        vec2(1700, 350),
+        1,
+        (val) => {
+            betty.pos = val
+        },
+        easings.easeInOutQuad
+    )
+    
+    // tween(
+
+    // )
 }
