@@ -520,7 +520,7 @@ function treemapButtons(){
 // Fonctions pour les boutons scénarios:
 // JV
 function scenarioJvButtons(){
-    let offset = 200
+    let offset = 285
     destroyAll("bg_buttons")
     let telephone_button = add([
         sprite("button"),
@@ -626,34 +626,34 @@ function scenarioJvButtons(){
         "vg_buttons"
     ])
     // Cloud
-    let cloud_button = add([
-        sprite("button"),
-        pos(1230 + offset, 940),
-        area(),
-        anchor("center"),
-        scale(1.3),
-        "vg_buttons"
-    ])
-    let cloud_button_icon = cloud_button.add([
-        sprite("cloud"),
-        anchor("center"),
-        pos(0, 0),
-        scale(1/1.3),
-        "vg_buttons"
-    ])
-    cloud_button.add([
-        text(getTranslation("CLOUD"), {
-            font: "pixel",
-            size: 18,
-        }),
-        anchor("top"),
-        pos(0,43),
-        "vg_buttons"
-    ]);
+    // let cloud_button = add([
+    //     sprite("button"),
+    //     pos(1230 + offset, 940),
+    //     area(),
+    //     anchor("center"),
+    //     scale(1.3),
+    //     "vg_buttons"
+    // ])
+    // let cloud_button_icon = cloud_button.add([
+    //     sprite("cloud"),
+    //     anchor("center"),
+    //     pos(0, 0),
+    //     scale(1/1.3),
+    //     "vg_buttons"
+    // ])
+    // cloud_button.add([
+    //     text(getTranslation("CLOUD"), {
+    //         font: "pixel",
+    //         size: 18,
+    //     }),
+    //     anchor("top"),
+    //     pos(0,43),
+    //     "vg_buttons"
+    // ]);
 
-    cloud_button.onClick(() => {
-        buttonPressed(cloud_button, cloud_button_icon, cloudConsole, "etage1");
-    });
+    // cloud_button.onClick(() => {
+    //     buttonPressed(cloud_button, cloud_button_icon, cloudConsole, "etage1");
+    // });
     portable_button.onClick(() => {
         buttonPressed(portable_button, portable_button_icon, jouerSurPortable, "etage1");
     });
