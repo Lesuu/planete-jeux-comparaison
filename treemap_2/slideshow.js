@@ -6,7 +6,9 @@ let isSkipping = false;
 let isTweening = false
 
 // Constantes pour les histogrammes
-const barScale = 2000;
+const barScaleJv = 2000;
+const barScaleJds = 100
+const baseLineXJds = 730
 const baseLineX = 615;
 const baseLineY = 850;
 const barWidth = 80;
@@ -18,9 +20,9 @@ const histo_jv_data = [
     {label: "téléphone", value:	0.046833172839506},    
 ];
 const histo_jds_data = [
-    {label: "petit", value: 0.732836000000000},
+    {label: "grand", value: 4.082425600000000},
     {label: "moyen", value: 1.223896000000000},
-    {label: "grand", value: 4.082425600000000}
+    {label: "petit", value: 0.732836000000000},
 ];
 
 export function slideshow(){
@@ -92,6 +94,11 @@ export function slideshow(){
                 if(curDialog === 2){
                     isTweening = true
                     await tweens()
+                    isTweening = false
+                }
+                if (curDialog === 3){
+                    isTweening = true
+                    await tweens2()
                     isTweening = false
                 }
                 currentDialog = dialogs[curDialog];
@@ -172,28 +179,21 @@ async function tweens(){
         easings.easeInOutQuad
     )
 
-    // Eclaircir la couleur des bars
-    function interpolateColor(r1, g1, b1, r2, g2, b2, factor) {
-        return rgb(
-            Math.round(r1 + (r2 - r1) * factor),
-            Math.round(g1 + (g2 - g1) * factor),
-            Math.round(b1 + (b2 - b1) * factor)
-        )
-    }
-
-    const startColor = { r: 0, g: 0, b: 0 } 
-    const endColor   = { r: 30, g: 144, b: 255 } 
+    let startColor = { r: 0, g: 0, b: 139 } 
+    let endColor   = { r: 30, g: 144, b: 255 } 
     
     histo_jv_data.forEach((d, i) =>{
-        const barHeight = d.value * barScale;
+        const barHeight = d.value * barScaleJv;
         const xPos = baseLineX + i * (barWidth + 150);
         const yPos = baseLineY;
 
-        // Facteur par lequelle la couleur s'éclaircit
-        const factor = i / (histo_jv_data.length - 1);
+        const factor = i / (histo_jv_data.length - 1)
 
-        // Définition de la couleur
-        let barColor = lightenColor(39, 0, 216, factor);
+        const barColor = interpolateColor(
+            startColor.r, startColor.g, startColor.b,
+            endColor.r,   endColor.g,   endColor.b,
+            factor
+        )
 
         let bar = add([
             rect(barWidth, 0),
@@ -201,7 +201,8 @@ async function tweens(){
             anchor("bot"),
             color(barColor),
             outline(2, rgb(0,0,0)),
-            area()
+            area(),
+            "bar"
         ]);
 
         // Animation de la barre qui se construit
@@ -228,7 +229,8 @@ async function tweens(){
             pos(xPos + 4, baseLineY + 10 + 3),
             anchor("top"),
             color(0,0,0),
-            opacity(0.4)
+            opacity(0.4),
+            "bar"
         ])
         shadow.add([
             text(d.label, {
@@ -238,7 +240,87 @@ async function tweens(){
                 align : "center"
             }),
             pos(-4, -3),
-            anchor("top")
+            anchor("top"),
+            "bar"
         ])
     })
+}
+
+async function tweens2(){
+    destroyAll("bar")
+
+    let startColor = { r: 0, g: 0, b: 139 } 
+    let endColor   = { r: 30, g: 144, b: 255 } 
+
+    histo_jds_data.forEach((d, i) =>{
+        const barHeight = d.value * barScaleJds;
+        const xPos = baseLineXJds + i * (barWidth + 150);
+        const yPos = baseLineY;
+
+        const factor = i / (histo_jv_data.length - 1)
+
+        const barColor = interpolateColor(
+            startColor.r, startColor.g, startColor.b,
+            endColor.r,   endColor.g,   endColor.b,
+            factor
+        )
+
+        let bar = add([
+            rect(barWidth, 0),
+            pos(xPos, yPos),
+            anchor("bot"),
+            color(barColor),
+            outline(2, rgb(0,0,0)),
+            area(),
+            "bar"
+        ]);
+
+        // Animation de la barre qui se construit
+        let barTween = tween(
+            bar.height,
+            barHeight,
+            1.5,
+            (val) => {
+                bar.height = val
+            },
+            easings.easeInOutQuad
+        )
+
+        //tweens.push(barTween)
+
+        // Ajout du label de la barre & son ombre
+        let shadow = add([
+            text(d.label, {
+                font: "pixel",
+                size: 36,
+                width : 200,
+                align : "center"
+            }),
+            pos(xPos + 4, baseLineY + 10 + 3),
+            anchor("top"),
+            color(0,0,0),
+            opacity(0.4),
+            "bar"
+        ])
+        shadow.add([
+            text(d.label, {
+                font: "pixel",
+                size: 36,
+                width : 200,
+                align : "center"
+            }),
+            pos(-4, -3),
+            anchor("top"),
+            "bar"
+        ])
+    })
+}
+
+// Eclaircir la couleur des bars
+function interpolateColor(r1, g1, b1, r2, g2, b2, factor) {
+    return rgb(
+        Math.round(r1 + (r2 - r1) * factor),
+        Math.round(g1 + (g2 - g1) * factor),
+        Math.round(b1 + (b2 - b1) * factor)
+    )
 }
