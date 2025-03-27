@@ -2,6 +2,10 @@
     font-family: 'm6x11';
     src: url('assets/fonts/m6x11plus.ttf') format('truetype');
 }
+@font-face {
+    font-family: 'm5x7';
+    src: url('assets/fonts/m5x7.ttf') format('truetype');
+}
 #loadingOverlay h1 {
     font-family: 'm6x11', sans-serif;
 }
@@ -44,7 +48,7 @@ html, body {
     margin: 40px, 20px, 20px, 20px;
     padding: 80px;
     color: rgb(56, 71, 74);
-    font-family: 'm6x11';
+    font-family: 'm5x7';
     font-size: 54px;
     text-align: center;
     z-index: 60;

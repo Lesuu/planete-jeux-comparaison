@@ -87,7 +87,7 @@ function languageChange(){
     }
     plateforme_choisie = jeuVideo;
     indicateur_choisi = changementClimatique;
-    contribution_choisie = parEquipement;
+    contribution_choisie = cycleDeVie;
     etage1_choisi = jouerSurConsole;
 }
 // Initialization des langues
@@ -412,77 +412,77 @@ function treemapButtons(){
     //#endregion
     //#region Contributions:
     // Label
-    let offset = 100
-    let contributions_label_shadow = add([
-        text(getTranslation("CONTRIBUTIONS LABEL"), {
-            font: "pixel",
-            size: 45,
-        }),
-        pos(1650 - offset + 4, 834 + 4),
-        color(0,0,0),
-        anchor("top"),
-        opacity(0.4)
-    ])
-    contributions_label_shadow.add([
-        text(getTranslation("CONTRIBUTIONS LABEL"), {
-            font: "pixel",
-            size: 45,
-        }),
-        pos(-4, -4),
-        anchor("top")
-    ])
-    // Par étape de cycle de vie
-    let cycle_de_vie_button = add([
-        sprite("button"),
-        pos(1564 - offset, 940),
-        area(),
-        anchor("center"),
-        scale(1.3)
-    ])
-    let cycle_de_vie_button_icon = cycle_de_vie_button.add([
-        sprite("cycle_de_vie"),
-        anchor("center"),
-        pos(0, 0),
-        scale(1/1.3)
-    ])
-    cycle_de_vie_button.add([
-        text(getTranslation("CYCLE DE VIE"), {
-            font: "pixel",
-            size: 18,
-            width: 100,
-            align: "center"
-        }),
-        anchor("top"),
-        pos(0,43)
-    ])
-    cycle_de_vie_button.onClick(() => {
-        buttonPressed(cycle_de_vie_button, cycle_de_vie_button_icon, cycleDeVie, "contribution");
-    });
-    // Par équipement
-    let par_equipement_button = add([
-        sprite("button"),
-        pos(1734 - offset, 940),
-        area(),
-        anchor("center"),
-        scale(1.3)
-    ])
-    let par_equipement_button_icon = par_equipement_button.add([
-        sprite("par_equipement"),
-        anchor("center"),
-        pos(0, 0),
-        scale(1/1.3)
-    ])
-    par_equipement_button.add([
-        text(getTranslation("PAR EQUIPEMENT"), {
-            font: "pixel",
-            size: 18,
-        }),
-        anchor("top"),
-        pos(0,43)
-    ])
-    par_equipement_button.onClick(() => {
-        buttonPressed(par_equipement_button, par_equipement_button_icon, parEquipement, "contribution");
-    });
+    // let offset = 100
+    // let contributions_label_shadow = add([
+    //     text(getTranslation("CONTRIBUTIONS LABEL"), {
+    //         font: "pixel",
+    //         size: 45,
+    //     }),
+    //     pos(1650 - offset + 4, 834 + 4),
+    //     color(0,0,0),
+    //     anchor("top"),
+    //     opacity(0.4)
+    // ])
+    // contributions_label_shadow.add([
+    //     text(getTranslation("CONTRIBUTIONS LABEL"), {
+    //         font: "pixel",
+    //         size: 45,
+    //     }),
+    //     pos(-4, -4),
+    //     anchor("top")
+    // ])
+    // // Par étape de cycle de vie
+    // let cycle_de_vie_button = add([
+    //     sprite("button"),
+    //     pos(1564 - offset, 940),
+    //     area(),
+    //     anchor("center"),
+    //     scale(1.3)
+    // ])
+    // let cycle_de_vie_button_icon = cycle_de_vie_button.add([
+    //     sprite("cycle_de_vie"),
+    //     anchor("center"),
+    //     pos(0, 0),
+    //     scale(1/1.3)
+    // ])
+    // cycle_de_vie_button.add([
+    //     text(getTranslation("CYCLE DE VIE"), {
+    //         font: "pixel",
+    //         size: 18,
+    //         width: 100,
+    //         align: "center"
+    //     }),
+    //     anchor("top"),
+    //     pos(0,43)
+    // ])
+    // cycle_de_vie_button.onClick(() => {
+    //     buttonPressed(cycle_de_vie_button, cycle_de_vie_button_icon, cycleDeVie, "contribution");
+    // });
+    // // Par équipement
+    // let par_equipement_button = add([
+    //     sprite("button"),
+    //     pos(1734 - offset, 940),
+    //     area(),
+    //     anchor("center"),
+    //     scale(1.3)
+    // ])
+    // let par_equipement_button_icon = par_equipement_button.add([
+    //     sprite("par_equipement"),
+    //     anchor("center"),
+    //     pos(0, 0),
+    //     scale(1/1.3)
+    // ])
+    // par_equipement_button.add([
+    //     text(getTranslation("PAR EQUIPEMENT"), {
+    //         font: "pixel",
+    //         size: 18,
+    //     }),
+    //     anchor("top"),
+    //     pos(0,43)
+    // ])
+    // par_equipement_button.onClick(() => {
+    //     buttonPressed(par_equipement_button, par_equipement_button_icon, parEquipement, "contribution");
+    // });
 
     onMouseRelease(() => {
         if (current_button_pressed){
@@ -494,15 +494,17 @@ function treemapButtons(){
     })
 
     // Label scénario
+    let offset = 200
     let scenario_label_shadow = add([
         text(getTranslation("SCENARIO LABEL"), {
             font: "pixel",
             size: 45,
         }),
-        pos(830 + 4, 834 + 4),
+        pos(890 + 4 + offset, 834 + 4),
         color(0,0,0),
         anchor("top"),
-        opacity(0.4)
+        opacity(0.4),
+        area()
     ])
     scenario_label_shadow.add([
         text(getTranslation("SCENARIO LABEL"), {
@@ -510,7 +512,7 @@ function treemapButtons(){
             size: 45,
         }),
         pos(-4, -4),
-        anchor("top")
+        anchor("top"),
     ])
 }
 
@@ -518,11 +520,11 @@ function treemapButtons(){
 // Fonctions pour les boutons scénarios:
 // JV
 function scenarioJvButtons(){
-    let offset = 60
+    let offset = 200
     destroyAll("bg_buttons")
     let telephone_button = add([
         sprite("button"),
-        pos(550 - offset, 940),
+        pos(550 + offset, 940),
         area(),
         anchor("center"),
         scale(1.3),
@@ -547,7 +549,7 @@ function scenarioJvButtons(){
     // portable
     let portable_button = add([
         sprite("button"),
-        pos(720 - offset, 940),
+        pos(720 + offset, 940),
         area(),
         anchor("center"),
         scale(1.3),
@@ -574,7 +576,7 @@ function scenarioJvButtons(){
     // Fixe
     let fixe_button = add([
         sprite("button"),
-        pos(890 - offset, 940),
+        pos(890 + offset, 940),
         area(),
         anchor("center"),
         scale(1.3),
@@ -601,7 +603,7 @@ function scenarioJvButtons(){
     // Console
     let console_button = add([
         sprite("button"),
-        pos(1060 - offset, 940),
+        pos(1060 + offset, 940),
         area(),
         anchor("center"),
         scale(1.3),
@@ -626,7 +628,7 @@ function scenarioJvButtons(){
     // Cloud
     let cloud_button = add([
         sprite("button"),
-        pos(1230 - offset, 940),
+        pos(1230 + offset, 940),
         area(),
         anchor("center"),
         scale(1.3),
@@ -670,9 +672,10 @@ function scenarioJvButtons(){
 function scenarioJdsButtons(){
     destroyAll("vg_buttons")
     // Petit jeu
+    let offset = 200
     let petit_jeu_button = add([
         sprite("button"),
-        pos(720, 940),
+        pos(720 + offset, 940),
         area(),
         anchor("center"),
         scale(1.3),
@@ -697,7 +700,7 @@ function scenarioJdsButtons(){
     // Jeu moyen
     let jeu_moyen_button = add([
         sprite("button"),
-        pos(890, 940),
+        pos(890 + offset, 940),
         area(),
         anchor("center"),
         scale(1.3),
@@ -722,7 +725,7 @@ function scenarioJdsButtons(){
     // Grand jeu
     let grand_jeu_button = add([
         sprite("button"),
-        pos(1060, 940),
+        pos(1060 + offset, 940),
         area(),
         anchor("center"),
         scale(1.3),

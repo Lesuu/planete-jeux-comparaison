@@ -10,33 +10,27 @@ const barScaleJv = 2000;
 const barScaleJds = 100
 const baseLineXJds = 730
 const baseLineX = 615;
-const baseLineY = 850;
+const baseLineY = 750;
 const barWidth = 80;
 
 const histo_jv_data = [
-    {label: "console", value: 0.260300000000000},
-    {label: "ordinateur fixe", value: 0.133547000000000},
-    {label: "ordinateur portable", value: 0.083747000000000},
-    {label: "téléphone", value:	0.046833172839506},    
+    {label: "console", value: 0.260300000000000,                icon : "console"},
+    {label: "ordinateur fixe", value: 0.133547000000000,        icon : "pc"},
+    {label: "ordinateur portable", value: 0.083747000000000,    icon : "portable"},
+    {label: "téléphone", value:	0.046833172839506,              icon : "telephone"},    
 ];
 const histo_jds_data = [
-    {label: "grand", value: 4.082425600000000},
-    {label: "moyen", value: 1.223896000000000},
-    {label: "petit", value: 0.732836000000000},
+    {label: "grand", value: 4.082425600000000,  icon: "petit_jeu" },
+    {label: "moyen", value: 1.223896000000000,  icon:"jeu_moyen"},
+    {label: "petit", value: 0.732836000000000,  icon:"bg_icon"},
 ];
 
 export function slideshow(){
-    add([
-        sprite("quest"),
-        pos(960),
-        area()
-    ])
-
     const dialogs = [
         { text: getTranslation("INTRO"),            bubbleSize: {x: 10, y: 6}},
         { text: getTranslation("ACV"),              bubbleSize: {x: 10, y: 12}},
-        { text : getTranslation("HISTOGRAMME JV"),  bubbleSize: {x: 5, y: 5}},
-        { text : getTranslation("HISTOGRAMME JDS"), bubbleSize: {x: 5, y: 5}}
+        { text : getTranslation("HISTOGRAMME JV"),  bubbleSize: {x: 5, y: 6.2}},
+        { text : getTranslation("HISTOGRAMME JDS"), bubbleSize: {x: 5, y: 6.2}}
     ];
     curDialog = 0;
     isTalking = false;
@@ -171,7 +165,7 @@ function skipDialog() {
 async function tweens(){
     await tween(
         betty.pos,
-        vec2(1700, 350),
+        vec2(1700, 450),
         1,
         (val) => {
             betty.pos = val
@@ -218,6 +212,13 @@ async function tweens(){
 
         //tweens.push(barTween)
 
+        // Ajout de l'icone
+        add([
+            sprite(d.icon),
+            pos(xPos, baseLineY + 10),
+            anchor("top"),
+            "bar"
+        ])
         // Ajout du label de la barre & son ombre
         let shadow = add([
             text(d.label, {
@@ -226,7 +227,7 @@ async function tweens(){
                 width : 200,
                 align : "center"
             }),
-            pos(xPos + 4, baseLineY + 10 + 3),
+            pos(xPos + 4, baseLineY + 75 + 3),
             anchor("top"),
             color(0,0,0),
             opacity(0.4),
@@ -288,6 +289,13 @@ async function tweens2(){
 
         //tweens.push(barTween)
 
+        // Ajout des icones
+        add([
+            sprite(d.icon),
+            pos(xPos, baseLineY + 10),
+            anchor("top"),
+            "bar"
+        ])
         // Ajout du label de la barre & son ombre
         let shadow = add([
             text(d.label, {
@@ -296,7 +304,7 @@ async function tweens2(){
                 width : 200,
                 align : "center"
             }),
-            pos(xPos + 4, baseLineY + 10 + 3),
+            pos(xPos + 4, baseLineY + 75 + 3),
             anchor("top"),
             color(0,0,0),
             opacity(0.4),

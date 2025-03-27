@@ -130,7 +130,7 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
                         }
                     },
                     upperLabel: {
-                    show: true,
+                    show: false,
                     height: 35,
                     // Texte de l'intitulé du treemap
                     textStyle: {
