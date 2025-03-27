@@ -5,13 +5,30 @@ let isTalking = false;
 let isSkipping = false;
 let isTweening = false
 
+// Constantes pour les histogrammes
+const barScale = 2000;
+const baseLineX = 615;
+const baseLineY = 850;
+const barWidth = 80;
+
+const histo_jv_data = [
+    {label: "console", value: 0.260300000000000},
+    {label: "ordinateur fixe", value: 0.133547000000000},
+    {label: "ordinateur portable", value: 0.083747000000000},
+    {label: "téléphone", value:	0.046833172839506},    
+];
+const histo_jds_data = [
+    {label: "petit", value: 0.732836000000000},
+    {label: "moyen", value: 1.223896000000000},
+    {label: "grand", value: 4.082425600000000}
+];
+
 export function slideshow(){
-    const histo_jv_data = [
-
-    ]
-    const histo_jds_data = [
-
-    ]
+    add([
+        sprite("quest"),
+        pos(960),
+        area()
+    ])
 
     const dialogs = [
         { text: getTranslation("INTRO"),            bubbleSize: {x: 10, y: 6}},
@@ -144,8 +161,8 @@ function skipDialog() {
     isSkipping = true
 }
 
-function tweens(){
-    tween(
+async function tweens(){
+    await tween(
         betty.pos,
         vec2(1700, 350),
         1,
@@ -154,8 +171,74 @@ function tweens(){
         },
         easings.easeInOutQuad
     )
-    
-    // tween(
 
-    // )
+    // Eclaircir la couleur des bars
+    function interpolateColor(r1, g1, b1, r2, g2, b2, factor) {
+        return rgb(
+            Math.round(r1 + (r2 - r1) * factor),
+            Math.round(g1 + (g2 - g1) * factor),
+            Math.round(b1 + (b2 - b1) * factor)
+        )
+    }
+
+    const startColor = { r: 0, g: 0, b: 0 } 
+    const endColor   = { r: 30, g: 144, b: 255 } 
+    
+    histo_jv_data.forEach((d, i) =>{
+        const barHeight = d.value * barScale;
+        const xPos = baseLineX + i * (barWidth + 150);
+        const yPos = baseLineY;
+
+        // Facteur par lequelle la couleur s'éclaircit
+        const factor = i / (histo_jv_data.length - 1);
+
+        // Définition de la couleur
+        let barColor = lightenColor(39, 0, 216, factor);
+
+        let bar = add([
+            rect(barWidth, 0),
+            pos(xPos, yPos),
+            anchor("bot"),
+            color(barColor),
+            outline(2, rgb(0,0,0)),
+            area()
+        ]);
+
+        // Animation de la barre qui se construit
+        let barTween = tween(
+            bar.height,
+            barHeight,
+            1.5,
+            (val) => {
+                bar.height = val
+            },
+            easings.easeInOutQuad
+        )
+
+        //tweens.push(barTween)
+
+        // Ajout du label de la barre & son ombre
+        let shadow = add([
+            text(d.label, {
+                font: "pixel",
+                size: 36,
+                width : 200,
+                align : "center"
+            }),
+            pos(xPos + 4, baseLineY + 10 + 3),
+            anchor("top"),
+            color(0,0,0),
+            opacity(0.4)
+        ])
+        shadow.add([
+            text(d.label, {
+                font: "pixel",
+                size: 36,
+                width : 200,
+                align : "center"
+            }),
+            pos(-4, -3),
+            anchor("top")
+        ])
+    })
 }

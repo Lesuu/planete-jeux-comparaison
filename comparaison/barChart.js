@@ -10,6 +10,12 @@ let betty, bulle;
 let sequence = 0;
 let bars = [];
 
+// Version du jeu (normal, bus, interne_bus) pour le bouton final
+const version = "bus"
+
+const lien1 = "https://museedujeu.ch/"
+const lien2 = "https://museedujeu.ch/activites"
+
 export function createBarChart(langue, score){
     // Données du bar chart
     const data = [
@@ -441,7 +447,17 @@ export function createBarChart(langue, score){
             ])
             
             suivant_bouton.onClick(()=>{
-                go("titleScreen")
+                switch (version){
+                    case "normal":
+                        go("titleScreen")
+                        break;
+                    case "bus":
+                        window.location.href = lien1
+                        break;
+                    case "interne_bus":
+                        window.location.href = lien2
+                        break;
+                }
             })
         } else if (sequence === 3){
             if(isTalking){

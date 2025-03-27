@@ -65,9 +65,9 @@ function languageChange(){
         jouerSurTelephone = "Jouer sur téléphone";
         jouerSurFixe = "Jouer sur ordinateur fixe";
         cloudConsole = "Cloud gaming sur console";
-        jouerPetitJeu = "Jouer à un petit jeu de société";
-        jouerJeuMoyen = "Jouer à un jeu de société moyen";
-        jouerGrandJeu = "Jouer à un grand jeu de société";
+        jouerPetitJeu = "Petit format";
+        jouerJeuMoyen = "Format moyen";
+        jouerGrandJeu = "Grand format";
     } else if (langue == "eng"){
         jeuVideo = "Video game";
         jeuSociete = "Board game";
