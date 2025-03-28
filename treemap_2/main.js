@@ -4,6 +4,7 @@ import { loadAssets, importText } from "./initialize.js";
 import { createWindow, windowsTreemapContainer } from "./windowMaker.js";
 import { callBetty, initializeBetty } from "./betty.js";
 import { slideshow } from "./slideshow.js";
+import { tutorial } from "./tutorial.js";
 
 let plateforme_choisie, indicateur_choisi, contribution_choisie, etage1_choisi;
 let current_button_pressed = null;
@@ -230,6 +231,10 @@ scene("titleScreen", async () => {
 // Slideshow
 scene("slideshow", () => {
     slideshow()
+})
+
+scene("tutorial", () => {
+    tutorial()
 })
 
 scene("treemap", async () => {
