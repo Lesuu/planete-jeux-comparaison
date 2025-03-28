@@ -62,6 +62,9 @@ export async function loadAssets(){
     loadSprite("button_red", "assets/sprites/button_textless.png")
     // Bulle de dialogue
     loadSprite("bulle", "assets/sprites/bulle.png")
+    // Tutoriel
+    loadSprite("screenshot", "assets/sprites/screenshot.png")
+    loadSprite("screenshot_jds", "assets/sprites/screenshot_jds.png")
     //#endregion
     //#region Betty
     loadSpriteAtlas("assets/sprites/BETTY-sheet.png", {

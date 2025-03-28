@@ -128,7 +128,7 @@ export function slideshow(){
                 betty.play("idle")
                 destroy(bulle)
                 destroy(txt)
-                go("treemap")
+                go("tutorial")
             }
         }
     })
@@ -143,6 +143,7 @@ function startWriting(dialog) {
     txt.text = dialog;
     isSkipping = false;
     betty.play("talk")
+    let counter = 0
 
     const writing = loop(0.02, () => {
         if(isSkipping){
@@ -153,9 +154,13 @@ function startWriting(dialog) {
                 txt.renderedText.length,
             );
         }
-        play("talk", {
-            volume: 0.1,
-        });
+        counter += 1
+        if (counter % 2 === 0){
+            play("talk", {
+                volume: 0.05,
+            });
+        }
+        
         if (txt.letterCount === txt.renderedText.length) {
             isTalking = false;
             writing.cancel();
