@@ -142,7 +142,13 @@ async function main() {
     }
 
     scene("titleScreen", async () => {
-        setBackground(background_col)
+        add([
+            rect(1920, 1080),
+            pos(0, 0),
+            color(42, 138, 109),
+            z(-50),  
+            stay()
+        ]);
         //éléments universels
         // Shader CRT
         onUpdate(() => {

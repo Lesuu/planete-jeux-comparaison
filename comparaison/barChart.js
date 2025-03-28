@@ -11,7 +11,7 @@ let sequence = 0;
 let bars = [];
 
 // Version du jeu (normal, bus, interne_bus) pour le bouton final
-const version = "bus"
+const version = "normal"
 
 const lien1 = "https://museedujeu.ch/"
 const lien2 = "https://museedujeu.ch/activites"
