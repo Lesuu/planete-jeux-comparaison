@@ -717,6 +717,7 @@ function scenarioJdsButtons(){
         pos(720 + offset, 940),
         area(),
         anchor("center"),
+        color(),
         scale(1.3),
         "bg_buttons"
     ])
@@ -742,6 +743,7 @@ function scenarioJdsButtons(){
         pos(890 + offset, 940),
         area(),
         anchor("center"),
+        color(),
         scale(1.3),
         "bg_buttons"
     ])
@@ -767,11 +769,12 @@ function scenarioJdsButtons(){
         pos(1060 + offset, 940),
         area(),
         anchor("center"),
+        color(0, 230, 0),
         scale(1.3),
         "bg_buttons"
     ])
     let grand_jeu_button_icon = grand_jeu_button.add([
-        sprite("bg_icon"),
+        sprite("bg_color"),
         anchor("center"),
         pos(0, 0),
         scale(1),
@@ -789,12 +792,30 @@ function scenarioJdsButtons(){
     // Fonction des boutons
     petit_jeu_button.onClick(() => {
         buttonPressed(petit_jeu_button, petit_jeu_button_icon, jouerPetitJeu, "etage1");
+        petit_jeu_button_icon.sprite = "petit_jeu_full"
+        jeu_moyen_button_icon.sprite = "jeu_moyen"
+        grand_jeu_button_icon.sprite = "bg_icon"
+        petit_jeu_button.color = rgb(0, 230, 0)
+        jeu_moyen_button.color = rgb(255,255,255)
+        grand_jeu_button.color = rgb(255,255,255)
     });
     jeu_moyen_button.onClick(() => {
         buttonPressed(jeu_moyen_button, jeu_moyen_button_icon, jouerJeuMoyen, "etage1");
+        petit_jeu_button_icon.sprite = "petit_jeu"
+        jeu_moyen_button_icon.sprite = "jeu_moyen_full"
+        grand_jeu_button_icon.sprite = "bg_icon"
+        petit_jeu_button.color = rgb(255,255,255)
+        jeu_moyen_button.color = rgb(0, 230, 0)
+        grand_jeu_button.color = rgb(255,255,255)
     });
     grand_jeu_button.onClick(() => {
         buttonPressed(grand_jeu_button, grand_jeu_button_icon, jouerGrandJeu, "etage1");
+        petit_jeu_button_icon.sprite = "petit_jeu"
+        jeu_moyen_button_icon.sprite = "jeu_moyen"
+        grand_jeu_button_icon.sprite = "bg_color"
+        petit_jeu_button.color = rgb(255,255,255)
+        jeu_moyen_button.color = rgb(255,255,255)
+        grand_jeu_button.color = rgb(0, 230, 0)
     });
 };
 
