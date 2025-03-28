@@ -191,7 +191,7 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
 
 // #region Conversion/filtrage des données
 function conversionDonnees(allData, plateforme, scenario, contribution, etage1) {
-    let title = `${plateforme} - ${scenario} - ${contribution}`;
+    let title = `${plateforme} - ${scenario}`;
     let root = { name: title, path: etage1, children: [] };
     
     // Filtrage des données
