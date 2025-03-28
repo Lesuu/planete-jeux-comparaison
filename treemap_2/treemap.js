@@ -142,7 +142,7 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
                     }
                     },
                     itemStyle: {
-                        borderColor: '#fff'
+                        borderColor: '#fff',
                     },
                     levels: [
                     {
@@ -157,7 +157,7 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
                         itemStyle: {
                             // Couleur du tour du treemap
                             borderColor: '#555',
-                            borderWidth: 5,
+                            borderWidth: 0,
                             gapWidth: 1
                         },
                         emphasis: { itemStyle: { borderColor: '#ddd' } }
@@ -172,7 +172,10 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
                     // },
                     {
                         colorSaturation: [0.35, 0.5],
-                        itemStyle: { borderWidth: 5, gapWidth: 1, borderColorSaturation: 0.6 }
+                        itemStyle: { 
+                            borderWidth: 5, 
+                            gapWidth: 5, 
+                            borderColorSaturation: 0.6 }
                     }
                     ],
                     data: [convertedData]

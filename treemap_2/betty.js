@@ -60,6 +60,7 @@ export function callBetty() {
                 },
                 easings.easeInOutQuad
             )
+            betty.angle = 0
             tween(
                 betty.angle,
                 betty.angle + 20,
