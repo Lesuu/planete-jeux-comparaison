@@ -1,5 +1,5 @@
 import { getTranslation } from "./main.js";
-let txt, betty, bulle;
+let txt, betty, bulle, retour;
 let curDialog = 0;
 let isTalking = false;
 let isSkipping = false;
@@ -14,15 +14,15 @@ const baseLineY = 750;
 const barWidth = 80;
 
 const histo_jv_data = [
-    {label: "console", value: 0.260300000000000,                icon : "console"},
-    {label: "ordinateur fixe", value: 0.133547000000000,        icon : "pc"},
-    {label: "ordinateur portable", value: 0.083747000000000,    icon : "portable"},
-    {label: "téléphone", value:	0.046833172839506,              icon : "telephone"},    
+    {label: "Console", value: 0.260300000000000,                icon : "console_full"},
+    {label: "Ordinateur fixe", value: 0.133547000000000,        icon : "pc_full"},
+    {label: "Ordinateur portable", value: 0.083747000000000,    icon : "portable_full"},
+    {label: "Téléphone", value:	0.046833172839506,              icon : "telephone_full"},    
 ];
 const histo_jds_data = [
-    {label: "grand", value: 4.082425600000000,  icon: "petit_jeu" },
-    {label: "moyen", value: 1.223896000000000,  icon:"jeu_moyen"},
-    {label: "petit", value: 0.732836000000000,  icon:"bg_icon"},
+    {label: "Grand", value: 4.082425600000000,  icon: "bg_color" },
+    {label: "Moyen", value: 1.223896000000000,  icon:"jeu_moyen_full"},
+    {label: "Petit", value: 0.732836000000000,  icon:"petit_jeu_full"},
 ];
 
 export function slideshow(){
@@ -34,6 +34,11 @@ export function slideshow(){
     ];
     curDialog = 0;
     isTalking = false;
+
+    // retour = add([
+    //     sprite("button"),
+    //     pos
+    // ])
 
     // Ajout de betty
     betty = add([
@@ -127,6 +132,7 @@ export function slideshow(){
             }
         }
     })
+
 }
 
 

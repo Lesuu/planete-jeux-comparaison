@@ -35,7 +35,7 @@ kaplay({
 // });
 
 // Charge les assets
-loadAssets();
+await loadAssets();
 
 // Chargement du texte
 let translations = await load(importText(lien_meta_text));
@@ -252,6 +252,7 @@ function treemapButtons(){
         pos(109, 190),
         area(),
         anchor("center"),
+        color(0,230,0),
         scale(1.8),
     ])
     let vg_button_icon = vg_button.add([
@@ -273,6 +274,7 @@ function treemapButtons(){
         pos(279, 190),
         area(),
         anchor("center"),
+        color(),
         scale(1.8)
     ])
     let bg_button_icon = bg_button.add([
@@ -294,12 +296,16 @@ function treemapButtons(){
         buttonPressed(bg_button, bg_button_icon, jeuSociete, "plateforme");
         bg_button_icon.sprite = "bg_color";
         vg_button_icon.sprite = "vg_icon";
+        bg_button.color = rgb(0, 230, 0)
+        vg_button.color = rgb(255, 255, 255)
     });
     vg_button.onClick(() => {
         scenarioJvButtons();
         buttonPressed(vg_button, vg_button_icon, jeuVideo, "plateforme");
         vg_button_icon.sprite = "vg_color";
         bg_button_icon.sprite = "bg_icon";
+        vg_button.color = rgb(0, 230, 0)
+        bg_button.color = rgb(255,255,255)
     });
     //#endregion
     //#region Indicateurs:
@@ -326,6 +332,7 @@ function treemapButtons(){
         pos(194, 540),
         area(),
         anchor("center"),
+        color(0, 230 ,0),
         scale(1.3)
     ])
     // Changement climatique
@@ -343,9 +350,6 @@ function treemapButtons(){
         anchor("top"),
         pos(0,43)
     ])
-    changclim_button.onClick(() => {
-        buttonPressed(changclim_button, changclim_button_icon, changementClimatique, "indicateur");
-    });
 
     // Métaux
     let metaux_button = add([
@@ -353,6 +357,7 @@ function treemapButtons(){
         pos(194, 740),
         area(),
         anchor("center"),
+        color(),
         scale(1.3)
     ])
     let metaux_button_icon = metaux_button.add([
@@ -369,15 +374,13 @@ function treemapButtons(){
         anchor("top"),
         pos(0,43)
     ])
-    metaux_button.onClick(() => {
-        buttonPressed(metaux_button, metaux_button_icon, metaux, "indicateur");
-    });
     // Particules fines
     let particules_fines_button = add([
         sprite("button"),
         pos(194, 940),
         area(),
         anchor("center"),
+        color(),
         scale(1.3)
     ])
     let particules_fines_button_icon = particules_fines_button.add([
@@ -406,8 +409,23 @@ function treemapButtons(){
         anchor("top"),
         pos(0,43)
     ])
+    changclim_button.onClick(() => {
+        buttonPressed(changclim_button, changclim_button_icon, changementClimatique, "indicateur");
+        changclim_button.color = rgb(0,230,0)
+        metaux_button.color = rgb(255, 255, 255)
+        particules_fines_button.color = rgb(255, 255, 255)
+    });
+    metaux_button.onClick(() => {
+        buttonPressed(metaux_button, metaux_button_icon, metaux, "indicateur");
+        changclim_button.color = rgb(255, 255, 255)
+        metaux_button.color = rgb(0, 230, 0)
+        particules_fines_button.color = rgb(255, 255, 255)
+    });
     particules_fines_button.onClick(() => {
         buttonPressed(particules_fines_button, particules_fines_button_icon, particulesFines, "indicateur");
+        changclim_button.color = rgb(255, 255, 255)
+        metaux_button.color = rgb(255, 255, 255)
+        particules_fines_button.color = rgb(0, 230, 0)
     });
     //#endregion
     //#region Contributions:
@@ -527,6 +545,7 @@ function scenarioJvButtons(){
         pos(550 + offset, 940),
         area(),
         anchor("center"),
+        color(),
         scale(1.3),
         "vg_buttons"
     ])
@@ -552,6 +571,7 @@ function scenarioJvButtons(){
         pos(720 + offset, 940),
         area(),
         anchor("center"),
+        color(),
         scale(1.3),
         "vg_buttons"
     ])
@@ -579,6 +599,7 @@ function scenarioJvButtons(){
         pos(890 + offset, 940),
         area(),
         anchor("center"),
+        color(),
         scale(1.3),
         "vg_buttons"
     ])
@@ -606,6 +627,7 @@ function scenarioJvButtons(){
         pos(1060 + offset, 940),
         area(),
         anchor("center"),
+        color(0, 230, 0),
         scale(1.3),
         "vg_buttons"
     ])
@@ -631,6 +653,7 @@ function scenarioJvButtons(){
     //     pos(1230 + offset, 940),
     //     area(),
     //     anchor("center"),
+    //     color(),
     //     scale(1.3),
     //     "vg_buttons"
     // ])
@@ -656,15 +679,31 @@ function scenarioJvButtons(){
     // });
     portable_button.onClick(() => {
         buttonPressed(portable_button, portable_button_icon, jouerSurPortable, "etage1");
+        portable_button.color = rgb(0, 230, 0)
+        telephone_button.color = rgb(255,255,255)
+        console_button.color = rgb(255,255,255)
+        fixe_button.color = rgb(255,255,255)
     });
     telephone_button.onClick(() => {
         buttonPressed(telephone_button, telephone_button_icon, jouerSurTelephone, "etage1");
+        portable_button.color = rgb(255,255,255)
+        telephone_button.color = rgb(0, 230, 0)
+        console_button.color = rgb(255,255,255)
+        fixe_button.color = rgb(255,255,255)
     });
     console_button.onClick(() => {
         buttonPressed(console_button, console_button_icon, jouerSurConsole, "etage1");
+        portable_button.color = rgb(255,255,255)
+        telephone_button.color = rgb(255,255,255)
+        console_button.color = rgb(0, 230, 0)
+        fixe_button.color = rgb(255,255,255)
     });
     fixe_button.onClick(() => {
         buttonPressed(fixe_button, fixe_button_icon, jouerSurFixe, "etage1");
+        portable_button.color = rgb(255,255,255)
+        telephone_button.color = rgb(255,255,255)
+        console_button.color = rgb(255,255,255)
+        fixe_button.color = rgb(0, 230, 0)
     });
 
 }

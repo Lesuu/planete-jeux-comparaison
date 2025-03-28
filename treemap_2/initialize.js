@@ -1,5 +1,5 @@
 // Chargement des assets
-export function loadAssets(){
+export async function loadAssets(){
     // Polices
     loadFont("pixel", "assets/fonts/m6x11plus.ttf")
     loadFont("pixelthin", "assets/fonts/m5x7.ttf")
@@ -148,22 +148,111 @@ export function loadAssets(){
         },
     });
     // Pictogrammes:
-    // Indicateurs
-    loadSprite("changement_climatique", "assets/pictos/changclim.png")
-    loadSprite("cycle_de_vie", "assets/pictos/cycle.png")
-    loadSprite("metaux", "assets/pictos/Metaux.png")
-    loadSprite("par_equipement", "assets/pictos/parequipement.png")
-    loadSprite("particules_fines", "assets/pictos/partfines.png")
-
-    // Scenarios
-    loadSprite("telephone", "assets/pictos/telephone.png")
-    loadSprite("portable", "assets/pictos/portable.png")
-    loadSprite("pc", "assets/pictos/pc.png")
-    loadSprite("console", "assets/pictos/console.png")
-    loadSprite("cloud", "assets/pictos/cloud.png")
-
-    loadSprite("petit_jeu", "assets/pictos/petit_jeu.png")
-    loadSprite("jeu_moyen", "assets/pictos/jeu_moyen.png")
+    // Sheet
+    loadSpriteAtlas("assets/pictos/picto_sheet.png", {
+        "changement_climatique": {
+            "x": 0,
+            "y": 155,
+            "width": 96,
+            "height": 96
+        },
+        "cloud": {
+            "x" : 96,
+            "y" : 155,
+            "width": 65,
+            "height": 65
+        },
+        "console": {
+            "x" : 0,
+            "y" : 59,
+            "width": 57,
+            "height": 58
+        },
+        "cycle_de_vie": {
+            "x" : 161,
+            "y" : 155,
+            "width": 96,
+            "height": 96
+        },
+        "console_full": {
+            "x": 0,
+            "y": 0,
+            "width": 57,
+            "height": 58
+        },
+        "pc_full": {
+            "x" : 57,
+            "y" : 0,
+            "width": 62,
+            "height": 61
+        },
+        "portable_full": {
+            "x" : 119,
+            "y" : 0,
+            "width": 65,
+            "height": 64
+        },
+        "telephone_full": {
+            "x" : 184,
+            "y" : 0,
+            "width": 60,
+            "height": 59
+        },
+        "jeu_moyen": {
+            "x" : 280,
+            "y" : 0,
+            "width": 64,
+            "height": 64
+        },
+        "jeu_moyen_full": {
+            "x" : 57,
+            "y" : 64,
+            "width": 64,
+            "height": 64
+        },
+        "metaux": {
+            "x" : 184,
+            "y" : 59,
+            "width": 96,
+            "height": 96
+        },
+        "particules_fines": {
+            "x" : 257,
+            "y" : 245,
+            "width": 96,
+            "height": 16
+        },
+        "pc": {
+            "x" : 121,
+            "y" : 64,
+            "width": 61,
+            "height": 62
+        },
+        "petit_jeu": {
+            "x" : 280,
+            "y" : 64,
+            "width": 64,
+            "height": 64
+        },
+        "petit_jeu_full": {
+            "x" : 96,
+            "y" : 245,
+            "width": 64,
+            "height": 64
+        },
+        "portable": {
+            "x" : 0,
+            "y" : 261,
+            "width": 64,
+            "height": 65
+        },
+        "telephone": {
+            "x" : 160,
+            "y" : 261,
+            "width": 60,
+            "height": 59
+        },
+    })
     //#endregion
     //#region Sounds
     loadSound("talk", "assets/audio/talk2.wav")
