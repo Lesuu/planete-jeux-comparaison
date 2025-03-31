@@ -101,6 +101,7 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
             var myChart = echarts.init(treemapContainer);
 
             // Build the treemap using the converted data.
+            //#region Treemap config
             myChart.setOption({
                 tooltip: {
                     formatter: function(info) {
