@@ -248,14 +248,13 @@ function conversionDonnees(allData, plateforme, scenario, contribution, etage1) 
     
     aggregateValues(root);
 
-    // Convert the result to JSON and trigger a 
     if (downloadData) {
         let jsonStr = JSON.stringify(root, null, 2);
         let blob = new Blob([jsonStr], { type: "application/json" });
         let url = URL.createObjectURL(blob);
         let a = document.createElement("a");
         a.href = url;
-        a.download = "convertedData.json"; // Name of the downloaded file
+        a.download = "convertedData.json";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
