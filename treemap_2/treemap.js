@@ -94,7 +94,7 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
 
             // Conversion des données
             let convertedData = conversionDonnees(allData, plateforme, scenario, contribution, etage1);
-
+            
             //generate treemap
             if (!treemapContainer) {
                 console.error('Treemap container not found');
@@ -174,11 +174,11 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
                     //     },
                     // },
                     {
-                        colorSaturation: [0.35, 0.5],
+                        colorSaturation: [0, 0], // de 0 à 0 pour n'avoir qu'un seule nuance de bleu
                         itemStyle: { 
                             borderWidth: 5, 
                             gapWidth: 5, 
-                            borderColorSaturation: 0.6 }
+                            borderColorSaturation: 1 } // 1 pour blanc, 0 pour noir
                     }
                     ],
                     data: [convertedData]
@@ -263,6 +263,4 @@ function conversionDonnees(allData, plateforme, scenario, contribution, etage1) 
     }
 
     return root;
-}   
-
-//#endregion
+}//#endregion
