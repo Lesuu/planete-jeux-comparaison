@@ -83,7 +83,9 @@ export function callBetty() {
     })
     document.addEventListener('mousedown', function onClicked(){
         if (!isTalking) return
-        speechBubble.remove()
+        if (speechBubble){
+            speechBubble.remove()
+        }
         betty.play("idle")
         document.getElementById("treemapOverlay").remove()
         backgroundRectangle.opacity = 0
