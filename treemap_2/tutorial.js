@@ -11,10 +11,11 @@ let offset = 0
 export function tutorial() {
     // Dialogues à afficher
     const dialogs = [
-        { text: getTranslation("INDICATEURS"),      bubbleSize: {x: 13, y: 14}},
+        { text: getTranslation("INDICATEURS"),      bubbleSize: {x: 13, y: 9}},
+        { text: getTranslation("INDICATEURS 2"),      bubbleSize: {x: 15, y: 15}},
         { text: getTranslation("SCENARIOS JV"),     bubbleSize: {x: 9, y: 8}},
-        { text : getTranslation("SCENARIOS JDS"),   bubbleSize: {x: 9, y: 7}},
-        { text : getTranslation("CASE"),            bubbleSize: {x: 5, y: 11}}
+        { text : getTranslation("SCENARIOS JDS"),   bubbleSize: {x: 4, y: 5}},
+        { text : getTranslation("CASE"),            bubbleSize: {x: 5, y: 12}}
     ];
     curDialog = 0;
     isTalking = false;
@@ -122,6 +123,7 @@ function assombris(dialog){
     switch (dialog){
         //#region Indicateurs
         case 0:
+        case 1:
             // Assombris tout sauf les indicateurs
             // Top
             assombrissement = add([
@@ -141,7 +143,7 @@ function assombris(dialog){
             ])
             break;
         //#region Scénarios Jv
-        case 1:
+        case 2:
             destroyAll("assombrissement")
             let vg_button = add([
                 sprite("button"),
@@ -198,7 +200,7 @@ function assombris(dialog){
             ])
             break;
         //#region Scénarios JdS
-        case 2:
+        case 3:
             destroyAll("assombrissement")
             destroyAll("vg_button")
             screenshot.sprite = "screenshot_jds"
@@ -257,7 +259,7 @@ function assombris(dialog){
 
             break;
         //#region Treemap
-        case 3:
+        case 4:
             destroyAll("assombrissement")
             destroyAll("bg_button")
             // On déplace Betty & sa bulle

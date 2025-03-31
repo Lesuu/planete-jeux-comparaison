@@ -8,6 +8,7 @@ let timer = 0.5
 let betty_highlight
 let bettyPeaking = false
 let nothingToSay = false
+let curTween;
 
 export function initializeBetty() {
     bettyEngaged = false;
@@ -50,23 +51,29 @@ export function callBetty() {
     betty.onClick(() => {
         if (isTalking||nothingToSay)return
         if (!bettyEngaged){
-            betty_highlight.destroy()
+            betty_highlight.opacity = 0
             tween(
                 betty.pos.x,
                 betty.pos.x - 90,
                 0.5,
                 (val) => {
                     betty.pos.x = val
+                    betty_highlight.pos.x = val
                 },
                 easings.easeInOutQuad
             )
-            betty.angle = 0
-            tween(
+            wait(() => console.log(betty.pos))
+            if (curTween) {
+                curTween.cancel(); 
+                betty.angle = -20;
+            };
+            curTween = tween(
                 betty.angle,
                 betty.angle + 20,
                 0.3,
                 (val) => {
                     betty.angle = val
+                    betty_highlight.angle = val
                 },
                 easings.easeInOutQuad
             )
@@ -100,13 +107,17 @@ export function callBetty() {
 
 function bettyAppears(){
     if (bettyEngaged || bettyPeaking) {
-        quest_marker.opacity = 1  
-        betty.play("idle_active") 
+        quest_marker.opacity = 1;  
+        betty.play("idle_active"); 
+        betty_highlight.opacity = 1;
+        setGravity(1200);
+        betty.jump(400)
+        betty_highlight.jump(400)
         if (betty_highlight){
-            betty_highlight.play("white")
-        } 
-        return
-    }
+            betty_highlight.play("white");
+        }; 
+        return;
+    };
     destroyAll("betty")
     bettyPeaking = true
     backgroundRectangle = add([
@@ -123,9 +134,18 @@ function bettyAppears(){
         area(),
         anchor("bot"),
         rotate(0),
+        move(0),
+        body(),
         "betty"
     ])
     betty.flipX = true
+    let betty_platform = add([
+        rect(width(), 10),
+        pos(0, 1020),
+        area(),
+        opacity(0),
+        body({isStatic: true})
+    ])
     quest_marker = betty.add([
         sprite("quest"),
         pos(0, -45),
@@ -140,6 +160,7 @@ function bettyAppears(){
         anchor("bot"),
         z(-5),
         color(255, 255, 0),
+        opacity(1),
         "betty"
     ])
     betty_highlight.flipX = true
@@ -154,7 +175,9 @@ function bettyAppears(){
             },
             easings.easeInOutQuad
         )
-        tween(
+        console.log(betty.angle)
+
+        curTween = tween(
             betty.angle,
             betty.angle - 20,
             1,

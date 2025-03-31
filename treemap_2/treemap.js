@@ -7,6 +7,8 @@ import { setCurrentTreemapExplanation } from "./global.js";
 export let etage1_jv = []
 export let etage1_jds = []
 
+let downloadData = false
+
 export function listEtages() {
     const lien_fr = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2RjJYuns3gy3P3p45n8_pm8yqqDCWqHfVON3xswfWfHk3vLgpdP6YhbIO/pub?gid=74008056&single=true&output=csv';
     const lien_eng = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2RjJYuns3gy3P3p45n8_pm8yqqDCWqHfVON3xswfWfHk3vLgpdP6YhbIO/pub?gid=895638476&single=true&output=csv';
@@ -193,7 +195,7 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
     }); 
 }
 
-// #region Conversion/filtrage des données
+//#region Conversion/filtrage des données
 function conversionDonnees(allData, plateforme, scenario, contribution, etage1) {
     let title = `${plateforme} - ${scenario}`;
     let root = { name: title, path: etage1, children: [] };
@@ -245,6 +247,22 @@ function conversionDonnees(allData, plateforme, scenario, contribution, etage1) 
     }
     
     aggregateValues(root);
+
+    // Convert the result to JSON and trigger a 
+    if (downloadData) {
+        let jsonStr = JSON.stringify(root, null, 2);
+        let blob = new Blob([jsonStr], { type: "application/json" });
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement("a");
+        a.href = url;
+        a.download = "convertedData.json"; // Name of the downloaded file
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
     return root;
 }   
+
 //#endregion
