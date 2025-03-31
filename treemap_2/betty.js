@@ -129,6 +129,7 @@ function bettyAppears(){
         pos(0, 0),
         color(0, 0, 0),
         opacity(0),
+        z(1),
         "betty"
     ])
     betty = add([
@@ -140,6 +141,7 @@ function bettyAppears(){
         rotate(0),
         move(0),
         body(),
+        z(2),
         "betty"
     ])
     betty.flipX = true
