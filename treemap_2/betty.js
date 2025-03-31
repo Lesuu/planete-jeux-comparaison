@@ -9,6 +9,7 @@ let betty_highlight
 let bettyPeaking = false
 let nothingToSay = false
 let curTween;
+let canJump = false
 
 export function initializeBetty() {
     bettyEngaged = false;
@@ -58,7 +59,7 @@ export function callBetty() {
                 0.5,
                 (val) => {
                     betty.pos.x = val
-                    betty_highlight.pos.x = val
+                    // betty_highlight.pos.x = val
                 },
                 easings.easeInOutQuad
             )
@@ -73,7 +74,7 @@ export function callBetty() {
                 0.3,
                 (val) => {
                     betty.angle = val
-                    betty_highlight.angle = val
+                    // betty_highlight.angle = val
                 },
                 easings.easeInOutQuad
             )
@@ -94,6 +95,7 @@ export function callBetty() {
             speechBubble.remove()
         }
         betty.play("idle")
+        betty_highlight.play("white")
         document.getElementById("treemapOverlay").remove()
         backgroundRectangle.opacity = 0
         //document.removeEventListener('mousedown', onClicked)
@@ -111,8 +113,10 @@ function bettyAppears(){
         betty.play("idle_active"); 
         betty_highlight.opacity = 1;
         setGravity(1200);
-        betty.jump(400)
-        betty_highlight.jump(400)
+        if (canJump){
+            betty.jump(400);
+            canJump = false;
+        }
         if (betty_highlight){
             betty_highlight.play("white");
         }; 
@@ -141,10 +145,11 @@ function bettyAppears(){
     betty.flipX = true
     let betty_platform = add([
         rect(width(), 10),
-        pos(0, 1020),
+        pos(0, 1040),
         area(),
         opacity(0),
-        body({isStatic: true})
+        body({isStatic: true}),
+        "platform"
     ])
     quest_marker = betty.add([
         sprite("quest"),
@@ -163,6 +168,14 @@ function bettyAppears(){
         opacity(1),
         "betty"
     ])
+    onUpdate(() => {
+        betty_highlight.pos = vec2(betty.pos.x, betty.pos.y + 5);
+        betty_highlight.angle = betty.angle;
+    });
+    betty.onCollide("platform", () => {
+        console.log("collide")
+        canJump = true;
+    });
     betty_highlight.flipX = true
     wait(0.5, () => {
         tween(
@@ -171,7 +184,7 @@ function bettyAppears(){
             1,
             (val) => {
                 betty.pos.x = val
-                betty_highlight.pos.x = val
+                // betty_highlight.pos.x = val
             },
             easings.easeInOutQuad
         )
@@ -183,7 +196,7 @@ function bettyAppears(){
             1,
             (val) => {
                 betty.angle = val
-                betty_highlight.angle = val
+                // betty_highlight.angle = val
             },
             easings.easeInOutQuad
         )
@@ -192,6 +205,7 @@ function bettyAppears(){
 
 async function bettyExplication(betty){
     betty.play("talk")
+    betty_highlight.opacity = 0
     // Création de la bulle
     let speechBubble = document.createElement("div")
     speechBubble.id = "speechBubble"
