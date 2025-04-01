@@ -722,7 +722,7 @@ function scenarioJdsButtons(){
         pos(720 + offset, 940),
         area(),
         anchor("center"),
-        color(),
+        color(0, 230, 0),
         scale(1.3),
         "bg_buttons"
     ])
@@ -774,7 +774,7 @@ function scenarioJdsButtons(){
         pos(1060 + offset, 940),
         area(),
         anchor("center"),
-        color(0, 230, 0),
+        color(),
         scale(1.3),
         "bg_buttons"
     ])
