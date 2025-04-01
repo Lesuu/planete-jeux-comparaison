@@ -8,7 +8,6 @@ let continue_label
 let startedTalking = false;
 let betty, bulle;
 let sequence = 0;
-let bars = [];
 
 // Version du jeu (normal, bus, interne_bus) pour le bouton final
 const version = "normal"
@@ -17,6 +16,11 @@ const lien1 = "https://museedujeu.ch/"
 const lien2 = "https://museedujeu.ch/activites"
 
 export function createBarChart(langue, score){
+    // reset les variables
+    sequence = 0
+    isTalking = false
+    isSkipping = false
+    startedTalking = false
     // Données du bar chart
     const data = [
         { label: "1 ordinateur portable",               carbon: 193,  impact: 48.47 },
@@ -449,7 +453,7 @@ export function createBarChart(langue, score){
             suivant_bouton.onClick(()=>{
                 switch (version){
                     case "normal":
-                        go("titleScreen")
+                        window.location.reload()
                         break;
                     case "bus":
                         window.location.href = lien1
@@ -473,7 +477,7 @@ export function createBarChart(langue, score){
 function startWriting(dialog) {
     startedTalking = true
     betty.play("talk")
-    let txtWidth = sequence < 2 ? 350 : 550
+    let txtWidth = sequence < 3 ? 350 : 550
     let txt = add([
         text("", {
             font: "pixelthin",
@@ -501,7 +505,7 @@ function startWriting(dialog) {
     txt.text = dialog;
     isSkipping = false;
 
-    const writing = loop(0.06, () => {
+    const writing = loop(0.03, () => {
         if(isSkipping){
             txt.letterCount = txt.renderedText.length;
         } else {

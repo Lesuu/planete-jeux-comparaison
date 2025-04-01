@@ -419,11 +419,13 @@ async function main() {
 
         screen.onClick(() => {
             if (loading) return
-            go("chooseCategory")
+            //go("chooseCategory")
+            go("finalResults", {score: 0})
         });
         
     })
     scene("chooseCategory", async () => {
+        both_hover = false
         windowButtons()
         // Elements UI
         let title = add([
