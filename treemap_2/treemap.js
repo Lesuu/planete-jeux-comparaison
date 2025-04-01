@@ -7,7 +7,6 @@ import { setCurrentTreemapExplanation } from "./global.js";
 export let etage1_jv = []
 export let etage1_jds = []
 
-let downloadData = false
 
 export function listEtages() {
     const lien_fr = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2RjJYuns3gy3P3p45n8_pm8yqqDCWqHfVON3xswfWfHk3vLgpdP6YhbIO/pub?gid=74008056&single=true&output=csv';
@@ -105,16 +104,6 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
             // Build the treemap using the converted data.
             //#region Treemap config
             myChart.setOption({
-                tooltip: {
-                    formatter: function(info) {
-                    // Etiquette quand on hover (désactivée car inutile en tactile)
-                    // var value = info.value;
-                    // var treePath = info.treePathInfo.map(item => item.name).slice(1).join('/');
-                    // var explication = info.data.explication ? ('<br>' + info.data.explication) : '';
-                    // return `<div class="tooltip-title">${echarts.format.encodeHTML(treePath)}</div>
-                    //         Case: ${value}${explication}`;
-                    }
-                },
                 series: [{
                     roam: zoom, 
                     name: 'Treemap',
@@ -147,43 +136,52 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
                     itemStyle: {
                         borderColor: '#fff',
                     },
-                    levels: [
+                    levels: [ // from echarts: getLeveOption()
                     {
                         itemStyle: {
                             borderColor: '#777',
-                            borderWidth: 0,
-                            gapWidth: 1
+                            borderWidth: 0, // tout le tour du treemap
+                            gapWidth: 0 // tour des boites de différentes couleurs
                         },
-                        upperLabel: { show: false }
+                        upperLabel: { show: false } // header treemap
                     },
-                    {
+                    {colorSaturation: [0, 0],
                         itemStyle: {
                             // Couleur du tour du treemap
-                            borderColor: '#555',
-                            borderWidth: 0,
-                            gapWidth: 1
+                            // borderColor: '' ,
+                            borderWidth: 10, // tour des boites de différentes couleurs
+                            gapWidth: 10, // espace entre différentes boites de meme couleurs
+                            borderColorSaturation: 0.5
                         },
-                        emphasis: { itemStyle: { borderColor: '#ddd' } }
-                    },
-                    // {
-                    //     itemStyle: {
-                    //         // Couleur du tour du treemap
-                    //         borderColor: '#555',
-                    //         borderWidth: 5,
-                    //         gapWidth: 2
-                    //     },
-                    // },
-                    {
-                        colorSaturation: [0, 0], // de 0 à 0 pour n'avoir qu'un seule nuance de bleu
-                        itemStyle: { 
-                            borderWidth: 5, 
-                            gapWidth: 5, 
-                            borderColorSaturation: 1 } // 1 pour blanc, 0 pour noir
+                        // emphasis: { itemStyle: { borderColor: '#777' } },
+                        upperLabel: {
+                            show: true
+                          }
                     }
+                    
+                    
                     ],
-                    data: [convertedData]
+                    data: convertedData
                 }]
             });
+
+    
+    let downloadData = false ;
+
+    // Optionally trigger a JSON download
+    if (downloadData) {
+        let jsonStr = JSON.stringify(convertedData, null, 2);
+        let blob = new Blob([jsonStr], { type: "application/json" });
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement("a");
+        a.href = url;
+        a.download = "convertedData.json"; // Name of the downloaded file
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }   
+
         // Resolve the promise when treemap is rendered
             resolve();
         }).fail((err) => {
@@ -195,71 +193,56 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
     }); 
 }
 
+
+
 //#region Conversion/filtrage des données
 function conversionDonnees(allData, plateforme, scenario, contribution, etage1) {
-    let title = `${plateforme} - ${scenario}`;
-    let root = { name: title, path: etage1, children: [] };
-    
-    // Filtrage des données
-    let data = allData.filter(d => d.treemap === plateforme && d.scenario === scenario && d.etage_1 === etage1 && d.contribution === contribution);
+    // Remove root and directly build the structure based on etage_2 and etage_3
+    let etage2Map = {};
+
+    // Filter data based on the criteria
+    let data = allData.filter(d =>
+        d.treemap === plateforme &&
+        d.scenario === scenario &&
+        d.etage_1 === etage1 &&
+        d.contribution === contribution
+    );
+
     setCurrentTreemapExplanation(data[0].explication);
 
-    // On progresse à travers les différents étages
+    // Iterate through the filtered data and build the structure
     data.forEach(row => {
-        let levels = ["etage_1", "etage_2", "etage_3"];
+        let levels = ["etage_2", "etage_3"];
         let val = parseFloat(row.case) || 0;
+        let currentPath = "";
 
-        let etageActuel = root;
-        let currentPath = title
-
-        // On passe à travers chaque étage
-        levels.forEach((level) => {
-            if (row[level]) {
-                currentPath += `/${row[level]}`;
-                let nodeExistante = etageActuel.children.find(d => d.name === row[level]);
-
-                if (!nodeExistante) {
-                    nodeExistante = { name: row[level], path: currentPath, children: [] };
-                    etageActuel.children.push(nodeExistante);
-                }
-                // On passe à l'étage suivant
-                etageActuel = nodeExistante;
+        // Process etage_2 and etage_3 as child nodes of etage_2
+        if (row.etage_2) {
+            if (!etage2Map[row.etage_2]) {
+                etage2Map[row.etage_2] = { name: row.etage_2, path: `${row.etage_2}`, children: [] };
             }
-        });
 
-        // Additionne la valeur de chaque dernier étage
-        etageActuel.value = (etageActuel.value || 0) + val;
-        // On attache l'explication.
-        etageActuel.explication = row.explication;
-    });
-    // Recursively aggregate parent node values from their children.
-    function aggregateValues(node) {
-        if (node.children && node.children.length > 0) {
-        // Sum the children's values.
-        let sum = 0;
-        node.children.forEach(child => {
-            sum += aggregateValues(child);
-        });
-        // If the node already has a value (from direct leaf insertions), add it.
-        node.value = (node.value || 0) + sum;
+            // Add etage_3 as a child of etage_2
+            if (row.etage_3) {
+                let etage3Node = {
+                    name: row.etage_3,
+                    path: `${row.etage_2}/${row.etage_3}`,
+                    value: val,
+                    explication: row.explication
+                };
+                etage2Map[row.etage_2].children.push(etage3Node);
+            }
+
+            // Add the value to etage_2
+            etage2Map[row.etage_2].value = (etage2Map[row.etage_2].value || 0)+ val;
+            etage2Map[row.etage_2].explication = row.explication;
         }
-        return node.value || 0;
-    }
-    
-    aggregateValues(root);
+    });
 
-    if (downloadData) {
-        let jsonStr = JSON.stringify(root, null, 2);
-        let blob = new Blob([jsonStr], { type: "application/json" });
-        let url = URL.createObjectURL(blob);
-        let a = document.createElement("a");
-        a.href = url;
-        a.download = "convertedData.json";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    }
+    // Convert the final data structure
+    let finalData = Object.values(etage2Map);
 
-    return root;
-}//#endregion
+    // Return the final data with etage_2 as the top-level and etage_3 as its children
+    return finalData;
+}
+//#endregion
