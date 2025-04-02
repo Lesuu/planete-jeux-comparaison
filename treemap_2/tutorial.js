@@ -13,9 +13,9 @@ export function tutorial() {
     const dialogs = [
         { text: getTranslation("INDICATEURS"),      bubbleSize: {x: 13, y: 9}},
         //{ text: getTranslation("INDICATEURS 2"),      bubbleSize: {x: 15, y: 15}},
-        { text: getTranslation("SCENARIOS JV"),     bubbleSize: {x: 9, y: 8}},
-        { text : getTranslation("SCENARIOS JDS"),   bubbleSize: {x: 4, y: 5}},
-        { text : getTranslation("CASE"),            bubbleSize: {x: 5, y: 12}}
+        { text: getTranslation("SCENARIOS JV"),     bubbleSize: {x: 9, y: 7}},
+        { text : getTranslation("SCENARIOS JDS"),   bubbleSize: {x: 5, y: 5}},
+        { text : getTranslation("CASE"),            bubbleSize: {x: 5, y: 14.5}}
     ];
     curDialog = 0;
     isTalking = false;

@@ -851,7 +851,7 @@ async function buttonPressed(button, icon, choix, catégorie){
     button.sprite = "button_pressed";
     icon.pos = vec2(icon.pos.x + 2, icon.pos.y + 2);
     await generateTreemap(plateforme_choisie, indicateur_choisi, contribution_choisie, etage1_choisi, zoom);
-    callBetty()
+    //callBetty()
 }
 //#endregion
 

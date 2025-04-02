@@ -27,10 +27,10 @@ const histo_jds_data = [
 
 export function slideshow(){
     const dialogs = [
-        { text: getTranslation("INTRO"),            bubbleSize: {x: 10, y: 6}},
-        { text: getTranslation("ACV"),              bubbleSize: {x: 10, y: 12}},
-        { text : getTranslation("HISTOGRAMME JV"),  bubbleSize: {x: 5, y: 6.2}},
-        { text : getTranslation("HISTOGRAMME JDS"), bubbleSize: {x: 5, y: 6.2}}
+        { text: getTranslation("INTRO"),            bubbleSize: {x: 9.2, y: 4}},
+        { text: getTranslation("ACV"),              bubbleSize: {x: 8, y: 9}},
+        { text : getTranslation("HISTOGRAMME JV"),  bubbleSize: {x: 6, y: 7.5}},
+        { text : getTranslation("HISTOGRAMME JDS"), bubbleSize: {x: 5, y: 5.5}}
     ];
     curDialog = 0;
     isTalking = false;
