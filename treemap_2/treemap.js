@@ -7,7 +7,6 @@ import { setCurrentTreemapExplanation } from "./global.js";
 export let etage1_jv = []
 export let etage1_jds = []
 
-
 export function listEtages() {
     const lien_fr = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2RjJYuns3gy3P3p45n8_pm8yqqDCWqHfVON3xswfWfHk3vLgpdP6YhbIO/pub?gid=74008056&single=true&output=csv';
     const lien_eng = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2RjJYuns3gy3P3p45n8_pm8yqqDCWqHfVON3xswfWfHk3vLgpdP6YhbIO/pub?gid=895638476&single=true&output=csv';
@@ -109,6 +108,16 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
                     name: 'Treemap',
                     type: 'treemap',
                     visibleMin: 0.0001,
+                    breadcrumb: {
+                        // Ajuste la taille du path en bas du treemap
+                        height: 40,
+                        itemStyle: {
+                            textStyle: {
+                                fontSize: 32,
+                                fontFamily: 'm6x11'
+                            },
+                        },
+                    },
                     label: {
                         // Texte à l'intérieur des cases
                         show: true,

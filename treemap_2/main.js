@@ -2,7 +2,7 @@
 import { generateTreemap, etage1_jds, etage1_jv, listEtages } from "./treemap.js";
 import { loadAssets, importText } from "./initialize.js";
 import { createWindow, windowsTreemapContainer } from "./windowMaker.js";
-import { callBetty, initializeBetty } from "./betty.js";
+import { callBetty, initializeBetty, iButtons } from "./betty.js";
 import { slideshow } from "./slideshow.js";
 import { tutorial } from "./tutorial.js";
 
@@ -28,12 +28,6 @@ kaplay({
     stretch:false,
     canvas: document.querySelector("#game"),
 });
-
-// // etage1
-// listEtages().then(({ etage1_jv, etage1_jds }) => {
-// }).catch(err => {
-//     console.error("Error fetching etage1 data:", err);
-// });
 
 // Charge les assets
 await loadAssets();
@@ -224,7 +218,7 @@ scene("titleScreen", async () => {
         opacity(0)
     ])
     clickArea.onClick(() => {
-        go("slideshow")
+        go("treemap")
     })
 })
 
@@ -331,7 +325,7 @@ function treemapButtons(){
         }),
         pos(-4, -4),
         anchor("top")
-    ])
+    ]);
     let changclim_button = add([
         sprite("button"),
         pos(194, 540),
@@ -432,81 +426,6 @@ function treemapButtons(){
         metaux_button.color = rgb(255, 255, 255)
         particules_fines_button.color = rgb(0, 230, 0)
     });
-    //#endregion
-    //#region Contributions:
-    // Label
-    // let offset = 100
-    // let contributions_label_shadow = add([
-    //     text(getTranslation("CONTRIBUTIONS LABEL"), {
-    //         font: "pixel",
-    //         size: 45,
-    //     }),
-    //     pos(1650 - offset + 4, 834 + 4),
-    //     color(0,0,0),
-    //     anchor("top"),
-    //     opacity(0.4)
-    // ])
-    // contributions_label_shadow.add([
-    //     text(getTranslation("CONTRIBUTIONS LABEL"), {
-    //         font: "pixel",
-    //         size: 45,
-    //     }),
-    //     pos(-4, -4),
-    //     anchor("top")
-    // ])
-    // // Par étape de cycle de vie
-    // let cycle_de_vie_button = add([
-    //     sprite("button"),
-    //     pos(1564 - offset, 940),
-    //     area(),
-    //     anchor("center"),
-    //     scale(1.3)
-    // ])
-    // let cycle_de_vie_button_icon = cycle_de_vie_button.add([
-    //     sprite("cycle_de_vie"),
-    //     anchor("center"),
-    //     pos(0, 0),
-    //     scale(1/1.3)
-    // ])
-    // cycle_de_vie_button.add([
-    //     text(getTranslation("CYCLE DE VIE"), {
-    //         font: "pixel",
-    //         size: 18,
-    //         width: 100,
-    //         align: "center"
-    //     }),
-    //     anchor("top"),
-    //     pos(0,43)
-    // ])
-    // cycle_de_vie_button.onClick(() => {
-    //     buttonPressed(cycle_de_vie_button, cycle_de_vie_button_icon, cycleDeVie, "contribution");
-    // });
-    // // Par équipement
-    // let par_equipement_button = add([
-    //     sprite("button"),
-    //     pos(1734 - offset, 940),
-    //     area(),
-    //     anchor("center"),
-    //     scale(1.3)
-    // ])
-    // let par_equipement_button_icon = par_equipement_button.add([
-    //     sprite("par_equipement"),
-    //     anchor("center"),
-    //     pos(0, 0),
-    //     scale(1/1.3)
-    // ])
-    // par_equipement_button.add([
-    //     text(getTranslation("PAR EQUIPEMENT"), {
-    //         font: "pixel",
-    //         size: 18,
-    //     }),
-    //     anchor("top"),
-    //     pos(0,43)
-    // ])
-    // par_equipement_button.onClick(() => {
-    //     buttonPressed(par_equipement_button, par_equipement_button_icon, parEquipement, "contribution");
-    // });
-
     onMouseRelease(() => {
         if (current_button_pressed){
             current_button_pressed.sprite = "button";
@@ -536,7 +455,8 @@ function treemapButtons(){
         }),
         pos(-4, -4),
         anchor("top"),
-    ])
+    ]);
+    iButtons()
 }
 
 //#region Scénarios:
@@ -652,36 +572,6 @@ function scenarioJvButtons(){
         pos(0,43),
         "vg_buttons"
     ])
-    // Cloud
-    // let cloud_button = add([
-    //     sprite("button"),
-    //     pos(1230 + offset, 940),
-    //     area(),
-    //     anchor("center"),
-    //     color(),
-    //     scale(1.3),
-    //     "vg_buttons"
-    // ])
-    // let cloud_button_icon = cloud_button.add([
-    //     sprite("cloud"),
-    //     anchor("center"),
-    //     pos(0, 0),
-    //     scale(1/1.3),
-    //     "vg_buttons"
-    // ])
-    // cloud_button.add([
-    //     text(getTranslation("CLOUD"), {
-    //         font: "pixel",
-    //         size: 18,
-    //     }),
-    //     anchor("top"),
-    //     pos(0,43),
-    //     "vg_buttons"
-    // ]);
-
-    // cloud_button.onClick(() => {
-    //     buttonPressed(cloud_button, cloud_button_icon, cloudConsole, "etage1");
-    // });
     portable_button.onClick(() => {
         buttonPressed(portable_button, portable_button_icon, jouerSurPortable, "etage1");
         portable_button.color = rgb(0, 230, 0)
@@ -851,7 +741,7 @@ async function buttonPressed(button, icon, choix, catégorie){
     button.sprite = "button_pressed";
     icon.pos = vec2(icon.pos.x + 2, icon.pos.y + 2);
     await generateTreemap(plateforme_choisie, indicateur_choisi, contribution_choisie, etage1_choisi, zoom);
-    //callBetty()
+    callBetty()
 }
 //#endregion
 

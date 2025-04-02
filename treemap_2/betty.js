@@ -1,4 +1,5 @@
 import { currentTreemapExplanation } from "./global.js"
+import { getTranslation } from "./main.js"
 
 let bettyEngaged = false
 let betty
@@ -10,6 +11,8 @@ let bettyPeaking = false
 let nothingToSay = false
 let curTween;
 let canJump = false
+let infoBubble = false
+let isTalking = false
 
 export function initializeBetty() {
     bettyEngaged = false;
@@ -41,7 +44,7 @@ function createTreemapOverlay() {
 
 export function callBetty() {
     let treemapContainer = document.getElementById("treemapContainer")
-    let isTalking = false
+    isTalking = false
     if (currentTreemapExplanation == ""){
         nothingToSay = true
     } else{
@@ -50,7 +53,7 @@ export function callBetty() {
     if (nothingToSay) return
     bettyAppears()
     betty.onClick(() => {
-        if (isTalking||nothingToSay)return
+        if (isTalking||nothingToSay||infoBubble)return
         if (!bettyEngaged){
             betty_highlight.opacity = 0
             tween(
@@ -63,7 +66,6 @@ export function callBetty() {
                 },
                 easings.easeInOutQuad
             )
-            wait(() => console.log(betty.pos))
             if (curTween) {
                 curTween.cancel(); 
                 betty.angle = -20;
@@ -86,12 +88,12 @@ export function callBetty() {
         let treemapOverlay = createTreemapOverlay()
         isTalking = true
         wait(timer, () => {
-            bettyExplication(betty) 
+            bettyExplication(betty, currentTreemapExplanation) 
         })  
     })
     document.addEventListener('mousedown', function onClicked(){
         if (!isTalking) return
-        if (speechBubble){
+        if (speechBubble !== 'undefined'){
             speechBubble.remove()
         }
         betty.play("idle")
@@ -175,7 +177,6 @@ function bettyAppears(){
         betty_highlight.angle = betty.angle;
     });
     betty.onCollide("platform", () => {
-        console.log("collide")
         canJump = true;
     });
     betty_highlight.flipX = true
@@ -190,7 +191,6 @@ function bettyAppears(){
             },
             easings.easeInOutQuad
         )
-        console.log(betty.angle)
 
         curTween = tween(
             betty.angle,
@@ -205,7 +205,7 @@ function bettyAppears(){
     })
 }
 
-async function bettyExplication(betty){
+async function bettyExplication(betty, text){
     betty.play("talk")
     betty_highlight.opacity = 0
     // Création de la bulle
@@ -216,6 +216,60 @@ async function bettyExplication(betty){
     // Création du paragraphe
     let speechText = document.createElement("p")
     speechText.id = "speechText"
-    speechText.innerHTML = currentTreemapExplanation
+    speechText.innerHTML = text
     speechBubble.appendChild(speechText)
+}
+
+export function iButtons(){
+    let info_shadow = add([
+        sprite("info"),
+        // 194: position du label indicateurs
+        // 113: offset par rapport au label
+        // 1: offset de l'ombre
+        pos(194 + 113 + 1, 390 + 11 + 1),
+        scale(2.1),
+        color(0,0,0),
+        opacity(0.4),
+
+    ]);
+    let indicateurs_info = info_shadow.add([
+        sprite("info"),
+        pos(-1, -1),
+        area()
+    ]);
+    let speechBubbleInfo
+    indicateurs_info.onClick(async () => {
+        if (isTalking) return
+
+    });
+
+    let scenario_info_shadow = add([
+        sprite("info"),
+        pos(1150 + 73 + 1, 836 + 7 + 1),
+        scale(1.7),
+        color(0,0,0),
+        opacity(0.4),
+    ])
+    let scenario_info = scenario_info_shadow.add([
+        sprite("info"),
+        pos(-1, -1),
+        area()
+    ]);
+
+    document.addEventListener('mousedown', function onClicked(){
+        console.log(infoBubble)
+        if (!infoBubble) return
+        if (speechBubbleInfo){
+            speechBubbleInfo.remove()
+        }
+        betty.play("idle")
+        betty_highlight.play("white")
+        document.getElementById("treemapOverlay").remove()
+        backgroundRectangle.opacity = 0
+        //document.removeEventListener('mousedown', onClicked)
+        treemapContainer.style.pointerEvents = "auto"
+        wait(0.1, () => {
+            infoBubble = false
+        })
+    })
 }

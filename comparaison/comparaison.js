@@ -419,8 +419,8 @@ async function main() {
 
         screen.onClick(() => {
             if (loading) return
-            //go("chooseCategory")
-            go("finalResults", {score: 0})
+            go("chooseCategory")
+            //go("finalResults", {score: 0})
         });
         
     })
@@ -559,11 +559,11 @@ async function main() {
 
         // Changement de la texture quand on survole les icones...
         jv_icon.onHover(() => {
-            jv_icon.sprite = "jv_color"
+            //jv_icon.sprite = "jv_color"
             jv_hover = true
         })
         jds_icon.onHover(() => {
-            jds_icon.sprite = "jds_color"
+            //jds_icon.sprite = "jds_color"
             jds_hover = true
         })
 
@@ -579,8 +579,8 @@ async function main() {
 
         function bothHover(){
             if (!both_hover){
-                jv_both.sprite = "jv_color"
-                jds_both.sprite = "jds_color"
+                //jv_both.sprite = "jv_color"
+                //jds_both.sprite = "jds_color"
                 both_hover = true
             } else if (both_hover){
                 jv_both.sprite = "jv_icon"
@@ -614,6 +614,7 @@ async function main() {
         }
 
         await jv_icon.onClick(() => {
+            jv_icon.sprite = "jv_color"
             onMouseRelease(async ()=>{
                 if (loading) return
                 if (jv_hover){
@@ -624,6 +625,7 @@ async function main() {
             })
         })
         await jds_icon.onClick(() => {
+            jds_icon.sprite = "jds_color"
             onMouseRelease(async ()=>{
                 if (loading) return
                 if (jds_hover){
@@ -634,6 +636,8 @@ async function main() {
             })
         })
         await both_area.onClick(() => {
+            jv_both.sprite = "jv_color"
+            jds_both.sprite = "jds_color"
             onMouseRelease(async () => {
                 if (loading) return
                 if (both_hover){

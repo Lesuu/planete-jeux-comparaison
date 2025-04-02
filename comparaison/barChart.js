@@ -8,11 +8,12 @@ let continue_label
 let startedTalking = false;
 let betty, bulle;
 let sequence = 0;
+let terminer_scale 
 
 // Version du jeu (normal, bus, interne_bus) pour le bouton final
-const version = "normal"
+const version = "bus"
 
-const lien1 = "https://museedujeu.ch/"
+const lien1 = "https://forms.gle/GMwGXPwwfqtjQT1p9"
 const lien2 = "https://museedujeu.ch/activites"
 
 export function createBarChart(langue, score){
@@ -211,11 +212,33 @@ export function createBarChart(langue, score){
             });
             switch(langue){
                 case "fr": 
-                    terminer_label = "TERMINER";
+                    switch(version){
+                        case "bus":
+                            terminer_label = "GAGNE TON TICKET POUR PLANÈTE JEUX !";
+                            terminer_scale = vec2(6, 4.5)
+                            break;
+                        case "interne_bus":
+                            terminer_label = "GAGNE TON TICKET POUR PLANÈTE JEUX !";
+                            break;
+                        case "normal":
+                            terminer_label = "TERMINER";
+                            terminer_scale = vec2(3.5, 3.5)
+                            break;
+                    }
                     continue_label = "Appuie pour continuer"
                     break;
                 case "eng": 
-                    terminer_label = "END"; 
+                    switch(version){
+                        case "bus":
+                            terminer_label = "WIN YOUR ENTRY FOR PLANÈTE JEUX!";
+                            break;
+                        case "interne_bus":
+                            terminer_label = "WIN YOUR ENTRY FOR PLANÈTE JEUX!";
+                            break;
+                        case "normal":
+                            terminer_label = "FINISH";
+                            break;
+                    }
                     continue_label = "Press to continue"
                     break;
             }
@@ -318,7 +341,6 @@ export function createBarChart(langue, score){
                     },
                     easings.easeInQuad
                 )
-                console.log(terminer_label)
                 bars.push({bars: finalBar, text: finalShadow})  
             })   
             sequence += 1
@@ -419,7 +441,7 @@ export function createBarChart(langue, score){
             let suivant_bouton = add([
                 sprite("button"),
                 pos(width()/2, height()/1.1),
-                scale(3.5),  
+                scale(terminer_scale),  
                 anchor("center"),
                 area(),
             ])
@@ -429,7 +451,8 @@ export function createBarChart(langue, score){
                     font: "pixel",
                     size: 54,
                     align: "center",
-                    letterSpacing : 6
+                    letterSpacing : 6,
+                    width: 500,
                 }),
                 pos(suivant_bouton.pos),
                 anchor("center"),
@@ -442,7 +465,8 @@ export function createBarChart(langue, score){
                     font: "pixel",
                     size: 54,
                     align: "center",
-                    letterSpacing : 6
+                    letterSpacing : 6,
+                    width: 500
                 }),
                 color(93, 27, 27),
                 pos(suivant_bouton.pos.x + 5, suivant_bouton.pos.y + 5),
