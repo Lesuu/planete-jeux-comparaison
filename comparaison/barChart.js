@@ -24,14 +24,14 @@ export function createBarChart(langue, score){
     startedTalking = false
     // Données du bar chart
     const data = [
-        { label: "1 ordinateur portable",               carbon: 193,  impact: 48.47 },
-       // { label: "Manger un steak de boeuf",            carbon: 130,  impact: 32.65 },
-        { label: "1 téléphone",                         carbon: 85.9, impact: 21.57 },
-        { label: "22 heures de jeu de société expert",  carbon: 4.08, impact: 1.02 },
-        { label: "22 heures de jeu vidéo sur console",  carbon: 3.982, impact: 1 },
+        { label: getTranslation("LEGENDE HISTOGRAMME 3"),               carbon: 193,  impact: 48.47 },
+     // { label: "Manger un steak de boeuf",            carbon: 130,  impact: 32.65 },
+        { label: getTranslation("LEGENDE HISTOGRAMME 4"),                         carbon: 85.9, impact: 21.57 },
+        { label: getTranslation("LEGENDE HISTOGRAMME 5"),  carbon: 4.08, impact: 1.02 },
+        { label: getTranslation("LEGENDE HISTOGRAMME 6"),  carbon: 3.982, impact: 1 },
     ];
-    const finalData = { label: "1 aller-retour Genève-New York en avion", carbon: 1770, impact: 444.5 }
-    const finalFinalData = { label: "Consommation annuelle de steak de boeuf pour 1 personne", carbon : 9880, impact: 2481}
+    const finalData = { label: getTranslation("LEGENDE HISTOGRAMME 2"), carbon: 1770, impact: 444.5 }
+    const finalFinalData = { label: getTranslation("LEGENDE HISTOGRAMME 1"), carbon : 9880, impact: 2481}
 
     let done = false
     let done2 = false
@@ -214,11 +214,9 @@ export function createBarChart(langue, score){
                 case "fr": 
                     switch(version){
                         case "bus":
-                            terminer_label = "GAGNE TON TICKET POUR PLANÈTE JEUX !";
-                            terminer_scale = vec2(6, 4.5)
-                            break;
                         case "interne_bus":
                             terminer_label = "GAGNE TON TICKET POUR PLANÈTE JEUX !";
+                            terminer_scale = vec2(6, 4.5)
                             break;
                         case "normal":
                             terminer_label = "TERMINER";
@@ -230,13 +228,13 @@ export function createBarChart(langue, score){
                 case "eng": 
                     switch(version){
                         case "bus":
-                            terminer_label = "WIN YOUR ENTRY FOR PLANÈTE JEUX!";
-                            break;
                         case "interne_bus":
-                            terminer_label = "WIN YOUR ENTRY FOR PLANÈTE JEUX!";
+                            terminer_label = "WIN AN ENTRY FOR PLANÈTE JEUX!";
+                            terminer_scale = vec2(6, 4.5)
                             break;
                         case "normal":
                             terminer_label = "FINISH";
+                            terminer_scale = vec2(3.5, 3.5)
                             break;
                     }
                     continue_label = "Press to continue"
