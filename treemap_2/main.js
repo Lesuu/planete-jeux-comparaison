@@ -86,40 +86,44 @@ function languageChange(){
     etage1_choisi = jouerSurConsole;
 }
 // Initialization des langues
-languageChange()
-
+languageChange();
+function createLanguageButtons(){
+      // Boutons de la fenêtre windows
+    if (!restart_button){
+        restart_button = add([
+            sprite("restart"),
+            pos(width() - 55, 10),
+            scale(2),
+            area(/*{ shape: new Rect(vec2(-16, 10), 25, 25 ) }*/),
+            stay(),
+            "window"
+        ]);
+    } 
+    if (getSceneName() == "titleScreen" || "treemap"){
+        eng_button = add([
+            sprite("en"),
+            pos(width() - 105, 10),
+            scale(2),
+            area(/*{ shape: new Rect(vec2(-16, 8), 25, 25 ) }*/),
+            "window"
+        ]);
+        fr_button = add([
+            sprite("fr"),
+            pos(width() - 155, 10),
+            scale(2),
+            area(/*{ shape: new Rect(vec2(-16, 0), 25, 25 ) }*/),
+            "window"
+        ]);
+    }
+};
 //#endregion
 //#region Menu principal
 scene("titleScreen", async () => {
     // Fenêtre windows autour de l'écran:
     createWindow();
-    // Boutons de la fenêtre windows
-    restart_button = add([
-        sprite("restart"),
-        pos(width() - 55, 10),
-        scale(2),
-        area(/*{ shape: new Rect(vec2(-16, 10), 25, 25 ) }*/),
-        stay(),
-        "window"
-    ])
-    eng_button = add([
-        sprite("en"),
-        pos(width() - 105, 10),
-        scale(2),
-        area(/*{ shape: new Rect(vec2(-16, 8), 25, 25 ) }*/),
-        stay(),
-        "window"
-    ])
-    fr_button = add([
-        sprite("fr"),
-        pos(width() - 155, 10),
-        scale(2),
-        area(/*{ shape: new Rect(vec2(-16, 0), 25, 25 ) }*/),
-        stay(),
-        "window"
-    ])
+    createLanguageButtons();
     // Fonctionnalité des boutons
-    windowButtons(restart_button, eng_button, fr_button)
+    windowButtons(restart_button, eng_button, fr_button);
    
     // Titre
     let main_shadow = add([
@@ -235,6 +239,7 @@ scene("treemap", async () => {
     // Réinitialise les variables pr la logique de betty
     initializeBetty()
     // Fonction des boutons de la fenêtre windows
+    createLanguageButtons();
     windowButtons(restart_button, eng_button, fr_button)
     windowsTreemapContainer();
     treemapButtons();

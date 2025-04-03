@@ -50,7 +50,6 @@ html, body {
     color: rgb(56, 71, 74);
     font-family: 'm5x7';
     font-size: 54px;
-    text-align: center;
+    white-space: pre-line;
     z-index: 60;
-    /* Optionally, you can add text-shadow or other effects */
   }

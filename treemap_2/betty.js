@@ -34,6 +34,7 @@ export function initializeBetty() {
         treemapContainer.style.pointerEvents = "auto"
         wait(0.1, () => {
             isTalking = false
+            infoBubble = false
         })
     })
 }
@@ -159,11 +160,19 @@ async function bettyExplication(betty, text){
     // Création de la bulle
     let speechBubble = document.createElement("div")
     speechBubble.id = "speechBubble"
+    if(infoBubble){
+        speechBubble.style.scale = 1.2
+    }
     await document.body.appendChild(speechBubble)
 
     // Création du paragraphe
     let speechText = document.createElement("p")
     speechText.id = "speechText"
+    if(infoBubble){
+        speechText.style.scale = 0.8
+        speechText.style.top = "50px";
+        speechText.style.left = "30px";
+    }
     speechText.innerHTML = text
     speechBubble.appendChild(speechText)
 }
@@ -238,6 +247,7 @@ export function iButtons(){
 
 async function iClick(texte){
     if (isTalking || infoBubble) return
+    infoBubble = true
     if (bettyEngaged){
         bettyExplication(betty, texte)
         quest_marker.opacity = 0
