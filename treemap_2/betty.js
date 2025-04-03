@@ -245,7 +245,7 @@ async function iClick(texte){
         let treemapOverlay = createTreemapOverlay()
         isTalking = true
     } else if (!bettyEngaged){
-        createBetty()
+        if (!betty) createBetty()
         betty_highlight.opacity = 0
         quest_marker.opacity = 0
         tween(
@@ -262,6 +262,17 @@ async function iClick(texte){
             curTween.cancel(); 
             betty.angle = -20;
         };
+        if (bettyPeaking){
+            curTween = tween(
+                betty.angle,
+                betty.angle + 20,
+                0.3,
+                (val) => {
+                    betty.angle = val
+                },
+                easings.easeInOutQuad
+            )
+        }
         bettyEngaged = true
         timer = 0
 
