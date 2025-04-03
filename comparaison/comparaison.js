@@ -1204,8 +1204,8 @@ async function main() {
                     })
                     score_effect = add([
                         text(`+${100 * multiplier}!`,{
-                            font: "kaph",
-                            size: 64,
+                            font: "pixeloutline",
+                            size: 100
                         }),
                         color(score_color),
                         pos(mousePos()),
