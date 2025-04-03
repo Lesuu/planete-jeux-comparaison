@@ -127,16 +127,16 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
                             fontSize: 27, 
                             textBorderColor: '#38474a',
                             textBorderWidth: 2,
-                            //fontWeight: 'bold' 
+                            // fontWeight: 'bold' 
                         }
                     },
                     upperLabel: {
                     show: false,
-                    height: 35,
+                    height: 45,
                     // Texte de l'intitulé du treemap
                     textStyle: {
                         fontFamily : 'm6x11',
-                        fontSize: 23,
+                        fontSize: 40,
                         textBorderColor: '#38474a',
                         textBorderWidth: 2,
                         color: '#fff'
