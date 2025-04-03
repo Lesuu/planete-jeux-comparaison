@@ -11,10 +11,10 @@ let sequence = 0;
 let terminer_scale 
 
 // Version du jeu (normal, bus, interne_bus) pour le bouton final
-const version = "bus"
+const version = "normal"
 
 const lien1 = "https://forms.gle/GMwGXPwwfqtjQT1p9"
-const lien2 = "https://museedujeu.ch/activites"
+const lien2 = "https://forms.gle/puxiijgLkFG1YTi59"
 
 export function createBarChart(langue, score){
     // reset les variables

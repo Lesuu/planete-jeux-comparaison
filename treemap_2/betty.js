@@ -226,8 +226,8 @@ export function iButtons(){
         // 194: position du label indicateurs
         // 113: offset par rapport au label
         // 1: offset de l'ombre
-        pos(194 + 113 + 1, 390 + 11 + 1),
-        scale(2.1),
+        pos(194 + 113 + 1, 390 + 18 + 1),
+        scale(1.9),
         color(0,0,0),
         opacity(0.4),
 
@@ -240,13 +240,19 @@ export function iButtons(){
     let speechBubbleInfo
     indicateurs_info.onClick(async () => {
         if (isTalking) return
-
+        if(bettyEngaged){
+            infoBubble = true
+            betty.play("talk")
+            backgroundRectangle.opacity = 0.5
+            createTreemapOverlay()
+            
+        }
     });
 
     let scenario_info_shadow = add([
         sprite("info"),
-        pos(1150 + 73 + 1, 836 + 7 + 1),
-        scale(1.7),
+        pos(1090 + 78 + 1, 836 + 12 + 1),
+        scale(1.5),
         color(0,0,0),
         opacity(0.4),
     ])
@@ -257,8 +263,8 @@ export function iButtons(){
     ]);
 
     document.addEventListener('mousedown', function onClicked(){
-        console.log(infoBubble)
-        if (!infoBubble) return
+        console.log("bulle:", infoBubble, "bettyEngaged:", bettyEngaged)
+        if (!infoBubble || !bettyEngaged) return
         if (speechBubbleInfo){
             speechBubbleInfo.remove()
         }
