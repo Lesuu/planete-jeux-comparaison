@@ -264,6 +264,8 @@ function treemapButtons(){
         text(getTranslation("JEU VIDEO"), {
             font: "pixel",
             size: 18,
+            width: 50,
+            align: "center"
         }),
         anchor("top"),
         pos(0,43)
@@ -286,6 +288,8 @@ function treemapButtons(){
         text(getTranslation("JEU DE SOCIETE"), {
             font: "pixel",
             size: 18,
+            width: 50,
+            align: "center"
         }),
         anchor("top"),
         pos(0,43)
@@ -344,7 +348,9 @@ function treemapButtons(){
     changclim_button.add([
         text(getTranslation("CHANGEMENT CLIMATIQUE"), {
             font: "pixel",
-            size: 18,
+            size: 20,
+            width: 200,
+            align: "center"
         }),
         anchor("top"),
         pos(0,43)
@@ -368,7 +374,9 @@ function treemapButtons(){
     metaux_button.add([
         text(getTranslation("METAUX"), {
             font: "pixel",
-            size: 18,
+            size: 20,
+            width: 200,
+            align: "center"
         }),
         anchor("top"),
         pos(0,43)
@@ -403,7 +411,9 @@ function treemapButtons(){
     particules_fines_button.add([
         text(getTranslation("PARTICULES FINES"), {
             font: "pixel",
-            size: 18,
+            size: 20,
+            width: 200,
+            align: "center"
         }),
         anchor("top"),
         pos(0,43)
@@ -465,6 +475,7 @@ function treemapButtons(){
 function scenarioJvButtons(){
     let offset = 285
     destroyAll("bg_buttons")
+    // telephone
     let telephone_button = add([
         sprite("button"),
         pos(550 + offset, 940),
@@ -485,6 +496,8 @@ function scenarioJvButtons(){
         text(getTranslation("TELEPHONE"), {
             font: "pixel",
             size: 18,
+            width: 100,
+            align: "center"
         }),
         anchor("top"),
         pos(0,43),
@@ -539,7 +552,7 @@ function scenarioJvButtons(){
         text(getTranslation("FIXE"), {
             font: "pixel",
             size: 18,
-            width: 100,
+            width: 90,
             align: "center"
         }),
         anchor("top"),
