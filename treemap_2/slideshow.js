@@ -38,11 +38,6 @@ export function slideshow(){
     curDialog = 0;
     isTalking = false;
 
-    // retour = add([
-    //     sprite("button"),
-    //     pos
-    // ])
-
     // Ajout de betty
     betty = add([
         sprite("betty", {anim : "talk"}),

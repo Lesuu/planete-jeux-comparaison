@@ -2,13 +2,14 @@
 import { generateTreemap, etage1_jds, etage1_jv, listEtages } from "./treemap.js";
 import { loadAssets, importText } from "./initialize.js";
 import { createWindow, windowsTreemapContainer } from "./windowMaker.js";
-import { callBetty, initializeBetty, iButtons } from "./betty.js";
+import { callBetty, initializeBetty, iButtons, isBettyTalking } from "./betty.js";
 import { slideshow } from "./slideshow.js";
 import { tutorial } from "./tutorial.js";
 
 let plateforme_choisie, indicateur_choisi, contribution_choisie, etage1_choisi;
 let current_button_pressed = null;
 let current_icon = null;
+let isTalking = false;
 
 // Constantes:
 const zoom = true; // Est-ce qu'on active le zoom/roam dans le treemap ou non
@@ -302,7 +303,11 @@ function treemapButtons(){
         anchor("top"),
         pos(0,43)
     ])
+    onUpdate(() => {
+        isTalking = isBettyTalking()
+    })
     bg_button.onClick(() => {
+        if (isTalking) return;
         scenarioJdsButtons();
         buttonPressed(bg_button, bg_button_icon, jeuSociete, "plateforme");
         bg_button_icon.sprite = "bg_color";
@@ -311,6 +316,7 @@ function treemapButtons(){
         vg_button.color = rgb(255, 255, 255)
     });
     vg_button.onClick(() => {
+        if (isTalking) return;
         scenarioJvButtons();
         buttonPressed(vg_button, vg_button_icon, jeuVideo, "plateforme");
         vg_button_icon.sprite = "vg_color";
@@ -427,18 +433,21 @@ function treemapButtons(){
         pos(0,43)
     ])
     changclim_button.onClick(() => {
+        if (isTalking) return;
         buttonPressed(changclim_button, changclim_button_icon, changementClimatique, "indicateur");
         changclim_button.color = rgb(0,230,0)
         metaux_button.color = rgb(255, 255, 255)
         particules_fines_button.color = rgb(255, 255, 255)
     });
     metaux_button.onClick(() => {
+        if (isTalking) return;
         buttonPressed(metaux_button, metaux_button_icon, metaux, "indicateur");
         changclim_button.color = rgb(255, 255, 255)
         metaux_button.color = rgb(0, 230, 0)
         particules_fines_button.color = rgb(255, 255, 255)
     });
     particules_fines_button.onClick(() => {
+        if (isTalking) return;
         buttonPressed(particules_fines_button, particules_fines_button_icon, particulesFines, "indicateur");
         changclim_button.color = rgb(255, 255, 255)
         metaux_button.color = rgb(255, 255, 255)
@@ -594,6 +603,7 @@ function scenarioJvButtons(){
         "vg_buttons"
     ])
     portable_button.onClick(() => {
+        if (isTalking) return;
         buttonPressed(portable_button, portable_button_icon, jouerSurPortable, "etage1");
         portable_button.color = rgb(0, 230, 0)
         telephone_button.color = rgb(255,255,255)
@@ -601,6 +611,7 @@ function scenarioJvButtons(){
         fixe_button.color = rgb(255,255,255)
     });
     telephone_button.onClick(() => {
+        if (isTalking) return;
         buttonPressed(telephone_button, telephone_button_icon, jouerSurTelephone, "etage1");
         portable_button.color = rgb(255,255,255)
         telephone_button.color = rgb(0, 230, 0)
@@ -608,6 +619,7 @@ function scenarioJvButtons(){
         fixe_button.color = rgb(255,255,255)
     });
     console_button.onClick(() => {
+        if (isTalking) return;
         buttonPressed(console_button, console_button_icon, jouerSurConsole, "etage1");
         portable_button.color = rgb(255,255,255)
         telephone_button.color = rgb(255,255,255)
@@ -615,6 +627,7 @@ function scenarioJvButtons(){
         fixe_button.color = rgb(255,255,255)
     });
     fixe_button.onClick(() => {
+        if (isTalking) return;
         buttonPressed(fixe_button, fixe_button_icon, jouerSurFixe, "etage1");
         portable_button.color = rgb(255,255,255)
         telephone_button.color = rgb(255,255,255)
@@ -707,6 +720,7 @@ function scenarioJdsButtons(){
     ])
     // Fonction des boutons
     petit_jeu_button.onClick(() => {
+        if (isTalking) return;
         buttonPressed(petit_jeu_button, petit_jeu_button_icon, jouerPetitJeu, "etage1");
         petit_jeu_button_icon.sprite = "petit_jeu_full"
         jeu_moyen_button_icon.sprite = "jeu_moyen"
@@ -716,6 +730,7 @@ function scenarioJdsButtons(){
         grand_jeu_button.color = rgb(255,255,255)
     });
     jeu_moyen_button.onClick(() => {
+        if (isTalking) return;
         buttonPressed(jeu_moyen_button, jeu_moyen_button_icon, jouerJeuMoyen, "etage1");
         petit_jeu_button_icon.sprite = "petit_jeu"
         jeu_moyen_button_icon.sprite = "jeu_moyen_full"
@@ -725,6 +740,7 @@ function scenarioJdsButtons(){
         grand_jeu_button.color = rgb(255,255,255)
     });
     grand_jeu_button.onClick(() => {
+        if (isTalking) return;
         buttonPressed(grand_jeu_button, grand_jeu_button_icon, jouerGrandJeu, "etage1");
         petit_jeu_button_icon.sprite = "petit_jeu"
         jeu_moyen_button_icon.sprite = "jeu_moyen"
@@ -770,15 +786,18 @@ async function buttonPressed(button, icon, choix, catégorie){
 function windowButtons(restart, eng, fr){
     let currentScene = getSceneName()
     restart.onClick(()=>{
+        if (isTalking) return;
         location.reload()
     })
     if (currentScene == "titleScreen" || currentScene == "treemap"){
         eng.onClick(()=>{
+            if (isTalking) return;
             langue = "eng"
             languageChange()
             go(currentScene)
         })
         fr.onClick(()=>{
+            if (isTalking) return;
             langue = "fr"
             languageChange()
             go(currentScene)

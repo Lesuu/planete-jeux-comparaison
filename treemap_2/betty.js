@@ -32,6 +32,10 @@ function onClicked(){
     })
 }
 
+export function isBettyTalking() {
+    return isTalking;
+}
+
 export function initializeBetty() {
     document.removeEventListener('mousedown', onClicked);
     bettyEngaged = false;
@@ -311,6 +315,7 @@ function createBetty(){
         color(0, 0, 0),
         opacity(0),
         z(1),
+        area(),
         "betty"
     ])
     betty = add([
