@@ -161,7 +161,8 @@ async function bettyExplication(betty, text){
     let speechBubble = document.createElement("div")
     speechBubble.id = "speechBubble"
     if(infoBubble){
-        speechBubble.style.scale = 1.2
+        speechBubble.style.transform = "scale(1.2)"; 
+        speechBubble.style.transformOrigin = "bottom right";
     }
     await document.body.appendChild(speechBubble)
 
@@ -169,9 +170,9 @@ async function bettyExplication(betty, text){
     let speechText = document.createElement("p")
     speechText.id = "speechText"
     if(infoBubble){
-        speechText.style.scale = 0.8
-        speechText.style.top = "50px";
-        speechText.style.left = "30px";
+        speechText.style.transform = "scale(0.8)";
+        speechText.style.transformOrigin = "top left";
+        speechText.style.width = "110%"
     }
     speechText.innerHTML = text
     speechBubble.appendChild(speechText)

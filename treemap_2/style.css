@@ -43,6 +43,7 @@ html, body {
     z-index: 50;             
     pointer-events: none;   
     image-rendering: pixelated;  
+    transform-origin: center;
 }
 #speechText {
     margin: 40px, 20px, 20px, 20px;
@@ -52,4 +53,5 @@ html, body {
     font-size: 54px;
     white-space: pre-line;
     z-index: 60;
+    transform-origin: center;
   }
