@@ -763,4 +763,13 @@ function windowButtons(restart, eng, fr){
     })
 }
 
+export function currentScenario(){
+    return {
+        plateforme_choisie,
+        indicateur_choisi,
+        contribution_choisie,
+        etage1_choisi
+    }
+}
+
 go("titleScreen");

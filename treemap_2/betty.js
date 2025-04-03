@@ -1,5 +1,5 @@
 import { currentTreemapExplanation } from "./global.js"
-import { getTranslation } from "./main.js"
+import { getTranslation, currentScenario, langue } from "./main.js"
 
 let bettyEngaged = false
 let betty
@@ -14,6 +14,8 @@ let canJump = false
 let infoBubble = false
 let isTalking = false
 
+let jouerSurConsole, jouerSurPortable, jouerSurTelephone, jouerSurFixe, jouerPetitJeu, jouerJeuMoyen, jouerGrandJeu;
+
 export function initializeBetty() {
     bettyEngaged = false;
     bettyPeaking = false;
@@ -23,14 +25,12 @@ export function initializeBetty() {
     document.addEventListener('mousedown', function onClicked(){
         if (!isTalking) return
         if (speechBubble){
-            console.log(speechBubble)
             speechBubble.remove()
         }
         betty.play("idle")
         betty_highlight.play("white")
         document.getElementById("treemapOverlay").remove()
         backgroundRectangle.opacity = 0
-        //document.removeEventListener('mousedown', onClicked)
         treemapContainer.style.pointerEvents = "auto"
         wait(0.1, () => {
             isTalking = false
@@ -127,60 +127,7 @@ function bettyAppears(){
     };
     destroyAll("betty")
     bettyPeaking = true
-    backgroundRectangle = add([
-        rect(width(), height()),
-        pos(0, 0),
-        color(0, 0, 0),
-        opacity(0),
-        z(1),
-        "betty"
-    ])
-    betty = add([
-        sprite("betty", {anim : "idle_active"}),
-        pos(1990, 1020),
-        scale(4),
-        area(),
-        anchor("bot"),
-        rotate(0),
-        move(0),
-        body(),
-        z(2),
-        "betty"
-    ])
-    betty.flipX = true
-    let betty_platform = add([
-        rect(width(), 10),
-        pos(0, 1040),
-        area(),
-        opacity(0),
-        body({isStatic: true}),
-        "platform"
-    ])
-    quest_marker = betty.add([
-        sprite("quest"),
-        pos(0, -45),
-        anchor("bot"),
-        opacity(1),
-        "betty"
-    ])
-    betty_highlight = add([
-        sprite("betty", {anim : "white"}),
-        pos(betty.pos.x, betty.pos.y + 5),
-        scale(4.3),
-        anchor("bot"),
-        z(-5),
-        color(255, 255, 0),
-        opacity(1),
-        "betty"
-    ])
-    onUpdate(() => {
-        betty_highlight.pos = vec2(betty.pos.x, betty.pos.y + 5);
-        betty_highlight.angle = betty.angle;
-    });
-    betty.onCollide("platform", () => {
-        canJump = true;
-    });
-    betty_highlight.flipX = true
+    createBetty()
     wait(0.5, () => {
         tween(
             betty.pos.x,
@@ -238,16 +185,8 @@ export function iButtons(){
         pos(-1, -1),
         area()
     ]);
-    let speechBubbleInfo
     indicateurs_info.onClick(async () => {
-        if (isTalking) return
-        if(bettyEngaged){
-            infoBubble = true
-            betty.play("talk")
-            backgroundRectangle.opacity = 0.5
-            createTreemapOverlay()
-            
-        }
+       iClick(getTranslation("INDICATEURS 2"))
     });
 
     let scenario_info_shadow = add([
@@ -263,20 +202,152 @@ export function iButtons(){
         area()
     ]);
 
-    document.addEventListener('mousedown', function onClicked(){
-        //console.log("bulle:", infoBubble, "bettyEngaged:", bettyEngaged)
-        if (!infoBubble || !bettyEngaged) return
-        if (speechBubbleInfo){
-            speechBubbleInfo.remove()
+    scenario_info.onClick(async () => {
+        languageCheck()
+        let current_scenario = currentScenario()
+        console.log(current_scenario)
+        let infoTexte = getTranslation("CONSOLE 2")
+        switch (current_scenario.etage1_choisi){
+            // JV
+            case jouerSurConsole:
+                infoTexte = getTranslation("CONSOLE 2")
+                break;
+            case jouerSurPortable:
+                infoTexte = getTranslation("ORDI PORTABLE")
+                break;
+            case jouerSurFixe:
+                infoTexte = getTranslation("ORDI FIXE")
+                break;
+            case jouerSurTelephone:
+                infoTexte = getTranslation("TELEPHONE 2")
+                break;
+            // JDS
+            case jouerPetitJeu:
+                infoTexte = getTranslation("PETIT")
+                break;
+            case jouerJeuMoyen:
+                infoTexte = getTranslation("MOYEN")
+                break;
+            case jouerGrandJeu:
+                infoTexte = getTranslation("GRAND")
+                break;
         }
-        betty.play("idle")
-        betty_highlight.play("white")
-        document.getElementById("treemapOverlay").remove()
-        backgroundRectangle.opacity = 0
-        //document.removeEventListener('mousedown', onClicked)
-        treemapContainer.style.pointerEvents = "auto"
-        wait(0.1, () => {
-            infoBubble = false
-        })
-    })
+        iClick(infoTexte)
+    });
+}
+
+async function iClick(texte){
+    if (isTalking || infoBubble) return
+    if (bettyEngaged){
+        bettyExplication(betty, texte)
+        quest_marker.opacity = 0
+        backgroundRectangle.opacity = 0.5
+        let treemapOverlay = createTreemapOverlay()
+        isTalking = true
+    } else if (!bettyEngaged){
+        createBetty()
+        betty_highlight.opacity = 0
+        quest_marker.opacity = 0
+        tween(
+            betty.pos.x,
+            betty.pos.x - 150,
+            0.5,
+            (val) => {
+                betty.pos.x = val
+                // betty_highlight.pos.x = val
+            },
+            easings.easeInOutQuad
+        )
+        if (curTween) {
+            curTween.cancel(); 
+            betty.angle = -20;
+        };
+        bettyEngaged = true
+        timer = 0
+
+        await wait(0.2)
+        bettyExplication(betty, texte)
+        quest_marker.opacity = 0
+        backgroundRectangle.opacity = 0.5
+        let treemapOverlay = createTreemapOverlay()
+        isTalking = true
+    }
+}
+
+
+function createBetty(){
+    backgroundRectangle = add([
+        rect(width(), height()),
+        pos(0, 0),
+        color(0, 0, 0),
+        opacity(0),
+        z(1),
+        "betty"
+    ])
+    betty = add([
+        sprite("betty", {anim : "idle_active"}),
+        pos(1990, 1020),
+        scale(4),
+        area(),
+        anchor("bot"),
+        rotate(0),
+        move(0),
+        body(),
+        z(2),
+        "betty"
+    ])
+    betty.flipX = true
+    let betty_platform = add([
+        rect(width(), 10),
+        pos(0, 1020),
+        area(),
+        opacity(0),
+        body({isStatic: true}),
+        "platform"
+    ])
+    quest_marker = betty.add([
+        sprite("quest"),
+        pos(0, -45),
+        anchor("bot"),
+        opacity(1),
+        "betty"
+    ])
+    betty_highlight = add([
+        sprite("betty", {anim : "white"}),
+        pos(betty.pos.x, betty.pos.y + 5),
+        scale(4.3),
+        anchor("bot"),
+        z(-5),
+        color(255, 255, 0),
+        opacity(1),
+        "betty"
+    ])
+    onUpdate(() => {
+        betty_highlight.pos = vec2(betty.pos.x, betty.pos.y + 5);
+        betty_highlight.angle = betty.angle;
+    });
+    betty.onCollide("platform", () => {
+        canJump = true;
+    });
+    betty_highlight.flipX = true
+}
+
+function languageCheck(){
+if (langue == "fr"){
+    jouerSurConsole = "Jouer sur console";
+    jouerSurPortable = "Jouer sur ordinateur portable";
+    jouerSurTelephone = "Jouer sur téléphone";
+    jouerSurFixe = "Jouer sur ordinateur fixe";
+    jouerPetitJeu = "Petit format";
+    jouerJeuMoyen = "Format moyen";
+    jouerGrandJeu = "Grand format";
+} else if (langue == "eng"){
+    jouerSurConsole = "Console";
+    jouerSurPortable = "Laptop";
+    jouerSurTelephone = "Phone";
+    jouerSurFixe = "Desktop computer";
+    jouerPetitJeu = "Small game";
+    jouerJeuMoyen = "Midsize game";
+    jouerGrandJeu = "Large game";
+}
 }
