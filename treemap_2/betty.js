@@ -19,6 +19,23 @@ export function initializeBetty() {
     bettyPeaking = false;
     nothingToSay = false;
     timer = 0.5;
+
+    document.addEventListener('mousedown', function onClicked(){
+        if (!isTalking) return
+        if (speechBubble){
+            console.log(speechBubble)
+            speechBubble.remove()
+        }
+        betty.play("idle")
+        betty_highlight.play("white")
+        document.getElementById("treemapOverlay").remove()
+        backgroundRectangle.opacity = 0
+        //document.removeEventListener('mousedown', onClicked)
+        treemapContainer.style.pointerEvents = "auto"
+        wait(0.1, () => {
+            isTalking = false
+        })
+    })
 }
 
 function createTreemapOverlay() {
@@ -90,23 +107,7 @@ export function callBetty() {
         wait(timer, () => {
             bettyExplication(betty, currentTreemapExplanation) 
         })  
-    })
-    document.addEventListener('mousedown', function onClicked(){
-        if (!isTalking) return
-        if (speechBubble !== 'undefined'){
-            speechBubble.remove()
-        }
-        betty.play("idle")
-        betty_highlight.play("white")
-        document.getElementById("treemapOverlay").remove()
-        backgroundRectangle.opacity = 0
-        //document.removeEventListener('mousedown', onClicked)
-        treemapContainer.style.pointerEvents = "auto"
-        wait(0.1, () => {
-            isTalking = false
-        })
-    })
-    
+    })    
 }
 
 function bettyAppears(){
@@ -263,7 +264,7 @@ export function iButtons(){
     ]);
 
     document.addEventListener('mousedown', function onClicked(){
-        console.log("bulle:", infoBubble, "bettyEngaged:", bettyEngaged)
+        //console.log("bulle:", infoBubble, "bettyEngaged:", bettyEngaged)
         if (!infoBubble || !bettyEngaged) return
         if (speechBubbleInfo){
             speechBubbleInfo.remove()

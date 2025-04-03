@@ -64,6 +64,7 @@ async function main() {
     let eng_button
     let fr_button
     let loading = false
+    let canJump = true
 
     // Constantes: détermine le nombre de questions & lesquelles sont scriptées.
     const nbr_questions = 10
@@ -774,6 +775,7 @@ async function main() {
             scale(scaleValue*2),
             anchor("bot"),
             z(90),
+            body(),
             area(31*scaleValue, 200*scaleValue),
             "betty"
         ])
@@ -786,7 +788,28 @@ async function main() {
             anchor("center"),
             z(80)
         ])
+        let betty_platform = add([
+            rect(width(), 10),
+            pos(0, 930),
+            area(),
+            body({isStatic: true}),
+            opacity(0),
+            "platform"
+        ])
         betty.flipX = true
+
+        // Le highlight suit tjrs betty
+        onUpdate(() => {
+            betty_highlight.pos = vec2(betty.pos.x, betty.pos.y - 91);
+            betty_shadow.pos = vec2(betty.pos.x, betty.pos.y)
+            info_shadow.pos = vec2(betty.pos.x + 1.5, betty.pos.y - 240 + 1.5)
+        });
+        // Logique pour le saut
+        setGravity(1200)
+        betty.onCollide("platform", () => {
+            canJump = true;
+        });
+
         // Star emitter
         // Initialize a timer variable
         let starTimer = 0;
@@ -808,7 +831,7 @@ async function main() {
                         move(choose([LEFT, RIGHT]), rand(60, 240)),
                         "betty"
                     ]);
-                    star.jump(rand(320, 640));
+                    star.jump(rand(480, 820));
                 }
             }
         });
@@ -1197,7 +1220,6 @@ async function main() {
                     ])
 
                     // Effet de saut pour le +100
-                    setGravity(800)
                     score_effect.jump(rand(400, 440))
 
                     // Effet de couleur pour le +300
@@ -1629,6 +1651,10 @@ async function main() {
             betty_info.opacity = 1
             info_shadow.opacity = 0.4
             betty_highlight.opacity = 1
+            if (canJump){
+                betty.jump(400);
+                canJump = false;
+            }
             betty.onClick(() => {
                 bettyClick()
             })
