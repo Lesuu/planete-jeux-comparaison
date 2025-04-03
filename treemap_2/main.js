@@ -222,17 +222,19 @@ scene("titleScreen", async () => {
         opacity(0)
     ])
     clickArea.onClick(() => {
-        go("treemap")
+        go("slideshow")
     })
 })
 
 // Slideshow
 scene("slideshow", () => {
     slideshow()
+    windowButtons(restart_button, eng_button, fr_button)
 })
 
 scene("tutorial", () => {
     tutorial()
+    windowButtons(restart_button, eng_button, fr_button)
 })
 
 scene("treemap", async () => {
@@ -770,16 +772,19 @@ function windowButtons(restart, eng, fr){
     restart.onClick(()=>{
         location.reload()
     })
-    eng.onClick(()=>{
-        langue = "eng"
-        languageChange()
-        go(currentScene)
-    })
-    fr.onClick(()=>{
-        langue = "fr"
-        languageChange()
-        go(currentScene)
-    })
+    if (currentScene == "titleScreen" || currentScene == "treemap"){
+        eng.onClick(()=>{
+            langue = "eng"
+            languageChange()
+            go(currentScene)
+        })
+        fr.onClick(()=>{
+            langue = "fr"
+            languageChange()
+            go(currentScene)
+        })
+    }
+
 }
 
 export function currentScenario(){

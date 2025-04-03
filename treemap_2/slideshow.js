@@ -13,23 +13,26 @@ const baseLineX = 615;
 const baseLineY = 750;
 const barWidth = 80;
 
-const histo_jv_data = [
-    {label: "Console", value: 0.260300000000000,                icon : "console_full"},
-    {label: "Ordinateur fixe", value: 0.133547000000000,        icon : "pc_full"},
-    {label: "Ordinateur portable", value: 0.083747000000000,    icon : "portable_full"},
-    {label: "Téléphone", value:	0.046833172839506,              icon : "telephone_full"},    
-];
-const histo_jds_data = [
-    {label: "Grand", value: 4.082425600000000,  icon: "bg_color" },
-    {label: "Moyen", value: 1.223896000000000,  icon:"jeu_moyen_full"},
-    {label: "Petit", value: 0.732836000000000,  icon:"petit_jeu_full"},
-];
+let histo_jv_data, histo_jds_data
 
 export function slideshow(){
+    // Données pour les histogrammes
+    histo_jv_data = [
+        {label: getTranslation("HISTOGRAMME JV 1"), value: 0.260300000000000,  icon : "console_full"},
+        {label: getTranslation("HISTOGRAMME JV 2"), value: 0.133547000000000,  icon : "pc_full"},
+        {label: getTranslation("HISTOGRAMME JV 3"), value: 0.083747000000000,  icon : "portable_full"},
+        {label: getTranslation("HISTOGRAMME JV 4"), value:	0.046833172839506, icon : "telephone_full"},    
+    ];
+    histo_jds_data = [
+        {label: getTranslation("HISTOGRAMME JDS 1"), value: 4.082425600000000, icon: "bg_color" },
+        {label: getTranslation("HISTOGRAMME JDS 2"), value: 1.223896000000000, icon:"jeu_moyen_full"},
+        {label: getTranslation("HISTOGRAMME JDS 3"), value: 0.732836000000000, icon:"petit_jeu_full"},
+    ];
+    // Dialogues pour le slideshow
     const dialogs = [
         { text: getTranslation("INTRO"),            bubbleSize: {x: 9.2, y: 4}},
         { text: getTranslation("ACV"),              bubbleSize: {x: 8, y: 9}},
-        { text : getTranslation("HISTOGRAMME JV"),  bubbleSize: {x: 6, y: 7.5}},
+        { text : getTranslation("HISTOGRAMME JV"),  bubbleSize: {x: 6, y: 5.7}},
         { text : getTranslation("HISTOGRAMME JDS"), bubbleSize: {x: 5, y: 5.5}}
     ];
     curDialog = 0;

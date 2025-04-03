@@ -16,27 +16,34 @@ let isTalking = false
 
 let jouerSurConsole, jouerSurPortable, jouerSurTelephone, jouerSurFixe, jouerPetitJeu, jouerJeuMoyen, jouerGrandJeu;
 
+function onClicked(){
+    if (!isTalking) return
+    if (speechBubble){
+        speechBubble.remove()
+    }
+    betty.play("idle")
+    betty_highlight.play("white")
+    document.getElementById("treemapOverlay").remove()
+    backgroundRectangle.opacity = 0
+    treemapContainer.style.pointerEvents = "auto"
+    wait(0.1, () => {
+        isTalking = false
+        infoBubble = false
+    })
+}
+
 export function initializeBetty() {
+    document.removeEventListener('mousedown', onClicked);
     bettyEngaged = false;
     bettyPeaking = false;
     nothingToSay = false;
+    infoBubble = false;
+    isTalking = false;
+    canJump = false;
+    curTween = null;
     timer = 0.5;
 
-    document.addEventListener('mousedown', function onClicked(){
-        if (!isTalking) return
-        if (speechBubble){
-            speechBubble.remove()
-        }
-        betty.play("idle")
-        betty_highlight.play("white")
-        document.getElementById("treemapOverlay").remove()
-        backgroundRectangle.opacity = 0
-        treemapContainer.style.pointerEvents = "auto"
-        wait(0.1, () => {
-            isTalking = false
-            infoBubble = false
-        })
-    })
+    document.addEventListener('mousedown', onClicked);
 }
 
 function createTreemapOverlay() {
@@ -170,9 +177,9 @@ async function bettyExplication(betty, text){
     let speechText = document.createElement("p")
     speechText.id = "speechText"
     if(infoBubble){
-        speechText.style.transform = "scale(0.8)";
+        speechText.style.transform = "scale(0.7)";
         speechText.style.transformOrigin = "top left";
-        speechText.style.width = "110%"
+        speechText.style.width = "120%"
     }
     speechText.innerHTML = text
     speechBubble.appendChild(speechText)
