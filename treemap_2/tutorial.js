@@ -1,4 +1,4 @@
-import { getTranslation } from "./main.js";
+import { getTranslation, langue } from "./main.js";
 
 let betty, bulle, txt, screenshot, bulleScaleX, bulleScaleY;
 let isTalking = false;
@@ -21,7 +21,7 @@ export function tutorial() {
     isTalking = false;
 
     screenshot = add([
-        sprite("screenshot"),
+        sprite(`screenshot_jv_${langue}`),
         pos(0, 0)
     ])
     //assombrissement
@@ -166,6 +166,8 @@ function assombris(dialog){
                 text(getTranslation("JEU VIDEO"), {
                     font: "pixel",
                     size: 18,
+                    width: 50,
+                    align: "center"
                 }),
                 anchor("top"),
                 pos(0,43),
@@ -202,7 +204,7 @@ function assombris(dialog){
         case 2:
             destroyAll("assombrissement")
             destroyAll("vg_button")
-            screenshot.sprite = "screenshot_jds"
+        screenshot.sprite = `screenshot_jds_${langue}`
             // Ajoute le bouton jds
             let bg_button = add([
                 sprite("button"),
@@ -225,6 +227,8 @@ function assombris(dialog){
                 text(getTranslation("JEU DE SOCIETE"), {
                     font: "pixel",
                     size: 18,
+                    width: 50,
+                    align: "center"
                 }),
                 anchor("top"),
                 pos(0,43),

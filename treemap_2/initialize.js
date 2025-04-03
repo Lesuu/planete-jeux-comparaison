@@ -63,8 +63,10 @@ export async function loadAssets(){
     // Bulle de dialogue
     loadSprite("bulle", "assets/sprites/bulle.png")
     // Tutoriel
-    loadSprite("screenshot", "assets/sprites/screenshot.png")
-    loadSprite("screenshot_jds", "assets/sprites/screenshot_jds.png")
+    loadSprite("screenshot_jv_fr", "assets/sprites/screenshot_jv.png")
+    loadSprite("screenshot_jds_fr", "assets/sprites/screenshot_jds.png")
+    loadSprite("screenshot_jv_eng", "assets/sprites/screenshot_jv_eng.png")
+    loadSprite("screenshot_jds_eng", "assets/sprites/screenshot_jds_eng.png")
     //#endregion
     //#region Betty
     loadSpriteAtlas("assets/sprites/BETTY-sheet.png", {
