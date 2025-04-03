@@ -6,7 +6,7 @@ export function loadAssets(){
     loadFont("kaph", "assets/fonts/Kaph-Regular.ttf", {
         outline: {
             width: 3,
-            color: text_color,
+            color: text_color
         },
         letterSpacing : -5,
     });
