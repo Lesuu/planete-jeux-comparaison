@@ -140,8 +140,8 @@ export function createBarChart(langue, score){
             wait(1, () => {
                 bulle = add([
                     sprite("bulle"),
-                    pos(betty.pos.x - 300, betty.pos.y - 400),
-                    scale(4, 7),
+                    pos(betty.pos.x - 340, betty.pos.y - 450),
+                    scale(4, 8),
                     anchor("topleft"),
                     "bulle"
                 ]);

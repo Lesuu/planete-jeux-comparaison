@@ -690,7 +690,7 @@ async function main() {
 
         // Compteur de score
         let score_caption = add([
-            text(`Score: ${score}`, {
+            text(`Score: ${score}/2800`, {
                 font: "pixel",
                 size: 54
             }),
@@ -699,7 +699,7 @@ async function main() {
             z(50)
         ])
         let score_shadow = add([
-            text(`Score: ${score}`, {
+            text(`Score: ${score}/2800`, {
                 font: "pixel",
                 size: 54
             }),
@@ -802,7 +802,7 @@ async function main() {
         onUpdate(() => {
             betty_highlight.pos = vec2(betty.pos.x, betty.pos.y - 91);
             betty_shadow.pos = vec2(betty.pos.x, betty.pos.y)
-            info_shadow.pos = vec2(betty.pos.x + 1.5, betty.pos.y - 240 + 1.5)
+            info_shadow.pos = vec2(betty.pos.x + 7 + 1.5, betty.pos.y - 270 + 1.5)
         });
         // Logique pour le saut
         setGravity(1200)
@@ -849,8 +849,8 @@ async function main() {
         ])
         betty_highlight.flipX = true
         let info_shadow = add([
-            sprite("info"),
-            pos(betty.pos.x + 1.5, betty.pos.y - 240 + 1.5),
+            sprite("quest"),
+            pos(betty.pos.x + 1.5, betty.pos.y - 600 + 1.5),
             scale(scaleValue * 2.2),
             anchor("center"),
             color(0,0,0),
@@ -859,7 +859,7 @@ async function main() {
             "betty"
         ])
         let betty_info = info_shadow.add([
-            sprite("info"),
+            sprite("quest"),
             pos(-1.5, -1.5),
             anchor("center"),
             area(),
@@ -1196,8 +1196,8 @@ async function main() {
 
                     }
                     score += 100 * multiplier
-                    score_caption.text = `Score: ${score}`
-                    score_shadow.text = `Score: ${score}`
+                    score_caption.text = `Score: ${score}/2800`
+                    score_shadow.text = `Score: ${score}/2800`
 
                     play(scoreSound[multiplier - 1], {
                         volume: 0.8
@@ -1604,7 +1604,7 @@ async function main() {
             } else {
                 let suivant_bouton = add([
                     sprite("button"),
-                    pos(width()/2, height()/1.1),
+                    pos(width()/1.75, height()/1.15),
                     scale(scaleValue*1.5),  
                     anchor("center"),
                     area(),
