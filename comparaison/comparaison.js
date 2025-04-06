@@ -4,6 +4,9 @@ import { loadData, questions_JV, questions_JdS, translations} from './dataLoader
 
 //#region initialisation 
 
+// Version du jeu (normal, bus, interne_bus) pour le bouton final
+export const version = "normal"
+
 // Initialisation de Kaplay
 kaplay({
     background : [0,0,0],
@@ -21,6 +24,21 @@ let langue = "fr"
 export function getTranslation(key){
     return translations[key][langue]
 }
+
+// Timer: recharge la page après 2 minutes d'inactivité
+let inactivityTimer
+
+function resetTimer(){
+    // Si la version n'est pas celle du musée, on ne fait rien
+    if (version !== "normal") return
+    clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(() => {
+        location.reload(); 
+    }, 120000); // 2 minutes en milisecondes 
+}
+
+// Reset le timer à chaque fois qu'on clique
+document.addEventListener('click', resetTimer);
 
 main()
 async function main() {

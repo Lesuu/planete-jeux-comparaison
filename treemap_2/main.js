@@ -41,6 +41,18 @@ export function getTranslation(key){
     return translations[key][langue]
 }
 
+// Timer: recharge la page après 2 minutes d'inactivité
+let inactivityTimer
+
+function resetTimer(){
+    clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(() => {
+        location.reload(); 
+    }, 120000); // 2 minutes en milisecondes 
+}
+// Reset le timer à chaque fois qu'on clique
+document.addEventListener('click', resetTimer);
+
 let jeuVideo, jeuSociete, changementClimatique, metaux, particulesFines, cycleDeVie, parEquipement, jouerSurConsole, jouerSurPortable, jouerSurTelephone, jouerSurFixe, cloudConsole, jouerPetitJeu, jouerJeuMoyen, jouerGrandJeu;
 function languageChange(){
     // etage1

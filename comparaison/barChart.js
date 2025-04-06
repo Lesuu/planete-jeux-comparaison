@@ -1,4 +1,4 @@
-import { getTranslation } from "./comparaison.js";
+import { getTranslation, version } from "./comparaison.js";
 
 let isTalking = false;
 let isSkipping = false;
@@ -9,9 +9,6 @@ let startedTalking = false;
 let betty, bulle;
 let sequence = 0;
 let terminer_scale 
-
-// Version du jeu (normal, bus, interne_bus) pour le bouton final
-const version = "normal"
 
 const lien1 = "https://forms.gle/GMwGXPwwfqtjQT1p9"
 const lien2 = "https://forms.gle/puxiijgLkFG1YTi59"
@@ -434,56 +431,57 @@ export function createBarChart(langue, score){
                     "bulle"
                 ]);
                 startWriting(getTranslation("HISTOGRAMME 3"))
-            })
-            // Bouton de fin
-            let suivant_bouton = add([
-                sprite("button"),
-                pos(width()/2, height()/1.1),
-                scale(terminer_scale),  
-                anchor("center"),
-                area(),
-            ])
 
-            let fin = add([
-                text(terminer_label,{
-                    font: "pixel",
-                    size: 54,
-                    align: "center",
-                    letterSpacing : 6,
-                    width: 500,
-                }),
-                pos(suivant_bouton.pos),
-                anchor("center"),
-                z(20),
-                "results_element"
-            ])
-    
-            let fin_shadow = add([
-                text(terminer_label,{
-                    font: "pixel",
-                    size: 54,
-                    align: "center",
-                    letterSpacing : 6,
-                    width: 500
-                }),
-                color(93, 27, 27),
-                pos(suivant_bouton.pos.x + 5, suivant_bouton.pos.y + 5),
-                anchor("center"),
-                "results_element"
-            ])
-            
-            suivant_bouton.onClick(()=>{
-                switch (version){
-                    case "normal":
-                        window.location.reload()
-                        break;
-                    case "bus":
-                        window.location.href = lien1
-                        break;
-                    case "interne_bus":
-                        window.location.href = lien2
-                        break;
-                }
+                // Bouton de fin
+                let suivant_bouton = add([
+                    sprite("button"),
+                    pos(width()/2, height()/1.1),
+                    scale(terminer_scale),  
+                    anchor("center"),
+                    area(),
+                ])
+
+                let fin = add([
+                    text(terminer_label,{
+                        font: "pixel",
+                        size: 54,
+                        align: "center",
+                        letterSpacing : 6,
+                        width: 500,
+                    }),
+                    pos(suivant_bouton.pos),
+                    anchor("center"),
+                    z(20),
+                    "results_element"
+                ])
+        
+                let fin_shadow = add([
+                    text(terminer_label,{
+                        font: "pixel",
+                        size: 54,
+                        align: "center",
+                        letterSpacing : 6,
+                        width: 500
+                    }),
+                    color(93, 27, 27),
+                    pos(suivant_bouton.pos.x + 5, suivant_bouton.pos.y + 5),
+                    anchor("center"),
+                    "results_element"
+                ])
+                
+                suivant_bouton.onClick(()=>{
+                    switch (version){
+                        case "normal":
+                            window.location.reload()
+                            break;
+                        case "bus":
+                            window.location.href = lien1
+                            break;
+                        case "interne_bus":
+                            window.location.href = lien2
+                            break;
+                    }
+                })
             })
         } else if (sequence === 3){
             if(isTalking){
