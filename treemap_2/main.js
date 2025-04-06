@@ -261,7 +261,7 @@ scene("treemap", async () => {
     scenarioJvButtons();
 
     await generateTreemap(plateforme_choisie, indicateur_choisi, contribution_choisie, etage1_choisi, zoom);
-    //callBetty()
+    callBetty()
 })
 
 //#region Boutons permanents 
@@ -366,7 +366,7 @@ function treemapButtons(){
     ])
     // Changement climatique
     let changclim_button_icon = changclim_button.add([
-        sprite("changement_climatique"),
+        sprite("changement_climatique_full"),
         anchor("center"),
         pos(0, 0),
         scale(1/1.3)
@@ -447,6 +447,9 @@ function treemapButtons(){
     changclim_button.onClick(() => {
         if (isTalking) return;
         buttonPressed(changclim_button, changclim_button_icon, changementClimatique, "indicateur");
+        changclim_button_icon.sprite = "changement_climatique_full"
+        metaux_button_icon.sprite = "metaux"
+        particules_fines_button_icon.sprite = "particules_fines"
         changclim_button.color = rgb(0,230,0)
         metaux_button.color = rgb(255, 255, 255)
         particules_fines_button.color = rgb(255, 255, 255)
@@ -454,6 +457,9 @@ function treemapButtons(){
     metaux_button.onClick(() => {
         if (isTalking) return;
         buttonPressed(metaux_button, metaux_button_icon, metaux, "indicateur");
+        changclim_button_icon.sprite = "changement_climatique"
+        metaux_button_icon.sprite = "metaux_full"
+        particules_fines_button_icon.sprite = "particules_fines"
         changclim_button.color = rgb(255, 255, 255)
         metaux_button.color = rgb(0, 230, 0)
         particules_fines_button.color = rgb(255, 255, 255)
@@ -461,6 +467,9 @@ function treemapButtons(){
     particules_fines_button.onClick(() => {
         if (isTalking) return;
         buttonPressed(particules_fines_button, particules_fines_button_icon, particulesFines, "indicateur");
+        changclim_button_icon.sprite = "changement_climatique"
+        metaux_button_icon.sprite = "metaux"
+        particules_fines_button_icon.sprite = "particules_fines_full"
         changclim_button.color = rgb(255, 255, 255)
         metaux_button.color = rgb(255, 255, 255)
         particules_fines_button.color = rgb(0, 230, 0)
@@ -518,7 +527,7 @@ function scenarioJvButtons(){
         sprite("telephone"),
         anchor("center"),
         pos(0, 0),
-        scale(1/1.3),
+        scale(1),
         "vg_buttons"
     ])
     telephone_button.add([
@@ -574,7 +583,7 @@ function scenarioJvButtons(){
         sprite("pc"),
         anchor("center"),
         pos(0, 0),
-        scale(1/1.3),
+        scale(1/1.62),
         "vg_buttons"
     ])
     fixe_button.add([
@@ -599,10 +608,10 @@ function scenarioJvButtons(){
         "vg_buttons"
     ])
     let console_button_icon = console_button.add([
-        sprite("console"),
+        sprite("console_full"),
         anchor("center"),
         pos(0, 0),
-        scale(1/1.3),
+        scale(1/1.2),
         "vg_buttons"
     ])
     console_button.add([
@@ -617,6 +626,10 @@ function scenarioJvButtons(){
     portable_button.onClick(() => {
         if (isTalking) return;
         buttonPressed(portable_button, portable_button_icon, jouerSurPortable, "etage1");
+        portable_button_icon.sprite = "portable_full"
+        telephone_button_icon.sprite = "telephone"
+        console_button_icon.sprite = "console"
+        fixe_button_icon.sprite = "pc"
         portable_button.color = rgb(0, 230, 0)
         telephone_button.color = rgb(255,255,255)
         console_button.color = rgb(255,255,255)
@@ -625,6 +638,10 @@ function scenarioJvButtons(){
     telephone_button.onClick(() => {
         if (isTalking) return;
         buttonPressed(telephone_button, telephone_button_icon, jouerSurTelephone, "etage1");
+        portable_button_icon.sprite = "portable"
+        telephone_button_icon.sprite = "telephone_full"
+        console_button_icon.sprite = "console"
+        fixe_button_icon.sprite = "pc"
         portable_button.color = rgb(255,255,255)
         telephone_button.color = rgb(0, 230, 0)
         console_button.color = rgb(255,255,255)
@@ -633,6 +650,10 @@ function scenarioJvButtons(){
     console_button.onClick(() => {
         if (isTalking) return;
         buttonPressed(console_button, console_button_icon, jouerSurConsole, "etage1");
+        portable_button_icon.sprite = "portable"
+        telephone_button_icon.sprite = "telephone"
+        console_button_icon.sprite = "console_full"
+        fixe_button_icon.sprite = "pc"
         portable_button.color = rgb(255,255,255)
         telephone_button.color = rgb(255,255,255)
         console_button.color = rgb(0, 230, 0)
@@ -641,6 +662,10 @@ function scenarioJvButtons(){
     fixe_button.onClick(() => {
         if (isTalking) return;
         buttonPressed(fixe_button, fixe_button_icon, jouerSurFixe, "etage1");
+        portable_button_icon.sprite = "portable"
+        telephone_button_icon.sprite = "telephone"
+        console_button_icon.sprite = "console"
+        fixe_button_icon.sprite = "pc_full"
         portable_button.color = rgb(255,255,255)
         telephone_button.color = rgb(255,255,255)
         console_button.color = rgb(255,255,255)
@@ -663,7 +688,7 @@ function scenarioJdsButtons(){
         "bg_buttons"
     ])
     let petit_jeu_button_icon = petit_jeu_button.add([
-        sprite("petit_jeu"),
+        sprite("petit_jeu_full"),
         anchor("center"),
         pos(0, 0),
         scale(1),
@@ -715,7 +740,7 @@ function scenarioJdsButtons(){
         "bg_buttons"
     ])
     let grand_jeu_button_icon = grand_jeu_button.add([
-        sprite("bg_color"),
+        sprite("bg_icon"),
         anchor("center"),
         pos(0, 0),
         scale(1),
@@ -790,7 +815,7 @@ async function buttonPressed(button, icon, choix, catégorie){
     button.sprite = "button_pressed";
     icon.pos = vec2(icon.pos.x + 2, icon.pos.y + 2);
     await generateTreemap(plateforme_choisie, indicateur_choisi, contribution_choisie, etage1_choisi, zoom);
-    //callBetty()
+    callBetty()
 }
 //#endregion
 

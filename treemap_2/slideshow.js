@@ -224,8 +224,8 @@ async function tweens(){
         // Ajout de l'icone
         add([
             sprite(d.icon),
-            pos(xPos, baseLineY + 10),
-            anchor("top"),
+            pos(xPos, baseLineY + 43),
+            anchor("center"),
             "bar"
         ])
         // Ajout du label de la barre & son ombre
@@ -301,8 +301,8 @@ async function tweens2(){
         // Ajout des icones
         add([
             sprite(d.icon),
-            pos(xPos, baseLineY + 10),
-            anchor("top"),
+            pos(xPos, baseLineY + 43),
+            anchor("center"),
             "bar"
         ])
         // Ajout du label de la barre & son ombre
