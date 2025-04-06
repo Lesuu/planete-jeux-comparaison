@@ -83,6 +83,7 @@ async function main() {
     let fr_button
     let loading = false
     let canJump = true
+    let button_hover = false
 
     // Constantes: détermine le nombre de questions & lesquelles sont scriptées.
     const nbr_questions = 10
@@ -438,8 +439,8 @@ async function main() {
 
         screen.onClick(() => {
             if (loading) return
-            go("chooseCategory")
-            //go("finalResults", {score: 0})
+            //go("chooseCategory")
+            go("finalResults", {score: 0})
         });
         
     })
@@ -1546,9 +1547,49 @@ async function main() {
                     area(),
                     "results_element"
                 ])
+
+                let suivant_shadow = add([
+                    text(getTranslation("SUIVANT"),{
+                        font: "pixel",
+                        width: 400,
+                        letterSpacing: 6,
+                        size: 54,
+                        align: "center"
+                    }),
+                    pos(suivant_bouton.pos.x + 5, suivant_bouton.pos.y - 4 + 4),
+                    anchor("center"),
+                    color(93, 27, 27),
+                    z(10),  
+                    "results_element"
+                ])
+
+                let suivant = suivant_shadow.add([
+                    text(getTranslation("SUIVANT"),{
+                        font: "pixel",
+                        width: 400,
+                        letterSpacing: 6,
+                        size: 54,
+                        align: "center"
+                    }),
+                    pos(-5, -4),
+                    anchor("center"),
+                    z(20),
+                    "results_element"            
+                ])
+
                 let lock = false
-                suivant_bouton.onClick(() => {
+                suivant_bouton.onClick(async () => {
                     if(lock || explanation) return
+                    // Bouton s'enfonce quand on clique
+                    suivant_bouton.sprite = "button_pressed"
+                    suivant_shadow.pos = vec2(suivant_shadow.pos.x + 3, suivant_shadow.pos.y + 3)
+                })
+                onMouseRelease(async () => {
+                    if (!button_hover) return
+                    console.log("blkah")
+                    // Bouton revient à la normale
+                    suivant_bouton.sprite = "button"
+                    suivant_shadow.pos = vec2(suivant_bouton.pos.x + 5, suivant_bouton.pos.y - 4 + 4)
                     lock = true
                     if (curTween1) curTween1.cancel()
                     if (curTween2) curTween2.cancel()
@@ -1589,35 +1630,14 @@ async function main() {
                         go("questions")   
                     })
                 })
-
-                let suivant = add([
-                    text(getTranslation("SUIVANT"),{
-                        font: "pixel",
-                        width: 400,
-                        letterSpacing: 6,
-                        size: 54,
-                        align: "center"
-                    }),
-                    pos(suivant_bouton.pos.x, suivant_bouton.pos.y - 4),
-                    anchor("center"),
-                    z(20),  
-                    "results_element"
-                ])
-
-                let suivant_shadow = add([
-                    text(getTranslation("SUIVANT"),{
-                        font: "pixel",
-                        width: 400,
-                        letterSpacing: 6,
-                        size: 54,
-                        align: "center"
-                    }),
-                    color(93, 27, 27),
-                    pos(suivant.pos.x + 5, suivant.pos.y + 4),
-                    anchor("center"),
-                    z(10),
-                    "results_element"            
-                ])
+                suivant_bouton.onHover(() => {
+                    button_hover = true
+                })
+                suivant_bouton.onHoverEnd(() => {
+                    suivant_bouton.sprite = "button"
+                    suivant_shadow.pos = vec2(suivant_bouton.pos.x + 5, suivant_bouton.pos.y - 4 + 4)
+                    button_hover = false
+                })
 
             } else {
                 let suivant_bouton = add([
@@ -1657,7 +1677,23 @@ async function main() {
                 ])
                 suivant_bouton.onClick(() => {
                     if (explanation) return
+                    suivant_bouton.sprite = "button_pressed"
+                    fin_shadow.pos = vec2(fin_shadow.pos.x + 1, fin_shadow.pos.y + 1)
+                    fin.pos = vec2(fin.pos.x + 1, fin.pos.y + 1)
+                })
+                onMouseRelease(() => {
+                    if (!button_hover) return
+                    suivant_bouton.sprite = "button"
+                    fin_shadow.pos = vec2(fin_shadow.pos.x - 1, fin_shadow.pos.y - 1)
+                    fin.pos = vec2(fin.pos.x - 1, fin.pos.y - 1)
                     go("finalResults", {score: score})
+                })
+                suivant_bouton.onHover(() => {
+                    button_hover = true
+                })
+                suivant_bouton.onHoverEnd(() => {
+                    suivant_bouton.sprite = "button"
+                    button_hover = false
                 })
             }
             //#endregion

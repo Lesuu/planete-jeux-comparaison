@@ -38,7 +38,20 @@ export function loadAssets(){
     loadSprite("jv_color", "assets/sprites/vg_color.png")
     loadSprite("jds_icon", "assets/sprites/board_game.png")
     loadSprite("jds_color", "assets/sprites/bg_color.png")
-    loadSprite("button", "assets/sprites/button_textless.png")
+    loadSpriteAtlas("assets/sprites/button.png", {
+        "button" : {
+            "x": 0,
+            "y": 0,
+            "width": 96,
+            "height": 29,
+        },
+        "button_pressed" : {
+            "x": 0,
+            "y": 29,
+            "width": 96,
+            "height": 29,
+        },
+    })
     loadSprite("bulle", "assets/sprites/bulle.png")
     loadSprite("blank_card", "assets/sprites/blank_card.png")
     loadSpriteAtlas("assets/sprites/cards.png", {

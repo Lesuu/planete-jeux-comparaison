@@ -9,6 +9,7 @@ let startedTalking = false;
 let betty, bulle;
 let sequence = 0;
 let terminer_scale 
+let button_hover = false
 
 const lien1 = "https://forms.gle/GMwGXPwwfqtjQT1p9"
 const lien2 = "https://forms.gle/puxiijgLkFG1YTi59"
@@ -441,7 +442,7 @@ export function createBarChart(langue, score){
                     area(),
                 ])
 
-                let fin = add([
+                let fin_shadow = add([
                     text(terminer_label,{
                         font: "pixel",
                         size: 54,
@@ -449,13 +450,14 @@ export function createBarChart(langue, score){
                         letterSpacing : 6,
                         width: 500,
                     }),
-                    pos(suivant_bouton.pos),
+                    pos(suivant_bouton.pos.x + 5, suivant_bouton.pos.y + 5),
                     anchor("center"),
-                    z(20),
+                    color(93, 27, 27),
+                    z(10),
                     "results_element"
                 ])
         
-                let fin_shadow = add([
+                let fin = fin_shadow.add([
                     text(terminer_label,{
                         font: "pixel",
                         size: 54,
@@ -463,13 +465,20 @@ export function createBarChart(langue, score){
                         letterSpacing : 6,
                         width: 500
                     }),
-                    color(93, 27, 27),
-                    pos(suivant_bouton.pos.x + 5, suivant_bouton.pos.y + 5),
+                    z(20),
+                    pos(-5, -5),
                     anchor("center"),
                     "results_element"
                 ])
                 
-                suivant_bouton.onClick(()=>{
+                suivant_bouton.onClick(() => {
+                    suivant_bouton.sprite = "button_pressed"
+                    fin_shadow.pos = vec2(fin_shadow.pos.x + 3, fin_shadow.pos.y + 3)
+                })
+                onMouseRelease(() => {
+                    if (!button_hover) return
+                    suivant_bouton.sprite = "button"
+                    fin_shadow.pos = vec2(fin_shadow.pos.x - 3, fin_shadow.pos.y - 3)
                     switch (version){
                         case "normal":
                             window.location.reload()
@@ -481,6 +490,14 @@ export function createBarChart(langue, score){
                             window.location.href = lien2
                             break;
                     }
+                })
+                suivant_bouton.onHover(() => {
+                    button_hover = true
+                })
+                suivant_bouton.onHoverEnd(() => {
+                    suivant_bouton.sprite = "button"
+                    fin_shadow.pos = vec2(suivant_bouton.pos.x + 5, suivant_bouton.pos.y + 5)
+                    button_hover = false
                 })
             })
         } else if (sequence === 3){
