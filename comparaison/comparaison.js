@@ -4,7 +4,7 @@ import { loadData, questions_JV, questions_JdS, translations} from './dataLoader
 
 //#region initialisation 
 
-// Version du jeu (normal, bus, interne_bus) pour le bouton final
+// Version du jeu (normal, bus, interne_bus) pour le bouton final/timer reset
 export const version = "normal"
 
 // Initialisation de Kaplay
@@ -439,8 +439,8 @@ async function main() {
 
         screen.onClick(() => {
             if (loading) return
-            //go("chooseCategory")
-            go("finalResults", {score: 0})
+            go("chooseCategory")
+            //go("finalResults", {score: 0})
         });
         
     })
