@@ -1,46 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Treemap Module</title>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-textwrap"></script>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <script src="treemap.js" defer></script>
-    <div id="menu">
-        <div id="icon-container">
-            <img id="bg-icon" src="assets/board_game.png">
-            <img id="vg-icon" src="assets/video_game.png">
-        </div>
-        <div class="checkbox-container-vertical">
-            <div class="checkbox-container">
-                <img id="checkbox-changement-climatique" class="checkbox-scenario" src="assets/full_checkbox.png">
-                <span id="checkbox-label" class="checkbox-scenario-label">Changement climatique</span>
-            </div>
-            <div class="checkbox-container">
-                <img id="checkbox-metaux" class="checkbox-scenario" src="assets/empty_checkbox.png">
-                <span id="checkbox-label" class="checkbox-scenario-label">Resources minérales et métalliques</span>
-            </div>
-            <div class="checkbox-container">
-                <img id="checkbox-particules-fines" class="checkbox-scenario" src="assets/empty_checkbox.png">
-                <span id="checkbox-label" class="checkbox-scenario-label">Particules fines</span>
-            </div>
-        </div>
-        <div class="checkbox-container-horizontal">
-            <div class="checkbox-container">
-                <img id="checkbox-equipement" class="checkbox-acv" src="assets/full_checkbox.png">
-                <span id="checkbox-label" class="checkbox-acv-label">Par équipement</span>
-            </div>
-            <div class="checkbox-container">
-                <img id="checkbox-cycle" class="checkbox-acv" src="assets/empty_checkbox.png">
-                <span id="checkbox-label" class="checkbox-acv-label">Par étape de cycle de vie</span>
-            </div>
-            <button id="download-data">Download Data</button>
-        </div>
-    </div>
-    <div id="chart"></div>
-</body>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=1920, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>Module treemap</title>
+        <!-- librairies: -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- JQuery -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script> <!-- PapaParse -->
+        <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script> <!-- ECharts -->
+        <script src="https://cdn.jsdelivr.net/npm/kaplay@3001/dist/kaplay.js"></script> <!-- Kaplay -->
+        <link rel="stylesheet" href="style.css">
+    </head>
+        <canvas id="game"></canvas>
+        <script type="module" src="main.js" defer></script>
+    </body>
 </html>

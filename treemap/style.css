@@ -1,70 +1,57 @@
-body {
-    background-color: rgb(0,100,0);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+@font-face {
+    font-family: 'm6x11';
+    src: url('assets/fonts/m6x11plus.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'm5x7';
+    src: url('assets/fonts/m5x7.ttf') format('truetype');
+}
+#loadingOverlay h1 {
+    font-family: 'm6x11', sans-serif;
+}
+#background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+html, body {
     margin: 0;
-}
-
-#menu {
-    width: 300px;
-    padding: 20px;
-    background-color: rgb(52, 130, 53);
-    border: 1px solid rgb(54, 133, 55);
-    border-radius: 5px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
-#icon-container {
-    display: flex;
-    justify-content: center;
+    padding: 0;
     width: 100%;
-    margin-bottom: 10px;
+    height: 100%;
+    overflow: hidden;
 }
-
-#menu img {
-    margin: 0 10px;
-    cursor: pointer;
-}
-
-.checkbox-container {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
+#game {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
+    height: 100%;
+    z-index: 1;
 }
-
-.checkbox-container-vertical {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
+#speechBubble{
+    position: absolute;       
+    top: 170px;             
+    left: 650px;
+    width: 1200px;             
+    height: 800px;            
+    background: url('assets/sprites/bulle.png') no-repeat center center;
+    background-size: contain; 
+    z-index: 50;             
+    pointer-events: none;   
+    image-rendering: pixelated;  
+    transform-origin: center;
 }
-
-.checkbox-container-horizontal {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin-top: 20px;
-}
-
-.checkbox-scenario, .checkbox-acv{
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
-}
-
-.checkbox-scenario-label, .checkbox-acv-label{
-    font-size: 14px;
-    flex: 1;
-    font-family: sans-serif;
-}
-
-.hidden{
-    display: none;
-}
+#speechText {
+    margin: 40px, 20px, 20px, 20px;
+    padding: 80px;
+    color: rgb(56, 71, 74);
+    font-family: 'm5x7';
+    font-size: 54px;
+    white-space: pre-line;
+    z-index: 60;
+    transform-origin: center;
+  }
