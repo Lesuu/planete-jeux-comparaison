@@ -34,7 +34,7 @@ function resetTimer(){
     clearTimeout(inactivityTimer);
     inactivityTimer = setTimeout(() => {
         location.reload(); 
-    }, 120000); // 2 minutes en milisecondes 
+    }, 300000); // 5 minutes en milisecondes 
 }
 
 // Reset le timer à chaque fois qu'on clique

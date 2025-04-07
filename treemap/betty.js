@@ -14,7 +14,7 @@ let canJump = false
 let infoBubble = false
 let isTalking = false
 
-let jouerSurConsole, jouerSurPortable, jouerSurTelephone, jouerSurFixe, jouerPetitJeu, jouerJeuMoyen, jouerGrandJeu;
+let jouerSurConsole, jouerSurPortable, jouerSurTelephone, jouerSurFixe, jouerPetitJeu, jouerJeuMoyen, jouerGrandJeu, changementClimatique, metaux, particulesFines;
 
 function onClicked(){
     if (!isTalking) return
@@ -208,7 +208,23 @@ export function iButtons(){
         area()
     ]);
     indicateurs_info.onClick(async () => {
-       iClick(getTranslation("INDICATEURS 2"))
+        languageCheck()
+        let current_scenario = currentScenario()
+        console.log(current_scenario)
+        let infoTexte = getTranslation("INDICATEURS 2")
+        switch (current_scenario.indicateur_choisi){
+            // JV
+            case changementClimatique:
+                infoTexte = getTranslation("INDICATEURS 2")
+                break;
+            case metaux:
+                infoTexte = getTranslation("INDICATEURS 3")
+                break;
+            case particulesFines:
+                infoTexte = getTranslation("INDICATEURS 4")
+                break;
+        }
+        iClick(infoTexte)
     });
 
     let scenario_info_shadow = add([
@@ -376,6 +392,9 @@ if (langue == "fr"){
     jouerPetitJeu = "Petit format";
     jouerJeuMoyen = "Format moyen";
     jouerGrandJeu = "Grand format";
+    changementClimatique = "Changement climatique";
+    metaux = "Ressources minérales et métalliques";
+    particulesFines = "Particules fines";
 } else if (langue == "eng"){
     jouerSurConsole = "Console";
     jouerSurPortable = "Laptop";
@@ -384,5 +403,8 @@ if (langue == "fr"){
     jouerPetitJeu = "Small game";
     jouerJeuMoyen = "Midsize game";
     jouerGrandJeu = "Large game";
+    changementClimatique = "Climate change";
+    metaux = "Metallic and mineral resources";
+    particulesFines = "Particulate matter";
 }
 }
