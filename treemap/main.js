@@ -725,6 +725,8 @@ function scenarioJdsButtons(){
         text(getTranslation("JEU MOYEN"), {
             font: "pixel",
             size: 18,
+            width: 100,
+            align: "center"
         }),
         anchor("top"),
         pos(0,43),
