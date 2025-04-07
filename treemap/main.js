@@ -14,6 +14,7 @@ let isTalking = false;
 // Constantes:
 const zoom = true; // Est-ce qu'on active le zoom/roam dans le treemap ou non
 const lien_meta_text = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2RjJYuns3gy3P3p45n8_pm8yqqDCWqHfVON3xswfWfHk3vLgpdP6YhbIO/pub?gid=919408839&single=true&output=csv'
+// const lien_meta_text = 'data/meta_texts.csv'
 
 // Variable globales:
 let restart_button, eng_button, fr_button;

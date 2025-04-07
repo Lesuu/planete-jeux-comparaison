@@ -1,0 +1,224 @@
+TEXTE,fr,eng
+TITRE,D'où vient notre impact environnemental lorsque nous jouons ?,Where does our environmental impact come from when we play?
+SOUS-TITRE,Les jeux de société et les jeux vidéos,Board games and video games
+START,Appuyez sur l'écran pour commencer !,Press the screen to start!
+CHARGEMENT,Chargement...,Loading...
+JEU VIDEO,Jeu vidéo,Video game
+JEU DE SOCIETE,Jeu de société,Board game
+CONTRIBUTIONS LABEL,Contribution,Contribution
+CYCLE DE VIE,Par étape de cycle de vie,Per life cycle step
+PAR EQUIPEMENT,Par équipement,Per equipment
+INDICATEURS LABEL,Indicateur,Indicator
+CHANGEMENT CLIMATIQUE,Changement climatique,Climate change
+METAUX,Ressources minérales et métalliques,Metallic and mineral resources
+PARTICULES FINES,Particules fines,Particulate matter
+SCENARIO LABEL,Scénario,Scenario
+TELEPHONE,Téléphone (smartphone),Phone (smartphone)
+CONSOLE,Console,Console
+PORTABLE,Ordinateur portable,Laptop
+FIXE,Ordinateur de bureau,Desktop computer
+CLOUD,Cloud gaming,Cloud gaming
+PETIT JEU,Petit format,Small format
+JEU MOYEN,Format moyen,Medium-size format
+GRAND JEU,Grand format,Large format
+INTRO,"Quelles sont les pratiques de jeu vidéo et de jeu de société qui ont le plus d'impact sur l'environnement ? 
+D'où vient cet impact environnemental ?","Which video game and board game scenario have the greatest impact on the environment?
+Where this environmental impact comes from?"
+ACV,"Pour calculer l'impact environnemental d'un produit, on évalue son cycle de vie :
+1. Sa Fabrication (qui contient l'extraction des matériaux)
+2. Son Transport,
+3. Son Utilisation, et
+4. Sa Fin de vie.","To calculate the environmental impact of a product, we assess its life cycle:
+1. Production phase (includes material extraction),
+2. Transport phase,
+3. Use phase, and
+4. End-of-life phase."
+HISTOGRAMME JV,"Plus la barre est haute, plus l'impact sur le changement climatique de la pratique de jeu vidéo est élevé.","The higher the bar, the greater the environmental impact of the video game practice."
+HISTOGRAMME JDS,"Ici, on compare l'impact sur le changement climatique de trois tailles de boîte de jeu de société.","Here, we compare the impact on climate change of three board game box sizes."
+INDICATEURS,"On peut calculer l'impact environnemental sur différents indicateurs comme :
+
+- le changement climatique, 
+- l'utilisation des ressources minérales et métalliques,
+- les particules fines,
+
+Et bien d'autres !","The environmental impact can be calculated on different indicators such as :
+
+- climate change, 
+- use of mineral and metal resources,
+- particulate matter.
+
+And many others !"
+INDICATEURS 2,"Plus d'infos sur les trois indicateurs choisis :
+
+- le changement climatique : donne la quantité de gaz à effet de serre produite lors d'une activité qui vient de l'utilisation d'énergies fossiles utilisées pour extraire les matériaux qui composent nos produits.
+ 
+- l'utilisation des ressources minérales et métalliques : informe sur la quantité de minéraux et métaux nécessaire pour la fabrication de nos équipements de jeux.
+
+- les particules fines : informent sur le nombre de cas maladie qu'il y a eu liés à notre activité. Les particules fines viennent de la combustion de bois ou d'énergies fossiles et peuvent véhiculer des composés chimiques dangereux pour la santé.","Find out more about the three chosen indicators:
+
+- climate change: gives the quantity of greenhouse gases produced during an activity, which comes from the use of fossil fuels to extract the materials that make up our products. 
+
+- use of mineral and metal resources: provides information on the quantity of minerals and metals required to manufacture our play equipment.
+
+- particulate matter: provide information on the number of cases of illness linked to an activity. Particulate matter comes from the combustion of wood or fossil fuels and can carry chemical compounds hazardous to health.
+
+They are the three most important indicators on the planetary boundaries for video games. The are chosen for board games as well for coherence of the vizualisation."
+SCENARIOS JV,"Tu peux choisir le scénario dont tu veux comprendre l'impact environnemental.
+
+Pour le jeu vidéo, tu peux choisir entre : téléphone, ordinateur portable, ordinateur de bureau et console.","You can choose the scenario whose environmental impact you want to understand.
+
+For video games, you can choose between: phone, laptop, desktop, console and cloud gaming."
+SCENARIOS JDS,"Pour le jeu de société, tu peux choisir la taille de la boîte du jeu : petite, moyenne et grande.","For the board game, you can choose the size of the game box: small, medium and large."
+TELEPHONE 2,"Les hypothèses sont : 
+- Le jeu est téléchargé sur internet.
+- On joue en ligne.
+- La durée de jeu total est de 182h.
+- La puissance de consommation du téléphone est de 7 Watt.","The assumptions are : 
+- The game is downloaded from the Internet.
+- The game is played online.
+- Total playing time is 182 hours.
+- The phone's power consumption is 7 watts."
+ORDI PORTABLE,"Les hypothèses sont : 
+- Le jeu est téléchargé sur internet.
+- On joue en ligne.
+- La durée de jeu total est de 182h.
+- La puissance de consommation de l'ordinateur portable est de 33 Watt.","The assumptions are : 
+- The game is downloaded from the Internet.
+- The game is played online.
+- Total playing time is 182 hours.
+- Laptop power consumption is 33 watts."
+ORDI FIXE,"Les hypothèses sont : 
+- Le jeu est téléchargé sur internet.
+- On joue en ligne.
+- La durée de jeu total est de 182h.
+- La puissance de consommation de l'ordinateur de bureau est de 165 Watt.
+- On utilise un écran pour afficher le jeu.","The assumptions are : 
+- The game is downloaded from the Internet.
+- The game is played online.
+- Total playing time is 182 hours.
+- The power consumption of the fixed computer is 165 watts.
+- A screen is used to display the game."
+CONSOLE 2,"Les hypothèses sont :
+- Le jeu est téléchargé sur internet.
+- On joue en ligne.
+- La durée du jeu totale est de 182h.
+- Le jeu est affiché sur une télévision
+
+Lorsqu'on joue sur une console, qu'on joue avec un jeu matérialisé (sur disque) ou avec un jeu téléchargé, que le jeu soit hors ligne ou en ligne, l'impact change très peu.","The assumptions are : 
+- The game is downloaded from the Internet.
+- The game is played online.
+- The total duration of the game is 182 hours.
+- The game is displayed on a TV.
+
+When playing on a console, whether playing with a materialized game (on disc) or with a downloaded game, whether the game is offline or online, the impact changes very little."
+CLOUD GAMING,"Le cloud gaming consiste à délocaliser l'exécution du jeu vidéo des consoles et ordinateurs portables vers des serveurs à distance. Ces serveurs envoient la vidéo aux joueurs en lecture en continu, qui interagissent avec les jeux par internet en temps réel. 
+
+Cette technique permet de jouer à des jeux vidéo qui demandent une puissance importante sur des équipements peu puissants.
+
+Les hypothèses sont :
+- On joue sur console avec une télévision.
+- La durée totale du jeu est de 182h.","Cloud gaming consists of relocating video game execution from consoles and laptops to remote servers. These servers send the video to players in streaming mode, who interact with the games over the Internet in real time. 
+
+This technique makes it possible to play power-hungry video games on low-power equipment.
+
+The hypotheses of the scenario are :
+- The game is played on a console with a TV.
+- Total playing time is 182h."
+PETIT,"Le jeu petit format contient : 
+- Une boîte pour ranger le jeu,
+- Des cartes,
+- Un punchboard, 
+- Les règles du jeu,
+En papier et carton.
+
+Le jeu contient aussi :
+- L'emballage plastique des cartes et de la boîte de jeu.
+
+Et pèse environ 250g !","The little format game contains : 
+- A box to store the game,
+- Cards,
+- Punchboard, 
+- Game rules,
+Of paper and cardboard.
+
+The game also includes :
+- Plastic packaging for the cards and the game box.
+
+And weighs about 250g!"
+MOYEN,"Le jeu format moyen contient : 
+- Une boîte pour ranger le jeu,
+- Des cartes,
+- Un punchboard, 
+- Les règles du jeu,
+En papier et carton.
+
+Le jeu contient aussi :
+- L'emballage plastique des cartes et de la boîte de jeu,
+- Des pions et des dés en bois
+
+Et pèse environ 500g !","The medium-size format game contains: 
+- A box to store the game,
+- Cards,
+- Punchboard, 
+- Game rules,
+Of Paper and cardboard.
+
+The game also includes :
+- Plastic packaging for the cards and the game box,
+- Wooden pawns and dices.
+
+And weighs around 500g!"
+GRAND,"Le jeu grand format contient : 
+- Une boîte pour ranger le jeu,
+- Des cartes,
+- Un punchboard, 
+- Les règles du jeu,
+- Un plateau de jeu
+En papier et carton.
+
+Le jeu contient aussi :
+- L'emballage plastique des cartes et de la boîte de jeu,
+- Des pions et des dés en bois,
+- Des figurines en plastique.
+
+Et pèse environ 1.8kg !","The large format game contains : 
+- A box to store the game,
+- Cards,
+- Punchboard, 
+- Game rules,
+- Game board
+Of paper and cardboard.
+
+The game also includes :
+- Plastic packaging for the cards and the game box,
+- Wooden pawns and dices,
+- Plastic figurines.
+
+And weighs around 1.8kg!”"
+CONTRIBUTION 1,"Tu peux choisir si tu veux l'impact environnemental en fonction :
+- des équipements : le matériel utilisé dans le scénario 
+ou
+- des étapes du cycle de vie : fabrication, distribution, utilisation et fin de vie","You can choose the environmental impact to be in function of :
+- the equipment: which is used in the scenario 
+or
+- the life-cycle stages: manufacture, distribution, use and end-of-life."
+CASE,"Plus le rectangle est grand, plus son impact est élevé par rapport aux autres rectangles.
+
+Tu peux :
+- Cliquer sur une case pour l'agrandir.
+- Revenir en arrière avec le menu sous le Treemap (le plus grand rectangle).
+
+Bonne exploration !","The larger the rectangle, the greater its impact in relation to other rectangles.
+
+You can:
+- Tap on a box to make it bigger.
+- Come back with the menu under the Treemap (the biggest rectangle).
+
+Happy exploring!"
+HISTOGRAMME JV 1,Console,Console
+HISTOGRAMME JV 2,Ordinateur fixe,Desktop computer
+HISTOGRAMME JV 3,Ordinateur portable,Laptop
+HISTOGRAMME JV 4,Téléphone ,Smartphone
+HISTOGRAMME JDS 1,Grande,Large
+HISTOGRAMME JDS 2,Moyenne,Medium
+HISTOGRAMME JDS 3,Petite,Small format

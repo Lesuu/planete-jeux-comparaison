@@ -1,7 +1,6 @@
 import { getTranslation, langue, loading } from "./main.js"
 import { setCurrentTreemapExplanation } from "./global.js"; 
 
-
 // Tout ce qui s'appelle "scenario" devrait s'appeler "indicateur", mais changer cause des problèmes.
 
 export let etage1_jv = []
@@ -10,6 +9,9 @@ export let etage1_jds = []
 export function listEtages() {
     const lien_fr = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2RjJYuns3gy3P3p45n8_pm8yqqDCWqHfVON3xswfWfHk3vLgpdP6YhbIO/pub?gid=74008056&single=true&output=csv';
     const lien_eng = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRC8oZQIgec7mCx7vZ540G2RjJYuns3gy3P3p45n8_pm8yqqDCWqHfVON3xswfWfHk3vLgpdP6YhbIO/pub?gid=895638476&single=true&output=csv';
+
+    // const lien_fr = 'data/texts_fr.csv'
+    // const lien_eng = 'data/texts_eng.csv'
 
     let csvUrl = langue === "fr" ? lien_fr : lien_eng;
 
@@ -98,7 +100,15 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
                 console.error('Treemap container not found');
                 return;
             }
-            var myChart = echarts.init(treemapContainer);
+            var myChart = echarts.init(
+                treemapContainer,
+                null,
+                {
+                    renderer: 'canvas',
+                    useDirtyRect: false,
+                    useCoarsePointer:false,
+                },
+            );
 
             // Build the treemap using the converted data.
             //#region Treemap config
