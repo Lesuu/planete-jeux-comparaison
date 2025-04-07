@@ -673,6 +673,9 @@ async function main() {
     // Scène où on pose les questions
     
     scene("questions", async () => {
+        button_hover = false
+        isTalking = false
+        explanation = false
         windowButtons()
         eng_button.destroy()
         fr_button.destroy()
@@ -1585,7 +1588,8 @@ async function main() {
                     suivant_shadow.pos = vec2(suivant_shadow.pos.x + 3, suivant_shadow.pos.y + 3)
                 })
                 onMouseRelease(async () => {
-                    if (!button_hover) return
+                    console.log(button_hover)
+                    if (!button_hover || isTalking || explanation) return
                     console.log("blkah")
                     // Bouton revient à la normale
                     suivant_bouton.sprite = "button"
@@ -1682,7 +1686,7 @@ async function main() {
                     fin.pos = vec2(fin.pos.x + 1, fin.pos.y + 1)
                 })
                 onMouseRelease(() => {
-                    if (!button_hover) return
+                    if (!button_hover || explanation) return
                     suivant_bouton.sprite = "button"
                     fin_shadow.pos = vec2(fin_shadow.pos.x - 1, fin_shadow.pos.y - 1)
                     fin.pos = vec2(fin.pos.x - 1, fin.pos.y - 1)
