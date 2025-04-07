@@ -1,0 +1,26 @@
+TEXTE,fr,eng
+TITRE,Qu'est-ce qui a le moins d'impact sur l'environnement ?,What has the least impact on the environment?
+START,Appuie sur l'écran pour commencer !,Press on the screen to start!
+OPTION,Choisis un mode de jeu !,Choose a game mode!
+JEU VIDEO,Jeu vidéo,Video games
+JEU DE SOCIETE,Jeu de société,Board games
+BOTH,Jeu vidéo + jeu de société,Video games + Board games
+QUESTION,"D'après toi, qu'est-ce qui a le moins d'impact sur l'environnement?",Which of these two options do you think has the lowest impact on the environment?
+CORRECT,C'est correct !,That's correct!
+INCORRECT,C'est incorrect !,That's incorrect!
+DEPENDS,... c'est équivalent !,... they're equivalent!
+SUIVANT,PROCHAINE QUESTION,NEXT QUESTION
+RESULTATS,RÉSULTATS,RESULTS
+FINAL,Bravo ! Tu as réalisé un score de {score} points.,Congratulations! You have scored {score} points.
+TERMINER,TERMINER,END
+FERMER,Appuie pour fermer la bulle,Press to close the bubble
+STREAK,Tu as répondu correctement à {streak} questions à la suite,You have answered {streak} questions correctly in a row
+HISTOGRAMME 1,Presse sur l'écran pour en savoir plus !,Click on the screen to learn more!
+HISTOGRAMME 2,"Plus la barre est grande, plus l'impact sur le changement climatique de la pratique est important !","This represents the consumption of various practices, in kilograms of CO2!"
+HISTOGRAMME 3,"Si tu veux rejouer, souviens toi des ordres de grandeurs de l'impact de ces activités. Cela pourra t'aider pour savoir quelle pratique a le moins d'impact sur l'environnement.","If you want to play again, remember the orders of magnitude of the impact of the activities we've seen. This will help you decide which practice has the least impact on the environment."
+LEGENDE HISTOGRAMME 1,Consommation annuelle de steak de bœuf par personne,Annual consumption of beef steak per person
+LEGENDE HISTOGRAMME 2,1 aller-retour Genève-New York en avion,1 round-trip Geneva-New York flight
+LEGENDE HISTOGRAMME 3,Achat d'un ordinateur portable,Buying a laptop
+LEGENDE HISTOGRAMME 4,Achat d'un téléphone,Buying a phone
+LEGENDE HISTOGRAMME 5,22 heures d'un jeu de société grand format,22 hours of a large-format board game
+LEGENDE HISTOGRAMME 6,22 heures de jeu vidéo sur console,22 hours of console video games
