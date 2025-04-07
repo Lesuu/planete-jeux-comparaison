@@ -1780,6 +1780,7 @@ async function main() {
                     txt.letterCount = 0;
                     txt.text = dialog;
                     isSkipping = false;
+                    let counter = 0
                 
                     const writing = loop(0.02, () => {
                         if(isSkipping){
@@ -1790,9 +1791,12 @@ async function main() {
                                 txt.renderedText.length,
                             );
                         }
-                        play("talk2", {
-                            volume: 0.05,
-                        });
+                        counter += 1
+                        if (counter % 2 === 0){
+                            play("talk2", {
+                                volume: 0.01,
+                            });
+                        }
                         if (txt.letterCount === txt.renderedText.length) {
                             isTalking = false;
                             writing.cancel();
