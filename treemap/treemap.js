@@ -35,6 +35,9 @@ export function listEtages() {
 }
 
 let isGenerating = false;
+export function isGeneratingTreemap() {
+    return isGenerating;
+}
 function createLoadingOverlay() {
     let loadingOverlay = document.createElement("div");
     loadingOverlay.id = "loadingOverlay";
@@ -176,10 +179,7 @@ export function generateTreemap(plateforme, scenario, contribution, etage1, zoom
                         upperLabel: {
                             show: true
                           }
-                    }
-                    
-                    
-                    ],
+                    }],
                     data: convertedData
                 }]
             });

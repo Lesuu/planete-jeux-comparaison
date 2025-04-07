@@ -1,5 +1,6 @@
 import { currentTreemapExplanation } from "./global.js"
 import { getTranslation, currentScenario, langue } from "./main.js"
+import { isGeneratingTreemap } from "./treemap.js"
 
 let bettyEngaged = false
 let betty
@@ -13,6 +14,7 @@ let curTween;
 let canJump = false
 let infoBubble = false
 let isTalking = false
+let isGenerating = false
 
 let jouerSurConsole, jouerSurPortable, jouerSurTelephone, jouerSurFixe, jouerPetitJeu, jouerJeuMoyen, jouerGrandJeu, changementClimatique, metaux, particulesFines;
 
@@ -82,7 +84,8 @@ export function callBetty() {
     if (nothingToSay) return
     bettyAppears()
     betty.onClick(() => {
-        if (isTalking||nothingToSay||infoBubble)return
+        isGenerating = isGeneratingTreemap()
+        if (isTalking||nothingToSay||infoBubble||isGenerating)return
         if (!bettyEngaged){
             betty_highlight.opacity = 0
             tween(
