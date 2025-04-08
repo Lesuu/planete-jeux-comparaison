@@ -1715,7 +1715,7 @@ async function main() {
             info_shadow.opacity = 0.4
             betty_highlight.opacity = 1
             if (canJump){
-                betty.jump(400);
+                betty.jump(600);
                 canJump = false;
             }
             betty.onClick(() => {
@@ -1799,7 +1799,7 @@ async function main() {
                         counter += 1
                         if (counter % 2 === 0){
                             play("talk2", {
-                                volume: 0.01,
+                                volume: 0.03,
                             });
                         }
                         if (txt.letterCount === txt.renderedText.length) {

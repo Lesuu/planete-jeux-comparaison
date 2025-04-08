@@ -15,6 +15,7 @@ let canJump = false
 let infoBubble = false
 let isTalking = false
 let isGenerating = false
+let isSkipping = false
 
 let jouerSurConsole, jouerSurPortable, jouerSurTelephone, jouerSurFixe, jouerPetitJeu, jouerJeuMoyen, jouerGrandJeu, changementClimatique, metaux, particulesFines;
 
@@ -275,6 +276,23 @@ export function iButtons(){
         }
         iClick(infoTexte)
     });
+    let info_treemap_shadow = add([
+        sprite("info"),
+        pos(476 + 1, 77 + 1),
+        scale(1),
+        color(0,0,0),
+        opacity(0.4),
+    ])
+    let info_treemap = info_treemap_shadow.add([
+        sprite("info"),
+        pos(-1, -1),
+        area()
+    ]);
+    info_treemap.onClick(async () => {
+        languageCheck()
+        let infoTexte = getTranslation("CASE")
+        iClick(infoTexte)
+    })
 }
 
 async function iClick(texte){

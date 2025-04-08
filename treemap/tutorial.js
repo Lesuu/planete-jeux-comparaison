@@ -11,9 +11,9 @@ let offset = 0
 export function tutorial() {
     // Dialogues à afficher
     const dialogs = [
-        { text: getTranslation("INDICATEURS"),      bubbleSize: {x: 13, y: 13.5}},
+        { text: getTranslation("INDICATEURS"),      bubbleSize: {x: 13, y: 14.5}},
         //{ text: getTranslation("INDICATEURS 2"),      bubbleSize: {x: 15, y: 15}},
-        { text: getTranslation("SCENARIOS JV"),     bubbleSize: {x: 9, y: 7}},
+        { text: getTranslation("SCENARIOS JV"),     bubbleSize: {x: 5, y: 5}},
         { text : getTranslation("SCENARIOS JDS"),   bubbleSize: {x: 5, y: 5}},
         { text : getTranslation("CASE"),            bubbleSize: {x: 11, y: 10.7}}
     ];
@@ -96,12 +96,12 @@ export function tutorial() {
                 text("", {
                     font: "pixelthin",
                     size: 48,
-                    width: (bulle.width - 10) * bulleScaleX,
+                    width: (bulle.width - 10) * bulleScaleX + 4*offset,
                     transform: (idx, ch) => {
                         return { opacity: idx < txt.letterCount ? 1 : 0 };
                     },
                 }),
-                pos(offset + bulle.pos.x + 5 * bulleScaleX, bulle.pos.y + 7 + bulleScaleY),
+                pos(bulle.pos.x + 5 * bulleScaleX - 0.6*offset, bulle.pos.y + 7 + bulleScaleY),
                 color(rgb(56, 71, 74)),
                 anchor("topleft"),
                 z(3),
@@ -270,7 +270,7 @@ function assombris(dialog){
             betty.flipX = false
             bulle.sprite = "bulle_vert"
             bulle.pos = vec2(betty.pos.x + bulleScaleX - 20, betty.pos.y - (82* bulleScaleY))
-            offset = 0
+            offset = 12
             // Assombris tout sauf la fenêtre treemap:
             // Gauche
             assombrissement = add([

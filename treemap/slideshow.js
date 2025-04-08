@@ -30,7 +30,7 @@ export function slideshow(){
     ];
     // Dialogues pour le slideshow
     const dialogs = [
-        { text: getTranslation("INTRO"),            bubbleSize: {x: 9.2, y: 4}},
+        { text: getTranslation("INTRO"),            bubbleSize: {x: 8, y: 5.5}},
         { text: getTranslation("ACV"),              bubbleSize: {x: 8, y: 9}},
         { text : getTranslation("HISTOGRAMME JV"),  bubbleSize: {x: 6, y: 5.7}},
         { text : getTranslation("HISTOGRAMME JDS"), bubbleSize: {x: 5, y: 5.5}}
