@@ -15,7 +15,7 @@ export function tutorial() {
         //{ text: getTranslation("INDICATEURS 2"),      bubbleSize: {x: 15, y: 15}},
         { text: getTranslation("SCENARIOS JV"),     bubbleSize: {x: 9, y: 7}},
         { text : getTranslation("SCENARIOS JDS"),   bubbleSize: {x: 5, y: 5}},
-        { text : getTranslation("CASE"),            bubbleSize: {x: 5, y: 15.5}}
+        { text : getTranslation("CASE"),            bubbleSize: {x: 11, y: 10.7}}
     ];
     curDialog = 0;
     isTalking = false;
@@ -268,9 +268,9 @@ function assombris(dialog){
             // On déplace Betty & sa bulle
             betty.pos = vec2(20, 900)
             betty.flipX = false
-            bulle.flipX = true
-            bulle.pos = vec2(betty.pos.x + bulleScaleX, betty.pos.y - (55* bulleScaleY))
-            offset = 10
+            bulle.sprite = "bulle_vert"
+            bulle.pos = vec2(betty.pos.x + bulleScaleX - 20, betty.pos.y - (82* bulleScaleY))
+            offset = 0
             // Assombris tout sauf la fenêtre treemap:
             // Gauche
             assombrissement = add([

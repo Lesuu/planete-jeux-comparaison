@@ -58,10 +58,9 @@ export async function loadAssets(){
             "height": 32
         },
     });
-    // Bouton
-    loadSprite("button_red", "assets/sprites/button_textless.png")
     // Bulle de dialogue
     loadSprite("bulle", "assets/sprites/bulle.png")
+    loadSprite("bulle_vert", "assets/sprites/bulle_vert.png")
     // Tutoriel
     loadSprite("screenshot_jv_fr", "assets/sprites/screenshot_jv.png")
     loadSprite("screenshot_jds_fr", "assets/sprites/screenshot_jds.png")
