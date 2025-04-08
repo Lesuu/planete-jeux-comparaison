@@ -977,6 +977,11 @@ async function main() {
                         availableQuestions = categorie;
                     }
 
+                    // Empêcher "Collectif" d'être parmis les premières questions
+                    if (compteur_question < 4) {
+                        availableQuestions = categorie.filter(question => question.theme !== "Collectif");
+                    }
+
                     // On choisit une question aléatoire parmi les questions disponibles
                     let questionIndex = Math.floor(Math.random() * availableQuestions.length);
                     let chosenQuestion = availableQuestions[questionIndex];
