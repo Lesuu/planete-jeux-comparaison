@@ -278,8 +278,8 @@ export function iButtons(){
     });
     let info_treemap_shadow = add([
         sprite("info"),
-        pos(476 + 1, 77 + 1),
-        scale(1),
+        pos(476 + 1, 76 + 1),
+        scale(1.1),
         color(0,0,0),
         opacity(0.4),
     ])
