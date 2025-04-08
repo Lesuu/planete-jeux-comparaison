@@ -188,7 +188,7 @@ async function bettyExplication(betty, text){
         speechText.style.transform = "scale(0.9)";
         speechText.style.transformOrigin = "top left";
         speechText.style.width = "100%"
-        speechText.style.lineHeight = "100%"
+        speechText.style.lineHeight = "95%"
     }
     speechText.innerHTML = text
     speechBubble.appendChild(speechText)

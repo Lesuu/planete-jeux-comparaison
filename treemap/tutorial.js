@@ -13,7 +13,7 @@ export function tutorial() {
     const dialogs = [
         { text: getTranslation("INDICATEURS"),      bubbleSize: {x: 13, y: 14.5}},
         //{ text: getTranslation("INDICATEURS 2"),      bubbleSize: {x: 15, y: 15}},
-        { text: getTranslation("SCENARIOS JV"),     bubbleSize: {x: 5, y: 5}},
+        { text: getTranslation("SCENARIOS JV"),     bubbleSize: {x: 5, y: 6.2}},
         { text : getTranslation("SCENARIOS JDS"),   bubbleSize: {x: 5, y: 5}},
         { text : getTranslation("CASE"),            bubbleSize: {x: 11, y: 10.7}}
     ];

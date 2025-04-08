@@ -103,17 +103,15 @@ function languageChange(){
 languageChange();
 function createLanguageButtons(){
       // Boutons de la fenêtre windows
-    if (!restart_button){
-        restart_button = add([
-            sprite("restart"),
-            pos(width() - 55, 10),
-            scale(2),
-            area(/*{ shape: new Rect(vec2(-16, 10), 25, 25 ) }*/),
-            stay(),
-            "window"
-        ]);
-    } 
-    if (getSceneName() == "titleScreen" || "treemap"){
+    restart_button = add([
+        sprite("restart"),
+        pos(width() - 55, 10),
+        scale(2),
+        area(/*{ shape: new Rect(vec2(-16, 10), 25, 25 ) }*/),
+        stay(),
+        "window"
+    ]);
+    if (getSceneName() == "titleScreen" || getSceneName() == "treemap"){
         eng_button = add([
             sprite("en"),
             pos(width() - 105, 10),

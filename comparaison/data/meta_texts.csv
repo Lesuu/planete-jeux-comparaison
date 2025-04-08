@@ -4,7 +4,7 @@ START,Appuie sur l'écran pour commencer !,Press on the screen to start!
 OPTION,Choisis un mode de jeu !,Choose a game mode!
 JEU VIDEO,Jeu vidéo,Video games
 JEU DE SOCIETE,Jeu de société,Board games
-BOTH,Jeu vidéo + jeu de société,Video games + Board games
+BOTH,Jeu vidéo + Jeu de société,Video games + Board games
 QUESTION,"D'après toi, qu'est-ce qui a le moins d'impact sur l'environnement?",Which of these two options do you think has the lowest impact on the environment?
 CORRECT,C'est correct !,That's correct!
 INCORRECT,C'est incorrect !,That's incorrect!
@@ -22,5 +22,5 @@ LEGENDE HISTOGRAMME 1,Consommation annuelle de steak de bœuf par personne,Annua
 LEGENDE HISTOGRAMME 2,1 aller-retour Genève-New York en avion,1 round-trip Geneva-New York flight
 LEGENDE HISTOGRAMME 3,Achat d'un ordinateur portable,Buying a laptop
 LEGENDE HISTOGRAMME 4,Achat d'un téléphone,Buying a phone
-LEGENDE HISTOGRAMME 5,22 heures d'un jeu de société grand format,22 hours of a large-format board game
+LEGENDE HISTOGRAMME 5,22 heures d'un jeu de société grand format,22 hours of a large format board game
 LEGENDE HISTOGRAMME 6,22 heures de jeu vidéo sur console,22 hours of console video games

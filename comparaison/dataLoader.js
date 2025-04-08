@@ -9,11 +9,14 @@ let translations = {};
 
 // Liens vers les fichiers CSV
 //const lien_eng = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQWBSQtcLt8CbTPN-TvHnrCt1h24GtoXiWxBCoo3nqbrTSqLuc93FeogkFsOrfS_qF-YDyhTk5E0aau/pub?gid=1414253908&single=true&output=csv';
-const lien_eng = 'assets/data/data_eng.csv'
 //const lien_fr = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQWBSQtcLt8CbTPN-TvHnrCt1h24GtoXiWxBCoo3nqbrTSqLuc93FeogkFsOrfS_qF-YDyhTk5E0aau/pub?gid=1185013817&single=true&output=csv';
-const lien_fr = 'assets/data/data_fr.csv'
 //const lien_meta = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQWBSQtcLt8CbTPN-TvHnrCt1h24GtoXiWxBCoo3nqbrTSqLuc93FeogkFsOrfS_qF-YDyhTk5E0aau/pub?gid=826164962&single=true&output=csv';
-const lien_meta = 'assets/data/meta_texts.csv'
+
+// Liens vers les fichiers CSV locaux
+const lien_eng = 'data/data_eng.csv'
+const lien_fr = 'data/data_fr.csv'
+const lien_meta = 'data/meta_texts.csv'
+
 let lien
 
 async function getCSV(url) {
