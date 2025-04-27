@@ -4,6 +4,7 @@ Un quiz qui te permet de comparer différentes pratiques de jeu afin de comprend
 
 Ce jeu a été développé en [Kaplay.js](https://kaplayjs.com/) pour l'exposition Planète Jeux du [Musée Suisse du jeu](https://museedujeu.ch/), à travers un projet en collaboration avec l'Université de Lausanne.
 
+Joue au jeu sur itch.io: https://lesu.itch.io/planete-jeux-comparaison
 ### Crédits
 Recherche & compilation des données : Lina Picasso
 
@@ -25,6 +26,7 @@ A quiz in which you can compare different gaming practices to understand how to 
 
 This game was developed using [Kaplay.js](https://kaplayjs.com/) for the [Swiss Games Museum](https://museedujeu.ch/)'s 'Planète Jeux' exhibition, as part of a collaboration with the University of Lausanne.
 
+Play it on itch.io: https://lesu.itch.io/planete-jeux-comparaison
 ### Credits
 
 Research & data compilation: Lina Picasso
