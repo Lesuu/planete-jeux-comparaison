@@ -1,3 +1,4 @@
+// Chargement des données CSV et séparation en différentes catégories
 // Déclaration des arrays
 let CSVdata = [];
 let metaText = [];
@@ -34,7 +35,6 @@ async function loadData(langue) {
     questions_JV = [];
     questions_JdS = [];
     translations = {};
-    //questions_autres = [];
     if (langue === "fr"){
         lien = lien_fr;
     } else if (langue === "eng"){
@@ -53,9 +53,7 @@ async function loadData(langue) {
 
     // Séparation des données - pairings
     for (let i = 0; i < CSVdata.length; i++) {
-        /*if (CSVdata[i].theme === "Autre") {
-            questions_autres.push(CSVdata[i]);
-        } else*/ if (CSVdata[i].jeu_video == "TRUE" && CSVdata[i].theme !== "Autre") {
+        if (CSVdata[i].jeu_video == "TRUE" && CSVdata[i].theme !== "Autre") {
             questions_JV.push(CSVdata[i]);
         } else if (CSVdata[i].jeu_video == "FALSE" && CSVdata[i].theme !== "Autre") {
             questions_JdS.push(CSVdata[i]);

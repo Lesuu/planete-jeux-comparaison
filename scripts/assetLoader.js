@@ -1,6 +1,8 @@
+// Chargement des assets du jeu
 export function loadAssets(){
     let text_color = rgb(56, 71, 74)
     
+    //#region Polices
     loadFont("pixel", "assets/fonts/m6x11plus.ttf")
     loadFont("pixelthin", "assets/fonts/m5x7.ttf")
     loadFont("kaph", "assets/fonts/Kaph-Regular.ttf", {
@@ -18,6 +20,7 @@ export function loadAssets(){
         letterSpacing : 5
     });
 
+    //#region Sons
     loadSound("fail","assets/audio/fail.mp3")
 
     loadSound("card1","assets/audio/card-place-1.ogg")
@@ -33,7 +36,7 @@ export function loadAssets(){
     loadSound("talk2", "assets/audio/talk2.wav")
 
 
-
+    //#region Icones
     loadSprite("jv_icon", "assets/sprites/video_game.png")
     loadSprite("jv_color", "assets/sprites/vg_color.png")
     loadSprite("jds_icon", "assets/sprites/board_game.png")
@@ -52,6 +55,7 @@ export function loadAssets(){
             "height": 29,
         },
     })
+    //#region Bulle/cartes
     loadSprite("bulle", "assets/sprites/bulle.png")
     loadSprite("blank_card", "assets/sprites/blank_card.png")
     loadSpriteAtlas("assets/sprites/cards.png", {
@@ -80,7 +84,7 @@ export function loadAssets(){
             "height": 236
         }
     })
-
+    //#region Betty + windows
     loadSpriteAtlas("assets/sprites/BETTY-sheet.png", {
         "betty" : {
             "x": 0,

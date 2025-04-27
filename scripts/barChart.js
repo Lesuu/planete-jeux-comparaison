@@ -1,4 +1,5 @@
-import { getTranslation, version } from "./comparaison.js";
+// Génération de l'histogramme à la fin du jeu
+import { getTranslation, version } from "../comparaison.js";
 
 let isTalking = false;
 let isSkipping = false;
@@ -85,7 +86,6 @@ export function createBarChart(langue, score){
     ])
     betty.flipX = true
 
-    // Initialize a timer variable
     let starTimer = 0;
     setGravity(800)
 

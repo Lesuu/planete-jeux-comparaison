@@ -1,10 +1,11 @@
-import { createBarChart } from './barChart.js';
-import { loadAssets } from './assetLoader.js';
-import { loadData, questions_JV, questions_JdS, translations} from './dataLoader.js';
+import { createBarChart } from './scripts/barChart.js';
+import { loadAssets } from './scripts/assetLoader.js';
+import { loadData, questions_JV, questions_JdS, translations} from './scripts/dataLoader.js';
 
 //#region initialisation 
 
-// Version du jeu (normal, bus, interne_bus) pour le bouton final/timer reset
+// Version du jeu (normal, bus, interne_bus) pour le bouton final/timer reset.
+// Les différentes versions existent pour la collaboration avec le bus VMCV, où le bouton final renvoie sur un formulaire pour gagner un billet pour le musée
 export const version = "normal"
 
 // Initialisation de Kaplay
@@ -98,7 +99,7 @@ async function main() {
     const egal_color = hsl2rgb(60/360, 0.7, 0.65)
     //#endregion
 
-    //#region Asset loading
+    //#region Asset loading, voir assetLoader.js
     loadAssets()
 
     let scoreSound = ["score1", "score2", "score3"]
@@ -119,7 +120,7 @@ async function main() {
     const scaleValue = 2.3;
     //#endregion
 
-    // #region Ecran d'accueil
+    // #region Fenêtre "windows"
     // Fonction pour restart
     function windowButtons(){
         restart_button.onClick(()=>{
@@ -134,6 +135,7 @@ async function main() {
             updateTexts()
         })
     }
+    // On met à jour les textes si la langue change
     async function updateTexts(){
         loading = true
         let currentScene = getSceneName()
@@ -161,6 +163,7 @@ async function main() {
         go(currentScene)
     }
 
+    // Ecran d'accueil
     scene("titleScreen", async () => {
         add([
             rect(1920, 1080),
@@ -169,7 +172,7 @@ async function main() {
             z(-50),  
             stay()
         ]);
-        //éléments universels
+        // éléments universels
         // Shader CRT
         onUpdate(() => {
             usePostEffect("crt", crtEffect());
@@ -243,8 +246,11 @@ async function main() {
             "window"
         ])
         
+        // Fonctionnalité des boutons de la barre windows
         windowButtons()
         
+        //#endregion
+        //#region Ecran d'accueil
 
         // Réinitialisation du score
         score = 0
@@ -360,7 +366,7 @@ async function main() {
             anchor("center"),
         ])
 
-        // Eventail
+        // Eventail de cartes
         let cardSprites = ["spades", "clubs", "hearts", "diamonds"]
         let cardFan = 6
         let card1 = add([
@@ -440,10 +446,13 @@ async function main() {
         screen.onClick(() => {
             if (loading) return
             go("chooseCategory")
-            //go("finalResults", {score: 0})
         });
         
     })
+
+    //#endregion
+    //#region Choix
+    // Scène de choix de catégorie
     scene("chooseCategory", async () => {
         both_hover = false
         windowButtons()
@@ -475,6 +484,7 @@ async function main() {
             color(0,0,0),
             opacity(0.4)
         ])
+        // Bouton pour le jeu vidéo
         let jv_icon = add([
             sprite("jv_icon"),
             pos(480, 470),
@@ -483,7 +493,6 @@ async function main() {
             area(),
             "jv_icon"
         ])
-
         let jv_shadow = add([
             text(getTranslation("JEU VIDEO"), {
                 font:"pixel",
@@ -504,7 +513,7 @@ async function main() {
             anchor("center"),
             z(50)
         ])
-
+        // Bouton pour le jeu de société
         let jds_icon = add([
             sprite("jds_icon"),
             pos(1440, 470),
@@ -513,7 +522,6 @@ async function main() {
             area(),
             "jds_icon"
         ])
-
         let jds_shadow = add([
             text(getTranslation("JEU DE SOCIETE"), {
                 font:"pixel",
@@ -534,7 +542,7 @@ async function main() {
             anchor("center"),
             z(50)
         ])
-
+        // Bouton pour les deux catégories ensembles
         let jv_both = add([
             sprite("jv_icon"),
             pos(860, 740),
@@ -557,7 +565,6 @@ async function main() {
             area(),
             opacity(0)
         ])
-
         let both_shadow = add([
             text(getTranslation("BOTH"), {
                 size: 54,
@@ -577,17 +584,16 @@ async function main() {
             anchor("center")
         ])
 
-        // Changement de la texture quand on survole les icones...
+        // Changement de la texture quand on clique sur les icones
+        // On vérifie si on est sur l'icône
         jv_icon.onHover(() => {
-            //jv_icon.sprite = "jv_color"
             jv_hover = true
         })
         jds_icon.onHover(() => {
-            //jds_icon.sprite = "jds_color"
             jds_hover = true
         })
 
-        // ... et quand on lâche
+        // et quand on sort de l'icône
         jv_icon.onHoverEnd(() => {
             jv_icon.sprite = "jv_icon"
             jv_hover = false
@@ -599,8 +605,6 @@ async function main() {
 
         function bothHover(){
             if (!both_hover){
-                //jv_both.sprite = "jv_color"
-                //jds_both.sprite = "jds_color"
                 both_hover = true
             } else if (both_hover){
                 jv_both.sprite = "jv_icon"
@@ -612,27 +616,7 @@ async function main() {
         both_area.onHover(() => bothHover())
         both_area.onHoverEnd(()=> bothHover())
 
-        // Changement de scène, on trie les données selon le support choisit
-        async function separationDonnees(cat){
-            if (cat === "jv"){
-                categorie = [...questions_JV]
-            } else if (cat === "jds"){
-                categorie = [...questions_JdS]
-            } else if (cat === "both"){
-                categorie = [...questions_JV, ...questions_JdS]
-            }
-            //autres = [...questions_autres]
-
-            // Sépare les questions 'égales'
-            questionsEgales = categorie.filter(question => question.theme === "Egal")
-
-            // Sépare les questions 'autre jeu'
-            autres_jeu = categorie.filter(question => question.theme === "Autre jeu")
-
-            // Supprime ces questions du reste
-            categorie = categorie.filter(question => question.theme !== "Egal" && question.theme !== "Autre jeu")
-        }
-
+        // Logique quand on clique sur les icones
         await jv_icon.onClick(() => {
             jv_icon.sprite = "jv_color"
             onMouseRelease(async ()=>{
@@ -667,9 +651,31 @@ async function main() {
                 }
             })
         })
+
+        // Changement de scène, on trie les données selon le support choisit
+        async function separationDonnees(cat){
+            if (cat === "jv"){
+                categorie = [...questions_JV]
+            } else if (cat === "jds"){
+                categorie = [...questions_JdS]
+            } else if (cat === "both"){
+                categorie = [...questions_JV, ...questions_JdS]
+            }
+            //autres = [...questions_autres]
+
+            // Sépare les questions 'égales'
+            questionsEgales = categorie.filter(question => question.theme === "Egal")
+
+            // Sépare les questions 'autre jeu'
+            autres_jeu = categorie.filter(question => question.theme === "Autre jeu")
+
+            // Supprime ces questions du reste
+            categorie = categorie.filter(question => question.theme !== "Egal" && question.theme !== "Autre jeu")
+        }
+
     })
     //#endregion
-    // #region Questions
+    // #region Scène questions
     // Scène où on pose les questions
     
     scene("questions", async () => {
@@ -677,9 +683,12 @@ async function main() {
         isTalking = false
         explanation = false
         windowButtons()
+        // On enlève les boutons pour changer de langue
+        // Changer de langue pendant le jeu serait trop complexe
         eng_button.destroy()
         fr_button.destroy()
-        // Couleur du background dépend du support choisi
+
+        // Icône en haut à gauche
         let icon_sprite
         if (categorie_choisie === "jv"){
             icon_sprite = "jv_color"
@@ -688,7 +697,6 @@ async function main() {
         } 
 
         // Compteur de question
-
         compteur_question ++
         let compteur_caption = add([
             text(`Question ${compteur_question}/${nbr_questions}`, {
@@ -731,6 +739,7 @@ async function main() {
             color(0,0,0),
 
         ])
+
         // Streak
         let streak_caption = add([
             text(getTranslation("STREAK").replace("{streak}", streak) + (streak > 1 ? "!" : "."), {
@@ -832,8 +841,7 @@ async function main() {
             canJump = true;
         });
 
-        // Star emitter
-        // Initialize a timer variable
+        // Génération de particules (étoiles)
         let starTimer = 0;
 
         betty.onUpdate(() => {
@@ -857,6 +865,7 @@ async function main() {
                 }
             }
         });
+
         // Hihlight jaune derrière Betty pour quand iel a qqch à dire
         let betty_highlight = add([
             sprite("betty", {anim: "white"}),
@@ -895,6 +904,8 @@ async function main() {
         })
         //#endregion
 
+        //#region Affichage Question
+        // Fonction qui affiche la question
         displayQuestion()
         function displayQuestion(){
             locked = false
@@ -910,11 +921,8 @@ async function main() {
             }
 
             // Choix aléatoire du type la carte
-            // let sprite1 = (randi() === 0 ? "spades" : "clubs")
-            // let sprite2 = (randi() === 0 ? "diamonds" : "hearts")
             let card_sprite = "blank_card"
 
-            //#region choixQuestion
             function choixQuestion(){
                 // Questions 'scriptées':
                 // On prend une question 'égale' selon la position déterminée dans question_egale
@@ -1153,7 +1161,7 @@ async function main() {
             card2_picto2.flipY = true
             //#endregion
 
-            //#region Tween!!
+            //#region Tween
             // Carte 1
             // Son de la carte
             play(choose(cardSounds), {
@@ -1257,7 +1265,7 @@ async function main() {
                     }                     
                     card.z = 60
                     card_text.z = 65
-                    // Si c'est une question égale, on colorie les 2 cartes en jauneen jaune
+                    // Si c'est une question égale, on colorie les 2 cartes en jaune
                     if (question.theme === "Egal"){
                         card.color = egal_color
                         if (clicked === 2){
@@ -1266,8 +1274,9 @@ async function main() {
                             card2.color = egal_color
                         } 
                     } else {
-                        // Si c'est correct, on colorie la carte cliquée en vert
+                        // Si c'est correcte, on colorie la carte cliquée en vert
                         card.color = correct_color
+                        // Betty est content.e
                         betty.play("happy")
                     }
                 } else {
@@ -1277,7 +1286,7 @@ async function main() {
                     card_text.z = 45
                     // On fait trembler l'écran
                     shake(10)
-                    // Betty est choquée
+                    // Betty est choqué.e
                     betty.play("owch")
                     // On joue le son de l'erreur
                     play("fail", {
@@ -1470,6 +1479,7 @@ async function main() {
                 easings.easeInOutQuad
             );
 
+            // Logique déterminant si c'est juste ou faux
             let caption_result
             if (((question.activite1_gagne) && (clicked == 1) && (question.theme !== "Egal")) 
                 || ((!question.activite1_gagne) && (clicked == 2) && (question.theme !== "Egal"))
@@ -1483,6 +1493,7 @@ async function main() {
                 streak = 0
             }
 
+            // On affiche le résultat
             let result = add([
                 text(caption_result, {
                     font: "pixel",
@@ -1518,6 +1529,8 @@ async function main() {
                 opacity(0.4),
                 "results_element"
             ]);
+
+            // On affiche le commentaire de la question
             let commentaire = add([
                 text(question.commentaire, {
                     font: "pixel",
@@ -1546,6 +1559,7 @@ async function main() {
                 "results_element"
             ])
             
+            // Bouton 'suivant'
             if ((categorie.length - 1 > 0) && (compteur_question < nbr_questions)){ 
                 let suivant_bouton = add([
                     sprite("button"),
@@ -1707,7 +1721,7 @@ async function main() {
             }
             //#endregion
             //#region Betty comment
-            // Dialogue
+            // Dialogue de betty pour les infos supplémentaires
 
             betty.play("idle_active")
             betty_highlight.play("white")
