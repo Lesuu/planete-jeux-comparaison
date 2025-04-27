@@ -5,13 +5,6 @@ export function loadAssets(){
     //#region Polices
     loadFont("pixel", "assets/fonts/m6x11plus.ttf")
     loadFont("pixelthin", "assets/fonts/m5x7.ttf")
-    loadFont("kaph", "assets/fonts/Kaph-Regular.ttf", {
-        outline: {
-            width: 3,
-            color: text_color
-        },
-        letterSpacing : -5,
-    });
     loadFont("pixeloutline", "assets/fonts/m6x11plus.ttf", {
         outline: {
             width: 3,
