@@ -1,6 +1,6 @@
 # Planète Jeux
 ## Comparaison
-Un quiz qui te permet de comparer différentes pratiques de jeu afin de comprendre comment réduire ton impact sur l'environnement!
+Un quiz qui te permet de comparer différentes pratiques de jeu afin de comprendre comment réduire ton impact sur l'environnement !
 
 Ce jeu a été développé en [Kaplay.js](https://kaplayjs.com/) pour l'exposition Planète Jeux du [Musée Suisse du jeu](https://museedujeu.ch/), à travers un projet en collaboration avec l'Université de Lausanne.
 
